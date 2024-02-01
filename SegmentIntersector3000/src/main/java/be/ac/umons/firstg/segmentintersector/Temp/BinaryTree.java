@@ -14,4 +14,8 @@ public class BinaryTree<T> {
         this.left = left;
         this.right = right;
     }
+
+    public boolean isLeaf(){
+        return this.left == null && this.right == null;
+    }
 }

@@ -1,20 +1,17 @@
 package be.ac.umons.firstg.segmentintersector;
 
+import be.ac.umons.firstg.segmentintersector.Components.Tree;
+import be.ac.umons.firstg.segmentintersector.Interfaces.IShapeGen;
 import be.ac.umons.firstg.segmentintersector.Temp.BinaryTree;
 import be.ac.umons.firstg.segmentintersector.Temp.Point;
 import javafx.application.Application;
-import javafx.fxml.FXMLLoader;
 import javafx.scene.Group;
-import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.shape.Circle;
-import javafx.scene.shape.Line;
+import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
-import javafx.util.Pair;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
 public class Test extends Application {
     @Override
@@ -32,11 +29,21 @@ public class Test extends Application {
         binaryTree.right.left = new BinaryTree<>(99);
         binaryTree.left.left.left = new BinaryTree<>(0);
         binaryTree.height = 3;
+        IShapeGen circleShape = () -> {
+            Circle circle = new Circle();
+            circle.setRadius(5f);
+            return circle;
+        };
+        IShapeGen rectangleShape = () -> {
+            Rectangle rectangle = new Rectangle(30,20);
 
-        ArrayList<Node> nodes = Tree.getAllPoints(binaryTree,new Point(scene.getWidth()/2,scene.getHeight()/2));
-        group.getChildren().addAll(nodes);
+            rectangle.setX(- rectangle.getWidth() /2);
+            rectangle.setY(- rectangle.getHeight() /2);
+            return rectangle;
+        };
+        group.getChildren().add(new Tree(binaryTree, new Point(300,200), rectangleShape, circleShape));
 
-        stage.setTitle("Hello!");
+        stage.setTitle("Only pain and suffering are awaiting!");
         stage.setScene(scene);
         stage.show();
     }
