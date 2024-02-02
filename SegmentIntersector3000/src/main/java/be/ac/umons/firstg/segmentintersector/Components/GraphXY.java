@@ -4,28 +4,29 @@ package be.ac.umons.firstg.segmentintersector.Components;
 import be.ac.umons.firstg.segmentintersector.Temp.Point;
 import be.ac.umons.firstg.segmentintersector.Temp.SegmentTMP;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
 
 public class GraphXY extends AnchorPane
 {
 
-    private Point start;
+    private Point origin;
     private Point maxAxisX;
     private Point maxAxisY;
 
     public GraphXY(Point start, float maxX, float maxY)
     {
-        this.start = start;
+        this.maxAxisY = start;
         // Get points for the ends of the X and Y axis
-        this.maxAxisX  = new Point(this.start.getX() + maxX, this.start.getY());
-        this.maxAxisY = new Point(this.start.getX(), this.start.getY() - maxY);
+        this.origin = new Point(this.maxAxisY.getX(), this.maxAxisY.getY() + maxY);
+        this.maxAxisX = new Point(this.origin.getX() + maxX, this.origin.getY());
         // Draw the axis using lines
         // X axis
-        Line line = new Line(this.maxAxisX.getX(), this.maxAxisX.getY(), this.start.getX(), this.start.getY());
+        Line line = new Line(this.maxAxisX.getX(), this.maxAxisX.getY(), this.origin.getX(), this.origin.getY());
         line.setStrokeWidth(2);
         this.getChildren().add(line);
         // Y axis
-        line = new Line(this.maxAxisY.getX(), this.maxAxisY.getY(), this.start.getX(), this.start.getY());
+        line = new Line(this.maxAxisY.getX(), this.maxAxisY.getY(), this.origin.getX(), this.origin.getY());
         line.setStrokeWidth(2);
         this.getChildren().add(line);
     }
@@ -46,7 +47,7 @@ public class GraphXY extends AnchorPane
      * @return The correct location of the point on this graph
      */
     public Point translatePoint(Point point){
-        return new Point(this.start.getX() + point.getX() , this.start.getY() - point.getY());
+        return new Point(this.origin.getX() + point.getX() , this.origin.getY() - point.getY());
     }
 
 

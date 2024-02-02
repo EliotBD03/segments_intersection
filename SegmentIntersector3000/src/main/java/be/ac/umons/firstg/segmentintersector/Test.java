@@ -40,7 +40,7 @@ public class Test extends Application {
         };
         group.getChildren().add(new Tree(binaryTree, new Point(300,200), rectangleShape, circleShape));
         */
-        GraphXY graph = new GraphXY(new Point(100,500), 400, 400);
+        GraphXY graph = new GraphXY(new Point(10,10), 300, 300);
         group.getChildren().add(graph);
         //group.getChildren().add(new Segment(new SegmentTMP(new Point(300,300), new Point(300, 400))));
         graph.addSegment(new SegmentTMP(new Point(0,0), new Point(200, 200)));
