@@ -1,14 +1,11 @@
 package be.ac.umons.firstg.segmentintersector;
 
-import be.ac.umons.firstg.segmentintersector.Components.Tree;
-import be.ac.umons.firstg.segmentintersector.Interfaces.IShapeGen;
-import be.ac.umons.firstg.segmentintersector.Temp.BinaryTree;
+import be.ac.umons.firstg.segmentintersector.Components.GraphXY;
 import be.ac.umons.firstg.segmentintersector.Temp.Point;
+import be.ac.umons.firstg.segmentintersector.Temp.SegmentTMP;
 import javafx.application.Application;
 import javafx.scene.Group;
 import javafx.scene.Scene;
-import javafx.scene.shape.Circle;
-import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 
 import java.io.IOException;
@@ -20,7 +17,7 @@ public class Test extends Application {
         //Scene scene = new Scene(fxmlLoader.load(), 320, 240);
         Group group = new Group();
         Scene scene = new Scene(group, 600,600);
-
+        /*
         BinaryTree<Integer> binaryTree = new BinaryTree<>(3);
         binaryTree.left = new BinaryTree<>(6);
         binaryTree.left.left = new BinaryTree<>(7);
@@ -42,7 +39,11 @@ public class Test extends Application {
             return rectangle;
         };
         group.getChildren().add(new Tree(binaryTree, new Point(300,200), rectangleShape, circleShape));
-
+        */
+        GraphXY graph = new GraphXY(new Point(100,500), 400, 400);
+        group.getChildren().add(graph);
+        //group.getChildren().add(new Segment(new SegmentTMP(new Point(300,300), new Point(300, 400))));
+        graph.addSegment(new SegmentTMP(new Point(0,0), new Point(200, 200)));
         stage.setTitle("Only pain and suffering are awaiting!");
         stage.setScene(scene);
         stage.show();
