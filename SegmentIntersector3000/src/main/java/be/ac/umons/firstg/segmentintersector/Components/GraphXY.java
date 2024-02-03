@@ -25,6 +25,12 @@ public class GraphXY extends AnchorPane
     private double minX,minY;
     private double scaleX,scaleY;
 
+    /**
+     * Creates a graph using fixed values for his X and Y axis
+     * @param start         The initial location of the graph, from the top left
+     * @param sizeAxisX     The size of it's X axis
+     * @param sizeAxisY     Thz size of it's Y axis
+     */
     public GraphXY(Point start, double sizeAxisX, double sizeAxisY)
     {
         // Infinity for both min values at start
@@ -48,7 +54,8 @@ public class GraphXY extends AnchorPane
         this.getChildren().add(line);
     }
 
-    public void addSegment(SegmentTMP segment){
+    private void addSegmentTo(SegmentTMP segment)
+    {
 
         Point point1 = translatePoint(segment.getPoint1());
         Point point2 = translatePoint(segment.getPoint2());
@@ -63,21 +70,33 @@ public class GraphXY extends AnchorPane
      * @param point The desired point
      * @return The correct location of the point on this graph
      */
-    public Point translatePoint(Point point){
+    public Point translatePoint(Point point)
+    {
         return new Point(this.origin.getX() + point.getX() , this.origin.getY() - point.getY());
     }
 
-    public Point scalePoint(Point point){
+    /**
+     * Gives the point coords scaled down to the graph proportions
+     * @param point
+     * @return
+     */
+    public Point scalePoint(Point point)
+    {
         return new Point((point.getX() - minX)/ scaleX, (point.getY() - minY)/ scaleY);
     }
 
-
+    /**
+     * This method should only be used once per graph.
+     * Add all segments to the graph, changing its scale to accommodate with the max and min values of the segments
+     * @param segments
+     */
     public void addSegments(List<SegmentTMP> segments)
     {
         Segment segment;
         SegmentTMP segmentScaled;
 
-        for(SegmentTMP segmentTMP: segments){
+        for(SegmentTMP segmentTMP: segments)
+        {
             // Update scale of the graph
             maxX = Math.max(Math.max(maxX, segmentTMP.getPoint1().getX()), segmentTMP.getPoint2().getX());
             maxY = Math.max(Math.max(maxY, segmentTMP.getPoint1().getY()), segmentTMP.getPoint2().getY());
@@ -87,17 +106,22 @@ public class GraphXY extends AnchorPane
             UpdateScale();
         }
         // Then when the scale has been fixed we can all segments
-        for(SegmentTMP segmentTMP: segments){
+        for(SegmentTMP segmentTMP: segments)
+        {
             segmentScaled = new SegmentTMP(scalePoint(segmentTMP.getPoint1()),
                     scalePoint(segmentTMP.getPoint2()));
-            addSegment(segmentScaled);
+            addSegmentTo(segmentScaled);
         }
 
 
     }
 
-    public void UpdateScale(){
-        // Round the number to the nearest mult of the size of the axisX and axisY
+    /**
+     * Update the scale of the graph, in relation to the min and max values of the points
+     */
+    public void UpdateScale()
+    {
+        // Round the number to the nearest mult of the size of the axisX and axisY (round up for max, round down for min)
         // Also add padding if needed
 
         // Careful using ceil and floor, this might require more testing
@@ -105,10 +129,6 @@ public class GraphXY extends AnchorPane
         minX = (Math.floor(minX/sizeAxisX) * sizeAxisX) - paddingX;
         maxY = (Math.ceil(maxY/sizeAxisY) * sizeAxisY) + paddingY;
         minY = (Math.floor(minY/sizeAxisY) * sizeAxisY) - paddingY;
-
-        System.out.println("X: " + maxX + ": " + minX);
-        System.out.println("Y: " + maxY + ": " + minY);
-
         scaleX = (maxX - minX) / sizeAxisX;
         scaleY = (maxY - minY) / sizeAxisY;
     }
@@ -117,19 +137,23 @@ public class GraphXY extends AnchorPane
     //_______________GETTER/SETTER
 
 
-    public int getPaddingX() {
+    public int getPaddingX()
+    {
         return paddingX;
     }
 
-    public int getPaddingY() {
+    public int getPaddingY()
+    {
         return paddingY;
     }
 
-    public void setPaddingX(int paddingX) {
+    public void setPaddingX(int paddingX)
+    {
         this.paddingX = paddingX;
     }
 
-    public void setPaddingY(int paddingY) {
+    public void setPaddingY(int paddingY)
+    {
         this.paddingY = paddingY;
     }
 }
