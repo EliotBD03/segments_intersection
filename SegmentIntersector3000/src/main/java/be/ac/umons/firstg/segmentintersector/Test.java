@@ -9,6 +9,8 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Test extends Application {
     @Override
@@ -16,7 +18,7 @@ public class Test extends Application {
         //FXMLLoader fxmlLoader = new FXMLLoader(Test.class.getResource("hello-view.fxml"));
         //Scene scene = new Scene(fxmlLoader.load(), 320, 240);
         Group group = new Group();
-        Scene scene = new Scene(group, 600,600);
+        Scene scene = new Scene(group, 2000,2000);
         /*
         BinaryTree<Integer> binaryTree = new BinaryTree<>(3);
         binaryTree.left = new BinaryTree<>(6);
@@ -41,9 +43,18 @@ public class Test extends Application {
         group.getChildren().add(new Tree(binaryTree, new Point(300,200), rectangleShape, circleShape));
         */
         GraphXY graph = new GraphXY(new Point(10,10), 300, 300);
+        graph.setPaddingX(0);
+        graph.setPaddingY(0);
         group.getChildren().add(graph);
         //group.getChildren().add(new Segment(new SegmentTMP(new Point(300,300), new Point(300, 400))));
-        graph.addSegment(new SegmentTMP(new Point(0,0), new Point(200, 200)));
+        SegmentTMP segmentTMP = new SegmentTMP(new Point(1500,1500), new Point(4500, 4500));
+        SegmentTMP segmentTMP2 = new SegmentTMP(new Point(1500,1500), new Point(4500, 4000));
+
+        ArrayList<SegmentTMP> segmentTMPList = new ArrayList<>();
+        segmentTMPList.add(segmentTMP);
+        segmentTMPList.add(segmentTMP2);
+        graph.addSegments(segmentTMPList);
+        //graph.addSegment(new SegmentTMP(new Point(0,0), new Point(200, 200)));
         stage.setTitle("Only pain and suffering are awaiting!");
         stage.setScene(scene);
         stage.show();

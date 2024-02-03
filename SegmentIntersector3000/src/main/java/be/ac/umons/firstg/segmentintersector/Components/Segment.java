@@ -19,7 +19,7 @@ public class Segment extends Group {
         // Draw segment
         IShapeGen getCircle = () -> {
             Circle circle = new Circle();
-            circle.setRadius(5f);
+            circle.setRadius(3f);
             return circle;
         };
         // Add the 2 end points
