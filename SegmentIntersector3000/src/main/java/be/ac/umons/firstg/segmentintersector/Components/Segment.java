@@ -4,6 +4,7 @@ import be.ac.umons.firstg.segmentintersector.Interfaces.IShapeGen;
 import be.ac.umons.firstg.segmentintersector.Temp.Point;
 import be.ac.umons.firstg.segmentintersector.Temp.SegmentTMP;
 import javafx.scene.Group;
+import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
 import javafx.scene.shape.Shape;
@@ -43,5 +44,21 @@ public class Segment extends Group {
         this.line = new Line(segment.getPoint1().getX(), segment.getPoint1().getY(),
                              segment.getPoint2().getX(), segment.getPoint2().getY());
         this.getChildren().add(line);
+    }
+
+
+    public void setLineColor(Color color)
+    {
+        line.setStroke(color);
+    }
+
+    public void setEndPoint1Color(Color color)
+    {
+        endPoint1.setFill(color);
+    }
+
+    public void setEndPoint2Color(Color color)
+    {
+        endPoint2.setFill(color);
     }
 }

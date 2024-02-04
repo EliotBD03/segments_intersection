@@ -10,6 +10,7 @@ import be.ac.umons.firstg.segmentintersector.Temp.SegmentTMP;
 import javafx.application.Application;
 import javafx.scene.Group;
 import javafx.scene.Scene;
+import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.stage.Stage;
 
@@ -26,10 +27,14 @@ public class Test extends Application {
         Scene scene = new Scene(group, 600,600);
 
         // Tree Testing
+        /*
         BinaryTree<SegmentTMP> bTree = new BinaryTree<>(new SegmentTMP("S1"));
         bTree.left = new BinaryTree<>(new SegmentTMP("S2"));
         bTree.right = new BinaryTree<>(new SegmentTMP("S3"));
         bTree.right.right = new BinaryTree<>(new SegmentTMP("S4"));
+        bTree.left.right = new BinaryTree<>(new SegmentTMP("S5"));
+        bTree.left.left = new BinaryTree<>(new SegmentTMP("S6"));
+        bTree.right.left = new BinaryTree<>(new SegmentTMP("S7"));
         bTree.height = 2;
 
         // Create method to display Circle with text(the name of the segment) inside
@@ -39,7 +44,7 @@ public class Test extends Application {
 
             return circle;
         };
-        IShapeGen<SegmentTMP> genLeaf = x -> new TreeSegmentNode(x,false);
+        IShapeGen<SegmentTMP> genLeaf = x -> new TreeSegmentNode(x,false, Color.AQUA);
         IShapeGen<SegmentTMP> genNode = x -> new TreeSegmentNode(x,true);
 
         Tree<SegmentTMP> tree = new Tree<SegmentTMP>(bTree, new Point(300,300),genLeaf,genNode);
@@ -50,22 +55,23 @@ public class Test extends Application {
         segmentNode.setLayoutY(300);
         //group.getChildren().add(segmentNode);
         group.getChildren().add(tree);
+         */
         // Graph Testing
-        /*
-        GraphXY graph = new GraphXY(new Point(10,10), 300, 300);
-        graph.setPaddingX(50);
-        graph.setPaddingY(50);
+
+        GraphXY graph = new GraphXY(new Point(90,90), 400, 400,  10, 10, true);
+        graph.setPaddingX(0);
+        graph.setPaddingY(0);
         group.getChildren().add(graph);
         //group.getChildren().add(new Segment(new SegmentTMP(new Point(300,300), new Point(300, 400))));
         SegmentTMP segmentTMP = new SegmentTMP(new Point(1500,1500), new Point(4500, 4500));
-        SegmentTMP segmentTMP2 = new SegmentTMP(new Point(1500,1500), new Point(4500, 4000));
+        SegmentTMP segmentTMP2 = new SegmentTMP(new Point(1000,1500), new Point(4500, 4000));
 
         ArrayList<SegmentTMP> segmentTMPList = new ArrayList<>();
         segmentTMPList.add(segmentTMP);
         segmentTMPList.add(segmentTMP2);
         graph.addSegments(segmentTMPList);
         //graph.addSegment(new SegmentTMP(new Point(0,0), new Point(200, 200)));
-        */
+
 
 
         stage.setTitle("Only pain and suffering are awaiting!");
