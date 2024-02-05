@@ -58,18 +58,30 @@ public class Test extends Application {
          */
         // Graph Testing
 
-        GraphXY graph = new GraphXY(new Point(90,90), 400, 400,  10, 10, true);
-        graph.setPaddingX(0);
-        graph.setPaddingY(0);
+        GraphXY graph = new GraphXY(new Point(90,90), 400, 400, 100, 100,  5, 5, true);
+
         group.getChildren().add(graph);
-        //group.getChildren().add(new Segment(new SegmentTMP(new Point(300,300), new Point(300, 400))));
-        SegmentTMP segmentTMP = new SegmentTMP(new Point(1500,1500), new Point(4500, 4500));
-        SegmentTMP segmentTMP2 = new SegmentTMP(new Point(1000,1500), new Point(4500, 4000));
+        SegmentTMP segmentTMP5 = new SegmentTMP(new Point(1500,1500), new Point(4500, 4500));
+        SegmentTMP segmentTMP4 = new SegmentTMP(new Point(1000,1500), new Point(4500, 4000));
+        SegmentTMP segmentTMP = new SegmentTMP(new Point(1500,150), new Point(1300, 122));
+        SegmentTMP segmentTMP2 = new SegmentTMP(new Point(150,150), new Point(0, 200));
+        SegmentTMP segmentTMP3 = new SegmentTMP(new Point(150,150), new Point(200, 0));
+
+
+        //SegmentTMP segmentTMP2 = new SegmentTMP(new Point(1000,1500), new Point(4500, 4000));
 
         ArrayList<SegmentTMP> segmentTMPList = new ArrayList<>();
         segmentTMPList.add(segmentTMP);
         segmentTMPList.add(segmentTMP2);
+        segmentTMPList.add(segmentTMP3);
+        //segmentTMPList.add(segmentTMP4);
+
         graph.addSegments(segmentTMPList);
+        segmentTMPList.clear();
+        segmentTMPList.add(segmentTMP4);
+        segmentTMPList.add(segmentTMP5);
+        graph.addSegments(segmentTMPList);
+        //graph.ResetGraph();
         //graph.addSegment(new SegmentTMP(new Point(0,0), new Point(200, 200)));
 
 

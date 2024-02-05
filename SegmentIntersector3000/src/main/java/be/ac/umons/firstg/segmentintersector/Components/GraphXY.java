@@ -3,35 +3,39 @@ package be.ac.umons.firstg.segmentintersector.Components;
 
 import be.ac.umons.firstg.segmentintersector.Temp.Point;
 import be.ac.umons.firstg.segmentintersector.Temp.SegmentTMP;
-import javafx.geometry.Insets;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.Background;
-import javafx.scene.layout.BackgroundFill;
-import javafx.scene.layout.CornerRadii;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
+import javafx.scene.text.Text;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+
+
 
 public class GraphXY extends AnchorPane
 {
     private int paddingX;
     private int paddingY;
 
-    private int nbOfMarksX,nbOfMarksY;
-    private int markSize = 10;
 
-    private final double sizeAxisX,sizeAxisY;
+    private int markSize = 10;
+    private int nbOfMarksX, nbOfMarksY;
+    private double gapX,gapY;
+    private ArrayList<Text> legendsX;
+    private ArrayList<Text> legendsY;
+
+    private final double sizePixelAxisX, sizePixelAxisY;
     private final Point origin;
     private final Point maxAxisX;
     private final Point maxAxisY;
 
     // Used to scale the graph
+    private double minScaleX, minScaleY;
     private double maxX,maxY;
     private double minX,minY;
-    private double scaleX,scaleY;
+    private double scalePixelX, scalePixelY;
 
     // Stores all segments contained inside the graph
     private HashMap<SegmentTMP, Segment> segmentsShown;
@@ -39,22 +43,22 @@ public class GraphXY extends AnchorPane
     /**
      * Creates a graph using fixed values for his X and Y axis
      * @param start         The initial location of the graph, from the top left
-     * @param sizeAxisX     The size of it's X axis
-     * @param sizeAxisY     Thz size of it's Y axis
+     * @param sizePixelAxisX     The size of it's X axis
+     * @param sizePixelAxisY     Thz size of it's Y axis
      */
-    public GraphXY(Point start, double sizeAxisX, double sizeAxisY, int nbOfMarksX, int nbOfMarksY, boolean showGrid)
+    public GraphXY(Point start, double sizePixelAxisX, double sizePixelAxisY, double minScaleX, double minScaleY,  int nbOfMarksX, int nbOfMarksY, boolean showGrid)
     {
         segmentsShown = new HashMap<>();
         // Infinity for both min values at start
         minX = Double.POSITIVE_INFINITY;
         minY = Double.POSITIVE_INFINITY;
-        this.sizeAxisX = sizeAxisX;
-        this.sizeAxisY = sizeAxisY;
+        this.sizePixelAxisX = sizePixelAxisX;
+        this.sizePixelAxisY = sizePixelAxisY;
 
         this.maxAxisY = start;
         // Get points for the ends of the X and Y axis
-        this.origin = new Point(this.maxAxisY.getX(), this.maxAxisY.getY() + sizeAxisY);
-        this.maxAxisX = new Point(this.origin.getX() + sizeAxisX, this.origin.getY());
+        this.origin = new Point(this.maxAxisY.getX(), this.maxAxisY.getY() + sizePixelAxisY);
+        this.maxAxisX = new Point(this.origin.getX() + sizePixelAxisX, this.origin.getY());
         // Draw the axis using lines
         // X axis
         Line line = new Line(this.maxAxisX.getX(), this.maxAxisX.getY(), this.origin.getX(), this.origin.getY());
@@ -65,20 +69,27 @@ public class GraphXY extends AnchorPane
         line.setStrokeWidth(2);
         this.getChildren().add(line);
 
+
+        this.minScaleX = minScaleX;
+        this.minScaleY = minScaleY;
         // Scale marks
         // Draw Scale Marks
-        double distX = sizeAxisX / nbOfMarksX;
-        double distY = sizeAxisY / nbOfMarksY;
-        double markSize = showGrid ? sizeAxisY: this.markSize;
 
-        for (int i = 1; i <= nbOfMarksX; i++)
+        this.nbOfMarksX = nbOfMarksX;
+        this.nbOfMarksY = nbOfMarksY;
+        double distMarkX = sizePixelAxisX / nbOfMarksX;
+        double distMarkY = sizePixelAxisY / nbOfMarksY;
+        double markSize = showGrid ? sizePixelAxisY: this.markSize;
+        legendsX = new ArrayList<>();
+        legendsY = new ArrayList<>();
+        for (int i = 0; i <= nbOfMarksX; i++)
         {
-            drawScaleMarkAxisX(distX * i, markSize);
+            drawScaleMarkAxisX(distMarkX * i, markSize);
         }
-        markSize = showGrid ? sizeAxisX: this.markSize;
-        for (int i = 1; i <= nbOfMarksY; i++)
+        markSize = showGrid ? sizePixelAxisX: this.markSize;
+        for (int i = 0; i <= nbOfMarksY; i++)
         {
-            drawScaleMarkAxisY(distY * i, markSize);
+            drawScaleMarkAxisY(distMarkY * i, markSize);
         }
         //setBackground(new Background(new BackgroundFill(Color.BLUE, CornerRadii.EMPTY, Insets.EMPTY)));
     }
@@ -114,16 +125,25 @@ public class GraphXY extends AnchorPane
      */
     public Point scalePoint(Point point)
     {
-        return new Point((point.getX() - minX)/ scaleX, (point.getY() - minY)/ scaleY);
+        return new Point((point.getX() - minX)/ scalePixelX, (point.getY() - minY)/ scalePixelY);
+    }
+
+    private void updateMinMax(SegmentTMP segment)
+    {
+        maxX = Math.max(Math.max(maxX, segment.getPoint1().getX()), segment.getPoint2().getX());
+        maxY = Math.max(Math.max(maxY, segment.getPoint1().getY()), segment.getPoint2().getY());
+        minX = Math.min(Math.min(minX, segment.getPoint1().getX()), segment.getPoint2().getX());
+        minY = Math.min(Math.min(minY, segment.getPoint1().getY()), segment.getPoint2().getY());
     }
 
     /**
-     * This method should only be used once per graph.
+     * This method will reset the graph.
      * Add all segments to the graph, changing its scale to accommodate with the max and min values of the segments
      * @param segments
      */
     public void addSegments(List<SegmentTMP> segments)
     {
+        ResetGraph();
         for(SegmentTMP segmentTMP: segments)
         {
             // Update scale of the graph
@@ -136,32 +156,11 @@ public class GraphXY extends AnchorPane
         {
             addSegmentTo(segmentTMP);
         }
-    }
+        // Update legend
+        UpdateLegend();
+        System.out.println("Min X: " + minX);
+        System.out.println("Min Y:" + minY);
 
-    private void updateMinMax(SegmentTMP segment)
-    {
-        maxX = Math.max(Math.max(maxX, segment.getPoint1().getX()), segment.getPoint2().getX());
-        maxY = Math.max(Math.max(maxY, segment.getPoint1().getY()), segment.getPoint2().getY());
-        minX = Math.min(Math.min(minX, segment.getPoint1().getX()), segment.getPoint2().getX());
-        minY = Math.min(Math.min(minY, segment.getPoint1().getY()), segment.getPoint2().getY());
-    }
-
-    /**
-     * Update the scale of the graph, in relation to the min and max values of the points
-     */
-    public void UpdateScale()
-    {
-        // Round the number to the nearest mult of the size of the axisX and axisY (round up for max, round down for min)
-        // Also add padding if needed
-
-        // Careful using ceil and floor, this might require more testing
-        maxX = (Math.ceil(maxX/sizeAxisX) * sizeAxisX) + paddingX;
-        minX = (Math.floor(minX/sizeAxisX) * sizeAxisX) - paddingX;
-        maxY = (Math.ceil(maxY/sizeAxisY) * sizeAxisY) + paddingY;
-        minY = (Math.floor(minY/sizeAxisY) * sizeAxisY) - paddingY;
-
-        scaleX = (maxX - minX) / sizeAxisX;
-        scaleY = (maxY - minY) / sizeAxisY;
     }
 
 
@@ -169,6 +168,13 @@ public class GraphXY extends AnchorPane
     {
         Line mark = new Line(origin.getX() + position, origin.getY(), origin.getX() + position, origin.getY() - size);
         mark.setStroke(Color.GRAY);
+        Text text = new Text();
+        //Double.toString(minX + position)
+
+        text.setLayoutX(origin.getX() + position);
+        text.setLayoutY(origin.getY() + 20);
+        getChildren().add(text);
+        legendsX.add(text);
         getChildren().add(mark);
     }
 
@@ -176,7 +182,65 @@ public class GraphXY extends AnchorPane
     {
         Line mark = new Line(origin.getX(), origin.getY() - position, origin.getX() + size, origin.getY() - position);
         mark.setStroke(Color.GRAY);
+        Text text = new Text();
+        text.setLayoutX(origin.getX() - 50);
+        text.setLayoutY(origin.getY() - position);
+        getChildren().add(text);
+        legendsY.add(text);
         getChildren().add(mark);
+    }
+
+    private void UpdateLegend()
+    {
+        gapX = (maxX-minX) / nbOfMarksX;
+        gapY = (maxY-minY) / nbOfMarksY;
+        for (int i = 0; i < legendsX.size(); i++)
+        {
+            legendsX.get(i).setText(Double.toString(minX + (gapX * i)));
+        }
+        for (int i = 0; i < legendsY.size(); i++)
+        {
+            legendsY.get(i).setText(Double.toString(minY + (gapY * i)));
+        }
+
+    }
+
+    /**
+     * Update the scale of the graph, in relation to the min and max values of the points
+     */
+    private void UpdateScale()
+    {
+        // Round the number to the nearest mult of the size of the axisX and axisY (round up for max, round down for min)
+        // Also add padding if needed
+
+        // Careful using ceil and floor, this might require more testing
+        maxX = (Math.ceil(maxX/ minScaleX) * minScaleX) + paddingX;
+        minX = (Math.floor(minX/ minScaleX) * minScaleX) - paddingX;
+        maxY = (Math.ceil(maxY/ minScaleY) * minScaleY) + paddingY;
+        minY = (Math.floor(minY/ minScaleY) * minScaleY) - paddingY;
+        scalePixelX = (maxX - minX) / sizePixelAxisX;
+        scalePixelY = (maxY - minY) / sizePixelAxisY;
+
+    }
+
+    /**
+     * Removes all segments displayed in the graph.
+     * Also resets the scale
+     */
+    public void ResetGraph()
+    {
+        for (SegmentTMP segmentTMP: segmentsShown.keySet())
+        {
+            getChildren().remove(segmentsShown.get(segmentTMP));
+        }
+        // Reset the scale
+        maxX = minScaleX;
+        minX = Double.POSITIVE_INFINITY;
+        minY = Double.POSITIVE_INFINITY;
+        maxY = minScaleY;
+        UpdateScale();
+        // And the labels too
+        UpdateLegend();
     }
 
     //_______________GETTER/SETTER
