@@ -34,16 +34,18 @@ public class Segment extends Group {
             circle.setCenterY(x.getY());
             return circle;
         };
+
+        // Add Line
+        this.line = new Line(segment.getPoint1().getX(), segment.getPoint1().getY(),
+                             segment.getPoint2().getX(), segment.getPoint2().getY());
+        line.setStroke(Color.BLUEVIOLET);
+        this.getChildren().add(line);
         // Add the 2 end points
         endPoint1 = (Circle) getCircle.createShape(segment.getPoint1());
         this.getChildren().add(endPoint1);
 
         endPoint2 = (Circle) getCircle.createShape(segment.getPoint2());
         this.getChildren().add(endPoint2);
-        // Add Line
-        this.line = new Line(segment.getPoint1().getX(), segment.getPoint1().getY(),
-                             segment.getPoint2().getX(), segment.getPoint2().getY());
-        this.getChildren().add(line);
     }
 
 

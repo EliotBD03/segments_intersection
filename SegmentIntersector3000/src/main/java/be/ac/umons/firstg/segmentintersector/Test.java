@@ -37,52 +37,37 @@ public class Test extends Application {
         bTree.right.left = new BinaryTree<>(new SegmentTMP("S7"));
         bTree.height = 2;
 
-        // Create method to display Circle with text(the name of the segment) inside
-        IShapeGen<SegmentTMP> coolCircle = X ->
-        {
-            Circle circle = new Circle();
-
-            return circle;
-        };
         IShapeGen<SegmentTMP> genLeaf = x -> new TreeSegmentNode(x,false, Color.AQUA);
         IShapeGen<SegmentTMP> genNode = x -> new TreeSegmentNode(x,true);
 
-        Tree<SegmentTMP> tree = new Tree<SegmentTMP>(bTree, new Point(300,300),genLeaf,genNode);
-        TreeSegmentNode segmentNode = new TreeSegmentNode(new SegmentTMP("S6"), true);
+        Tree<SegmentTMP> tree = new Tree<>(bTree, new Point(300,300),genLeaf,genNode);
 
-
-        segmentNode.setLayoutX(300);
-        segmentNode.setLayoutY(300);
         //group.getChildren().add(segmentNode);
         group.getChildren().add(tree);
-         */
-        // Graph Testing
 
+         */
+
+        // Graph Testing
         GraphXY graph = new GraphXY(new Point(90,90), 400, 400, 100, 100,  5, 5, true);
 
         group.getChildren().add(graph);
-        SegmentTMP segmentTMP5 = new SegmentTMP(new Point(1500,1500), new Point(4500, 4500));
-        SegmentTMP segmentTMP4 = new SegmentTMP(new Point(1000,1500), new Point(4500, 4000));
-        SegmentTMP segmentTMP = new SegmentTMP(new Point(1500,150), new Point(1300, 122));
-        SegmentTMP segmentTMP2 = new SegmentTMP(new Point(150,150), new Point(0, 200));
-        SegmentTMP segmentTMP3 = new SegmentTMP(new Point(150,150), new Point(200, 0));
+        SegmentTMP segmentTMP1 = new SegmentTMP(new Point(1500,1500), new Point(4500, 4500));
 
 
         //SegmentTMP segmentTMP2 = new SegmentTMP(new Point(1000,1500), new Point(4500, 4000));
 
-        ArrayList<SegmentTMP> segmentTMPList = new ArrayList<>();
-        segmentTMPList.add(segmentTMP);
-        segmentTMPList.add(segmentTMP2);
-        segmentTMPList.add(segmentTMP3);
-        //segmentTMPList.add(segmentTMP4);
+        ArrayList<SegmentTMP> segmentTMPList = new ArrayList<>(
+                List.of(new SegmentTMP(new Point(51.48,94.67), new Point(33.34, 94.67)),
+                        new SegmentTMP(new Point(39.99, 188.38), new Point(99.78, 42.37)),
+                        new SegmentTMP(new Point(115.8, 45.6), new Point(69.65, 45.6)),
+                        new SegmentTMP(new Point(139.22, 134.68), new Point(83.03, 165.42))));
 
         graph.addSegments(segmentTMPList);
-        segmentTMPList.clear();
-        segmentTMPList.add(segmentTMP4);
-        segmentTMPList.add(segmentTMP5);
-        graph.addSegments(segmentTMPList);
+        //segmentTMPList.add(segmentTMP4);
         //graph.ResetGraph();
         //graph.addSegment(new SegmentTMP(new Point(0,0), new Point(200, 200)));
+
+
 
 
 
