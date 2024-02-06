@@ -38,7 +38,7 @@ public class Segment extends Group {
         // Add Line
         this.line = new Line(segment.getPoint1().getX(), segment.getPoint1().getY(),
                              segment.getPoint2().getX(), segment.getPoint2().getY());
-        line.setStroke(Color.BLUEVIOLET);
+        line.setStroke(Color.BLACK);
         this.getChildren().add(line);
         // Add the 2 end points
         endPoint1 = (Circle) getCircle.createShape(segment.getPoint1());
@@ -49,18 +49,39 @@ public class Segment extends Group {
     }
 
 
-    public void setLineColor(Color color)
+    public void setVisitedSegment()
     {
-        line.setStroke(color);
+        line.setStroke(Color.RED);
+        line.setStrokeWidth(3);
+        endPoint1.setFill(Color.BLACK);
+        endPoint2.setFill(Color.BLACK);
     }
 
-    public void setEndPoint1Color(Color color)
+    public void setInactiveSegment()
     {
-        endPoint1.setFill(color);
+        line.setStroke(Color.GRAY);
+        endPoint1.setFill(Color.GRAY);
+        line.setStrokeWidth(1);
+        endPoint2.setFill(Color.GRAY);
+    }
+    public void setActiveSegment()
+    {
+        line.setStroke(Color.BLACK);
+        endPoint1.setFill(Color.BLACK);
+        endPoint2.setFill(Color.BLACK);
     }
 
-    public void setEndPoint2Color(Color color)
+    public void setVisitedPoint(Point point)
     {
-        endPoint2.setFill(color);
+        if(segment.getPoint1().equals(point))
+        {
+            endPoint1.setFill(Color.ROYALBLUE);
+        }
+        else if (segment.getPoint2().equals(point))
+        {
+            endPoint2.setFill(Color.ROYALBLUE);
+        }
+
     }
+
 }

@@ -6,12 +6,14 @@ import be.ac.umons.firstg.segmentintersector.Temp.Point;
 import be.ac.umons.firstg.segmentintersector.Temp.SegmentTMP;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
 import javafx.scene.text.Text;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Stack;
 
 
 /**
@@ -43,6 +45,11 @@ public class GraphXY extends AnchorPane
 
     // Stores all segments contained inside the graph
     private HashMap<SegmentTMP, Segment> segmentsShown;
+
+    // Sweep Line settings
+    private Line sweepLine;
+    private Stack<Segment> toSetInactive;
+    private Stack<Segment> toSetActive;
 
     /**
      * Creates a graph using fixed values for his X and Y axis
@@ -125,7 +132,7 @@ public class GraphXY extends AnchorPane
         SegmentTMP segmentTMP = new SegmentTMP(point1,point2);
         Segment segmentNode = new Segment(segmentTMP);
         // Add segment so we can easily reference it
-        segmentsShown.put(segmentTMP, segmentNode);
+        segmentsShown.put(segment, segmentNode);
         this.getChildren().add(segmentNode);
     }
 
@@ -171,7 +178,16 @@ public class GraphXY extends AnchorPane
      */
     public Point scalePoint(Point point)
     {
-        return new Point((point.getX() - minX)/ scalePixelX, (point.getY() - minY)/ scalePixelY);
+        return new Point(scaleOnX(point.getX()), scaleOnY(point.getY()));
+    }
+
+    private double scaleOnX(double x)
+    {
+        return  (x -  minX)/scalePixelX;
+    }
+    private double scaleOnY(double y)
+    {
+        return (y - minY)/scalePixelY;
     }
 
     private void updateMinMax(SegmentTMP segment)
@@ -241,7 +257,6 @@ public class GraphXY extends AnchorPane
         minY = (Math.floor(minY/ minScaleY) * minScaleY) - paddingY;
         scalePixelX = (maxX - minX) / sizePixelAxisX;
         scalePixelY = (maxY - minY) / sizePixelAxisY;
-
     }
 
     /**
@@ -264,6 +279,82 @@ public class GraphXY extends AnchorPane
         updateLegend();
     }
 
+
+    //_______________SWEEPLINE and Visit Segments
+
+    public void initializeSweepLine()
+    {
+        setSweepLinePosition(maxY);
+
+        toSetActive = new Stack<>();
+        toSetInactive = new Stack<>();
+        toSetInactive.addAll(segmentsShown.values());
+    }
+    private void setSweepLinePosition(double y)
+    {
+        // If the sweepline wasn't added yet
+        if(sweepLine == null)
+        {
+            sweepLine = new Line(maxAxisY.getX(), maxAxisY.getY(), maxAxisX.getX() + 5, maxAxisY.getY());
+            sweepLine.setStroke(Color.DARKGREEN);
+            sweepLine.setStrokeWidth(2);
+            sweepLine.getStrokeDashArray().addAll(5d);
+            getChildren().add(sweepLine);
+        }
+        // Move the sweep line (simply doing sweepLine.setLayoutY() doesn't work for some reason
+        double newPosition = origin.getY() - scaleOnY(y);
+        sweepLine.setStartY(newPosition);
+        sweepLine.setEndY(newPosition);
+    }
+
+    public void moveSweepLine(Point P, List<SegmentTMP> U, List<SegmentTMP> L, List<SegmentTMP> C)
+    {
+        // Move SweepLine
+        setSweepLinePosition(P.getY());
+        Segment currSegment;
+        // Set segments that were active last iteration to active
+        while (! toSetActive.isEmpty())
+        {
+            currSegment = toSetActive.pop();
+            currSegment.setActiveSegment();
+        }
+        // Set segments that became inactive since last iteration to inactive
+        while (! toSetInactive.isEmpty())
+        {
+            currSegment = toSetInactive.pop();
+            currSegment.setInactiveSegment();
+        }
+        if(L != null)
+        {
+            for(SegmentTMP segmentTMP: L)
+            {
+                segmentsShown.get(segmentTMP).setVisitedSegment();
+                toSetInactive.add(segmentsShown.get(segmentTMP));
+                segmentsShown.get(segmentTMP).toFront();
+            }
+        }
+        if(C != null)
+        {
+            for(SegmentTMP segmentTMP: C)
+            {
+                segmentsShown.get(segmentTMP).setVisitedSegment();
+                segmentsShown.get(segmentTMP).toFront();
+                segmentsShown.get(segmentTMP).toFront();
+            }
+        }
+        if(U != null){
+            for(SegmentTMP segmentTMP : U)
+            {
+                segmentsShown.get(segmentTMP).setVisitedSegment();
+                toSetActive.add(segmentsShown.get(segmentTMP));
+                segmentsShown.get(segmentTMP).setVisitedPoint(translatePoint(scalePoint(P)));
+                segmentsShown.get(segmentTMP).toFront();
+            }
+
+        }
+
+
+    }
     //_______________GETTER/SETTER
 
 /*

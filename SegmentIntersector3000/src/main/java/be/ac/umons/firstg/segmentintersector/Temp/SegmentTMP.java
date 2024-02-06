@@ -1,5 +1,7 @@
 package be.ac.umons.firstg.segmentintersector.Temp;
 
+import java.util.Objects;
+
 public class SegmentTMP
 {
     private String name;
@@ -34,5 +36,29 @@ public class SegmentTMP
     public String getName()
     {
         return name;
+    }
+
+    @Override
+    public boolean equals(Object o)
+    {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        SegmentTMP that = (SegmentTMP) o;
+        return Objects.equals(point1, that.point1) && Objects.equals(point2, that.point2);
+    }
+
+    @Override
+    public int hashCode()
+    {
+        return Objects.hash(point1, point2);
+    }
+
+    @Override
+    public String toString()
+    {
+        return "SegmentTMP{" +
+                "point1=" + point1 +
+                ", point2=" + point2 +
+                '}';
     }
 }

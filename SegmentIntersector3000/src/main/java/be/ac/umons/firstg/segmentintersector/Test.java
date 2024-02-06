@@ -48,10 +48,9 @@ public class Test extends Application {
          */
 
         // Graph Testing
-        GraphXY graph = new GraphXY(new Point(90,90), 400, 400, 100, 100,  5, 5, true);
+        GraphXY graph = new GraphXY(new Point(90,90), 400, 400, 100, 100,  10, 10, false);
 
         group.getChildren().add(graph);
-        SegmentTMP segmentTMP1 = new SegmentTMP(new Point(1500,1500), new Point(4500, 4500));
 
 
         //SegmentTMP segmentTMP2 = new SegmentTMP(new Point(1000,1500), new Point(4500, 4000));
@@ -63,6 +62,17 @@ public class Test extends Application {
                         new SegmentTMP(new Point(139.22, 134.68), new Point(83.03, 165.42))));
 
         graph.addSegments(segmentTMPList);
+        graph.initializeSweepLine();
+        graph.moveSweepLine(new Point(39.99, 188.38),
+                List.of(new SegmentTMP(new Point(39.99, 188.38),
+                        new Point(99.78, 42.37))),null,null);
+        graph.moveSweepLine(new Point(83.03, 165.42),
+                List.of(new SegmentTMP(new Point(139.22, 134.68), new Point(83.03, 165.42))),null,null);
+
+        //graph.moveSweepLine(new Point(51.48,94.67), null,List.of(new SegmentTMP(new Point(39.99, 188.38), new Point(99.78, 42.37))),null);
+        //graph.moveSweepLine(new Point(51.48,94.67), null,null,null);
+
+        // TODO EventPoint Component Class WITH A SPECIAL METHOD: HIGHLIGHT
         //segmentTMPList.add(segmentTMP4);
         //graph.ResetGraph();
         //graph.addSegment(new SegmentTMP(new Point(0,0), new Point(200, 200)));
