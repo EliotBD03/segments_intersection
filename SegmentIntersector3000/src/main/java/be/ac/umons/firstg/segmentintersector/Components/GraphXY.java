@@ -6,7 +6,6 @@ import be.ac.umons.firstg.segmentintersector.Temp.Point;
 import be.ac.umons.firstg.segmentintersector.Temp.SegmentTMP;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
 import javafx.scene.text.Text;
 
@@ -119,6 +118,7 @@ public class GraphXY extends AnchorPane
             drawScaleMarkAxisY(distMarkY * i, markSize);
         }
         //setBackground(new Background(new BackgroundFill(Color.BLUE, CornerRadii.EMPTY, Insets.EMPTY)));
+        updateLegend();
 
     }
 
@@ -143,7 +143,7 @@ public class GraphXY extends AnchorPane
      */
     public void addSegments(List<SegmentTMP> segments)
     {
-        ResetGraph();
+        resetGraph();
         for(SegmentTMP segmentTMP: segments)
         {
             // Update scale of the graph
@@ -229,15 +229,32 @@ public class GraphXY extends AnchorPane
 
     private void updateLegend()
     {
-        gapX = (maxX-minX) / nbOfMarksX;
-        gapY = (maxY-minY) / nbOfMarksY;
+        double tmpMinX = minX;
+        double tmpMinY = minY;
+
+        if(minX == Double.POSITIVE_INFINITY)
+        {
+            tmpMinX = 0d;
+            gapX = minScaleX / nbOfMarksY;
+        }
+        else
+            gapX = (maxX-tmpMinX) / nbOfMarksX;
+
+        if(minY == Double.POSITIVE_INFINITY)
+        {
+            tmpMinY = 0d;
+            gapY = minScaleX / nbOfMarksY;
+        }
+        else
+            gapY = (maxY-tmpMinY) / nbOfMarksY;
+
         for (int i = 0; i < legendsX.size(); i++)
         {
-            legendsX.get(i).setText(Double.toString(minX + (gapX * i)));
+            legendsX.get(i).setText(Double.toString(tmpMinX + (gapX * i)));
         }
         for (int i = 0; i < legendsY.size(); i++)
         {
-            legendsY.get(i).setText(Double.toString(minY + (gapY * i)));
+            legendsY.get(i).setText(Double.toString(tmpMinY + (gapY * i)));
         }
 
     }
@@ -263,7 +280,7 @@ public class GraphXY extends AnchorPane
      * Removes all segments displayed in the graph.
      * Also resets the scale
      */
-    public void ResetGraph()
+    public void resetGraph()
     {
         for (SegmentTMP segmentTMP: segmentsShown.keySet())
         {
