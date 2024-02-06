@@ -1,5 +1,10 @@
 package core;
+import java.util.Random;
 
+/**
+ * main representation of an AVL (abstraction of the inner class : Node)
+ * @param <T> generic must implement Comparable for insertion
+ */
 public class AVL<T extends Comparable<T>>
 {
     private Node<T> root;
@@ -8,142 +13,269 @@ public class AVL<T extends Comparable<T>>
     {
         root = new Node<>(data);
     }
-    public class Node<T extends Comparable<T>> implements Comparable<Node<T>>
+    private class Node<T extends Comparable<T>> implements Comparable<Node<T>>
     {
-        private final T data;
+        private T data;
         private Node<T> left, right;
         private int height;
 
-        private int balanceFactor;
-
+        /**
+         * Constructor of a single node.
+         * As the definition of an AVL, the node is in fact a leaf
+         * @param data the data stored inside the node
+         */
         public Node(T data)
         {
             this.data = data;
             this.left = null;
             this.right = null;
             this.height = 1;
-            this.balanceFactor = 0;
         }
 
+        /**
+         * Private constructor used to "copy" a node
+         * This is uniquely used inside the leftRotation and RightRotation method
+         * @param node an already existing node
+         */
         private Node(Node<T> node)
         {
+            if(node == null)
+                throw new NullPointerException("The constructor must be provided with a not null node");
             this.data = node.data;
             this.left = node.left;
             this.right = node.right;
             this.height = node.height;
-            this.balanceFactor = root.balanceFactor;
         }
 
+        /**
+         * Setter for the right child of the current node.
+         * @param node right child
+         */
         public void setRight(Node<T> node)
         {
             this.right = node;
         }
 
+        /**
+         * Setter for the left child of the current node.
+         * @param node left child
+         */
         public void setLeft(Node<T> node)
         {
             this.left = node;
         }
+
+        /**
+         * Change the height of the current node according to the changes made earlier.
+         */
+        private void updateHeight()
+        {
+            if(left == null && right == null)
+                height = 1; //leaf
+            else
+            {
+                if(left == null)
+                    height = 1 + right.height;
+                else
+                {
+                    if(right == null)
+                        height = 1 + left.height;
+                    else
+                        height = Math.max(left.height, right.height) + 1;
+                }
+            }
+        }
+
+        /**
+         * Getter for the left child.
+         * @return the left child of the node
+         */
         public Node<T> getLeft()
         {
             return left;
         }
 
+        /**
+         * Getter for the right child.
+         * @return the left right of the node
+         */
         public Node<T> getRight()
         {
             return right;
         }
 
+        /**
+         * Getter for the height.
+         * @return integer correspond to the height of the current node
+         */
         public int getHeight()
         {
             return height;
         }
 
-        public void updateHeight()
+        /**
+         * Getter for the data contained inside the node.
+         * @return the data contained inside the current node.
+         */
+        public T getData()
         {
-            if(root.left == null && root.right == null)
-                height = 1; //leaf
-            else if(root.left != null && root.right == null)
-                height =  root.left.height + 1;
-            else if(root.left == null && root.right != null)
-                height =  root.right.height + 1;
-            else
-                height = Math.max(root.left.height, root.right.height) + 1;
+            return data;
         }
 
-        public void updateBalanceFactor()
+        /**
+         * Getter for the balance factor of the node.
+         * @return an integer corresponding to the balance factor.
+         */
+        public int getBalanceFactor()
         {
-            if(root.left == null && root.right == null)
-                balanceFactor = 0; //leaf
-            else if(root.left != null && root.right == null)
-                height = root.left.height;
-            else if(root.left == null && root.right != null)
-                height =  root.right.height;
+            if(left == null && right == null)
+                return 0; //leaf
             else
-                height = root.right.height - root.left.height;
-        }
-
-        public void balance()
-        {
-            if(balanceFactor == -2 || balanceFactor == 2)
             {
-                if(balanceFactor == 2)
+                if(left == null)
+                    return right.height;
+                else
                 {
-                    if(right.balanceFactor < 0)
-                        doubleLeftRotation(this);
-                    leftRotation(this);
+                    if(right == null)
+                        return - left.height;
+                    else
+                        return right.height - left.height;
                 }
-                if(left.balanceFactor > 0)
-                    doubleRightRotation(this);
-                rightRotation(this);
             }
         }
 
-        private Node<T> leftRotation(Node<T> node)
+        /**
+         * Equilibrate the current AVL/subtree with the current node as root.
+         * This method apply the stabilizing theorem.
+         */
+        public void balance()
         {
-            Node<T> temp = new Node<>(node);
-            node = temp.right;
-            temp.right = node.left;
-            node.left = temp;
-            temp.updateHeight();
-            node.updateHeight();
-            return node;
+            if(getBalanceFactor() == 2)
+            {
+                if(right.getBalanceFactor() >= 0)
+                {
+                    leftRotation();
+                }
+                else
+                    doubleLeftRotation();
+            }
+            else
+            {
+                if(getBalanceFactor() == -2)
+                {
+                    if(left.getBalanceFactor() <= 0)
+                        rightRotation();
+                    else
+                        doubleRightRotation();
+                }
+            }
+            updateHeight();
         }
 
-        private Node<T> rightRotation(Node<T> node)
+        /**
+         * Apply a left rotation to the current tree formed by the current node.
+         */
+        public void leftRotation() //TODO must resolve the problem above
         {
-            Node<T> temp = new Node<>(node);
-            node = temp.left;
-            temp.left = node.right;
-            node.right = temp;
+            Node<T> temp = new Node<>(this);
+            data = right.getData();
+            left = right.getLeft();
+            right = right.getRight();
+            temp.right = left;
+            left = temp;
             temp.updateHeight();
-            node.updateHeight();
-            return node;
-        }
-        private void doubleLeftRotation(Node<T> node)
-        {
-            node.left = rightRotation(node.left);
-            leftRotation(node);
-        }
-        private void doubleRightRotation(Node<T> node)
-        {
-            node.right = leftRotation(node.right);
-            rightRotation(node);
+            updateHeight();
         }
 
+        /**
+         * Apply a right rotation to the current tree formed by the current node.
+         */
+        public void rightRotation()
+        {
+            Node<T> temp = new Node<>(this);
+            data = left.getData();
+            right = left.getRight();
+            left = left.getLeft();
+            temp.left = right;
+            right = temp;
+            temp.updateHeight();
+            updateHeight();
+        }
+
+        /**
+         * Apply a double left rotation to the current tree formed by the current node.
+         */
+        private void doubleLeftRotation()
+        {
+            right.rightRotation();
+            leftRotation();
+        }
+
+        /**
+         * Apply a double right rotation to the current tree formed by the current node.
+         */
+        private void doubleRightRotation()
+        {
+            left.leftRotation();
+            rightRotation();
+        }
+
+        /**
+         * Redefine the compareTo method from the interface Comparable.
+         * @param other the object to be compared.
+         * @return see ref compareTo from Comparable
+         */
         @Override
         public int compareTo(Node<T> other)
         {
             return data.compareTo(other.data);
         }
 
+        /**
+         * Redefine the compareTo method from the Object class.
+         * @return a string corresponding to the representation of a node (data,height,balance_factor)
+         * Notice that this method is exclusively used for debugging purposes.
+         */
         @Override
         public String toString()
         {
-            return data.toString();
+            return "(" + data.toString() + ","+ height +","+ getBalanceFactor()+")";
+        }
+
+        /**
+         * Will look for the minimum of a tree.
+         * @return the minimal node.
+         */
+        private Node<T> lookForMinimum()
+        {
+            Node<T> current = this;
+            while(current.getLeft() != null)
+                current = current.left;
+            return current;
+        }
+
+        /**
+         * Will look for the maximum of a tree.
+         * @return the maximal node.
+         */
+        private Node<T> lookForMaximum()
+        {
+            Node<T> current = this;
+            while(current.getRight() != null)
+                current = current.right;
+            return current;
         }
     }
 
-    private Node<T> insert(Node<T> current, Node<T> nodeToInsert)
+    /**
+     * Insert a node inside an AVL.
+     * As the definition mentioned, the AVL will be balanced during the process.
+     * @param current the current node in the tree.
+     * @param nodeToInsert The node to insert.
+     * @return the AVL modified.
+     * @throws Exception if the data already exists.
+     */
+    private Node<T> insert(Node<T> current, Node<T> nodeToInsert) throws Exception
     {
         if(current == null)
             return nodeToInsert;
@@ -151,7 +283,6 @@ public class AVL<T extends Comparable<T>>
         {
             current.setLeft(insert(current.getLeft(), nodeToInsert));
             current.updateHeight();
-            current.updateBalanceFactor();
             current.balance();
 
         }
@@ -159,33 +290,44 @@ public class AVL<T extends Comparable<T>>
         {
             current.setRight(insert(current.getRight(), nodeToInsert));
             current.updateHeight();
-            current.updateBalanceFactor();
             current.balance();
         }
+        else
+            throw new Exception("The data already exist inside the tree");
         return current;
     }
 
-    public void insert(T data)
+    /**
+     * Wrapper to the private insert method.
+     * @param data the data to be inserted inside the tree.
+     * @throws Exception if the data already exists.
+     */
+    public void insert(T data) throws Exception
     {
         root = insert(root, new Node<>(data));
     }
 
-    private Node<T> remove(Node<T> current, Node<T> nodeToRemove)
+    /**
+     * Remove a given node from the tree
+     * @param current the current node were in.
+     * @param nodeToRemove the node to remove from the tree.
+     * @return the modified tree
+     * @throws Exception if the data does not exist inside the tree.
+     */
+    private Node<T> remove(Node<T> current, Node<T> nodeToRemove) throws Exception
     {
         if (current == null)
-            return null;
-        else if(current.compareTo(nodeToRemove) < 0)
-        {
-            current.setRight(remove(current.getRight(), nodeToRemove));
-            current.updateHeight();
-            current.updateBalanceFactor();
-            current.balance();
-        }
-        else if(current.compareTo(nodeToRemove) > 0)
+            throw new Exception("the current AVL does not have the node with the given data : " + nodeToRemove.data);
+        else if(nodeToRemove.compareTo(current) < 0)
         {
             current.setLeft(remove(current.getLeft(), nodeToRemove));
             current.updateHeight();
-            current.updateBalanceFactor();
+            current.balance();
+        }
+        else if(nodeToRemove.compareTo(current) > 0)
+        {
+            current.setRight(remove(current.getRight(), nodeToRemove));
+            current.updateHeight();
             current.balance();
         }
         else
@@ -200,60 +342,69 @@ public class AVL<T extends Comparable<T>>
             {
                 if(current.getLeft().getHeight() < current.getRight().getHeight())
                 {
-                    Node<T> minimum = lookForMinimum();
+                    Node<T> minimum = current.right.lookForMinimum();
                     remove(current, minimum); //TODO could both removing and saving data
+                    current.data = minimum.data;
                 }
                 else
                 {
-                    Node<T> maximum = lookForMaximum();
+                    Node<T> maximum = current.left.lookForMaximum();
                     remove(current, maximum); //TODO could both removing and saving data
+                    current.data = maximum.data;
+
                 }
             }
         }
-        return nodeToRemove;
-    }
-
-    private Node<T> lookForMinimum()
-    {
-        Node<T> current = root;
-        while(current.getLeft() != null)
-            current = current.left;
         return current;
     }
 
-    private Node<T> lookForMaximum()
+    /**
+     * wrapper for the private remove function
+     * @param data the data to remove from the tree
+     * @throws Exception if the data does not exist inside the tree.
+     */
+    public void remove(T data) throws Exception
     {
-        Node<T> current = root;
-        while(current.getRight() != null)
-            current = current.right;
-        return current;
+        remove(root, new Node<>(data));
     }
 
+    /**
+     * Display the AVL in an inorder way.
+     * @param currentNode the current node were in.
+     * @param space the space between each father-children.
+     */
     private void display(Node<T> currentNode, int space)
     {
         if(currentNode != null)
         {
-            space += 2;
+            space += 5;
             display(currentNode.getRight(), space);
             System.out.print("\n");
-            for(int i = 0; i < space; i++)
-                System.out.println(" ");
-            System.out.println(root.data + "\n");
+            for(int i = 5; i < space; i++)
+                System.out.print(" ");
+            System.out.print(currentNode + "\n");
             display(currentNode.getLeft(), space);
         }
 
     }
-
+    /**
+     * wrapper for the private display function.
+     * Display the AVL in an inorder way.
+     */
     public void display()
     {
-        display(root, 1);
+        display(root, 0);
     }
 
-    public static void main(String[] args)
+
+    public static void main(String[] args) throws Exception
     {
-        AVL<Integer> avl = new AVL<>(1);
+        AVL<Integer> avl = new AVL<>(0);
+        for(int i = 1; i < 10; i++)
+            avl.insert(i);
         avl.display();
-        avl.insert(2);
+        System.out.println("----------------------");
+        avl.remove(3);
         avl.display();
 
     }
