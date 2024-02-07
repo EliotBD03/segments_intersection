@@ -5,6 +5,6 @@ module be.ac.umons.firstg.segmentintersector {
 
     opens be.ac.umons.firstg.segmentintersector to javafx.fxml;
     exports be.ac.umons.firstg.segmentintersector;
-    exports be.ac.umons.firstg.segmentintersector.Components;
-    opens be.ac.umons.firstg.segmentintersector.Components to javafx.fxml;
+    exports be.ac.umons.firstg.segmentintersector.components;
+    opens be.ac.umons.firstg.segmentintersector.components to javafx.fxml;
 }

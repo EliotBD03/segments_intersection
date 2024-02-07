@@ -1,14 +1,25 @@
 package be.ac.umons.firstg.segmentintersector;
 
+import be.ac.umons.firstg.segmentintersector.Temp.Point;
+import be.ac.umons.firstg.segmentintersector.Temp.SegmentTMP;
+import be.ac.umons.firstg.segmentintersector.components.IntersectionTable;
 import javafx.fxml.FXML;
-import javafx.scene.control.Label;
+import javafx.scene.Node;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
+
+import java.util.Map;
 
 public class HelloController {
     @FXML
-    private Label welcomeText;
+    private IntersectionTable interTable;
 
-    @FXML
-    protected void onHelloButtonClick() {
-        welcomeText.setText("But U are so SUS...");
+    public HelloController()
+    {
+    }
+
+    public IntersectionTable getInterTable()
+    {
+        return interTable;
     }
 }

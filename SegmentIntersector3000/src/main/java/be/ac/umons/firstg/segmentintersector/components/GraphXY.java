@@ -1,4 +1,4 @@
-package be.ac.umons.firstg.segmentintersector.Components;
+package be.ac.umons.firstg.segmentintersector.components;
 
 
 import be.ac.umons.firstg.segmentintersector.Interfaces.IShapeGen;

@@ -1,4 +1,4 @@
-package be.ac.umons.firstg.segmentintersector.Components;
+package be.ac.umons.firstg.segmentintersector.components;
 
 import be.ac.umons.firstg.segmentintersector.Interfaces.IShapeGen;
 import be.ac.umons.firstg.segmentintersector.Temp.BinaryTree;
@@ -8,11 +8,8 @@ import javafx.scene.Node;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
-import javafx.scene.shape.Shape;
-import javafx.util.Pair;
 
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Tree Component

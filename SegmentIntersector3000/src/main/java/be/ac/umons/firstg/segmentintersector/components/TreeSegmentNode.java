@@ -1,8 +1,7 @@
-package be.ac.umons.firstg.segmentintersector.Components;
+package be.ac.umons.firstg.segmentintersector.components;
 
 
 import be.ac.umons.firstg.segmentintersector.Temp.SegmentTMP;
-import javafx.geometry.Bounds;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Arc;

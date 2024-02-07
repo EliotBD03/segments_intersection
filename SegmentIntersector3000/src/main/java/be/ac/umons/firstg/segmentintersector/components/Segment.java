@@ -1,13 +1,11 @@
-package be.ac.umons.firstg.segmentintersector.Components;
+package be.ac.umons.firstg.segmentintersector.components;
 
 import be.ac.umons.firstg.segmentintersector.Interfaces.IShapeGen;
 import be.ac.umons.firstg.segmentintersector.Temp.Point;
 import be.ac.umons.firstg.segmentintersector.Temp.SegmentTMP;
 import javafx.scene.Group;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
-import javafx.scene.shape.Shape;
 
 /**
  * A component representing a segment by simply drawing 2 points and a line between them

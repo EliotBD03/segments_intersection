@@ -1,26 +1,41 @@
 package be.ac.umons.firstg.segmentintersector;
 
-import be.ac.umons.firstg.segmentintersector.Components.GraphXY;
 import be.ac.umons.firstg.segmentintersector.Temp.Point;
 import be.ac.umons.firstg.segmentintersector.Temp.SegmentTMP;
+import be.ac.umons.firstg.segmentintersector.components.IntersectionTable;
 import javafx.application.Application;
-import javafx.scene.Group;
+import javafx.collections.FXCollections;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
+import javafx.scene.control.cell.MapValueFactory;
 import javafx.stage.Stage;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-
-import static be.ac.umons.firstg.segmentintersector.Temp.Parser.getSegmentsFromFile;
+import java.util.*;
 
 public class Test extends Application {
     @Override
     public void start(Stage stage) throws IOException {
-        //FXMLLoader fxmlLoader = new FXMLLoader(Test.class.getResource("hello-view.fxml"));
-        //Scene scene = new Scene(fxmlLoader.load(), 320, 240);
-        Group group = new Group();
-        Scene scene = new Scene(group, 600,600);
+        FXMLLoader fxmlLoader = new FXMLLoader(Test.class.getResource("hello-view.fxml"));
+        Scene scene = new Scene(fxmlLoader.load());
+        HelloController helloController = fxmlLoader.getController();
+
+
+        IntersectionTable intersectionTable = helloController.getInterTable();
+
+        intersectionTable.addIntersection(new Point(3,1), List.of(
+                new SegmentTMP("s1"),
+                new SegmentTMP("s2")
+        ));
+        intersectionTable.addIntersection(new Point(10,9), List.of(
+                new SegmentTMP("s5"),
+                new SegmentTMP("s0"),
+                new SegmentTMP("s9")
+        ));
+        //Group group = new Group();
+        //Scene scene = new Scene(group, 600,600);
 
         // Tree Testing
         /*
@@ -44,9 +59,9 @@ public class Test extends Application {
          */
 
         // Graph Testing
-        GraphXY graph = new GraphXY(new Point(90,90), 400, 400, 50, 50,  5, 5, true);
+        //GraphXY graph = new GraphXY(new Point(90,90), 400, 400, 50, 50,  5, 5, true);
 
-        group.getChildren().add(graph);
+        //group.getChildren().add(graph);
 
 
         /*
@@ -57,8 +72,8 @@ public class Test extends Application {
         */
 
 
-        ArrayList<SegmentTMP> segmentTMPList = getSegmentsFromFile("/home/foucart/Bureau/Git/segments_intersection/SegmentIntersector3000/src/main/java/be/ac/umons/firstg/segmentintersector/Temp/cartes/fichier1.txt");
-        graph.addSegments(segmentTMPList);
+        //ArrayList<SegmentTMP> segmentTMPList = getSegmentsFromFile("/home/foucart/Bureau/Git/segments_intersection/SegmentIntersector3000/src/main/java/be/ac/umons/firstg/segmentintersector/Temp/cartes/fichier1.txt");
+        //graph.addSegments(segmentTMPList);
         //graph.resetGraph();
         //graph.moveSweepLine(new Point(51.48,94.67), null,List.of(new SegmentTMP(new Point(39.99, 188.38), new Point(99.78, 42.37))),null);
         //graph.moveSweepLine(new Point(51.48,94.67), null,null,null);
