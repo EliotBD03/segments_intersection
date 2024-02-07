@@ -15,8 +15,8 @@ import javafx.scene.shape.Shape;
 public class Segment extends Group {
     private final SegmentTMP segment;
     private final Line line;
-    private final Circle endPoint1;
-    private final Circle endPoint2;
+    private final EventPointC endPoint1;
+    private final EventPointC endPoint2;
 
     /**
      * Creates a segment component
@@ -26,12 +26,11 @@ public class Segment extends Group {
     {
         this.segment = segment;
         // Draw segment
-        IShapeGen<Point> getCircle = x ->
+        IShapeGen<Point> getEventPoint = x ->
         {
-            Circle circle = new Circle();
-            circle.setRadius(3f);
+            EventPointC circle = new EventPointC(x);
             circle.setLayoutX(x.getX());
-            circle.setCenterY(x.getY());
+            circle.setLayoutY(x.getY());
             return circle;
         };
 
@@ -41,10 +40,9 @@ public class Segment extends Group {
         line.setStroke(Color.BLACK);
         this.getChildren().add(line);
         // Add the 2 end points
-        endPoint1 = (Circle) getCircle.createShape(segment.getPoint1());
+        endPoint1 = (EventPointC) getEventPoint.createShape(segment.getPoint1());
         this.getChildren().add(endPoint1);
-
-        endPoint2 = (Circle) getCircle.createShape(segment.getPoint2());
+        endPoint2 = (EventPointC) getEventPoint.createShape(segment.getPoint2());
         this.getChildren().add(endPoint2);
     }
 
@@ -53,33 +51,33 @@ public class Segment extends Group {
     {
         line.setStroke(Color.RED);
         line.setStrokeWidth(3);
-        endPoint1.setFill(Color.BLACK);
-        endPoint2.setFill(Color.BLACK);
+        endPoint1.isActive();
+        endPoint2.isActive();
     }
 
     public void setInactiveSegment()
     {
         line.setStroke(Color.GRAY);
-        endPoint1.setFill(Color.GRAY);
         line.setStrokeWidth(1);
-        endPoint2.setFill(Color.GRAY);
+        endPoint1.isInactive();
+        endPoint2.isInactive();
     }
     public void setActiveSegment()
     {
         line.setStroke(Color.BLACK);
-        endPoint1.setFill(Color.BLACK);
-        endPoint2.setFill(Color.BLACK);
+        endPoint2.isActive();
+        endPoint1.isActive();
     }
 
     public void setVisitedPoint(Point point)
     {
         if(segment.getPoint1().equals(point))
         {
-            endPoint1.setFill(Color.ROYALBLUE);
+            endPoint1.isVisited();
         }
         else if (segment.getPoint2().equals(point))
         {
-            endPoint2.setFill(Color.ROYALBLUE);
+            endPoint2.isVisited();
         }
 
     }

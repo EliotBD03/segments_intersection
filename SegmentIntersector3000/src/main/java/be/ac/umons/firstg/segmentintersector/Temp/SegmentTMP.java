@@ -10,8 +10,13 @@ public class SegmentTMP
 
     public SegmentTMP(Point point1, Point point2)
     {
+        this(point1,point2,null);
+    }
+    public SegmentTMP(Point point1, Point point2, String name)
+    {
         this.point1 = point1;
         this.point2 = point2;
+        this.name = name;
     }
 
     /**

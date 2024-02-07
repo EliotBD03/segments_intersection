@@ -299,12 +299,18 @@ public class GraphXY extends AnchorPane
 
     //_______________SWEEPLINE and Visit Segments
 
+    /**
+     * Initialises the sweep line and set all segment to be inactive at the next iteration
+     */
     public void initializeSweepLine()
     {
+        // Initialises the sweepLine
         setSweepLinePosition(maxY);
-
+        // Initialise the stacks that will be used to change the status of segments during
+        // the exploration
         toSetActive = new Stack<>();
         toSetInactive = new Stack<>();
+        // When starting the exploration, all segments are inactive
         toSetInactive.addAll(segmentsShown.values());
     }
     private void setSweepLinePosition(double y)
@@ -324,8 +330,18 @@ public class GraphXY extends AnchorPane
         sweepLine.setEndY(newPosition);
     }
 
+    /**
+     * Moves the sweep line at the Y value of the given point
+     * @param P         The point being explored
+     * @param U         Contains all segments that have P as their upper point
+     * @param L         Contains all segments that have P as their lower point
+     * @param C         Contains all segments that have P as an inner point
+     */
     public void moveSweepLine(Point P, List<SegmentTMP> U, List<SegmentTMP> L, List<SegmentTMP> C)
     {
+        if(sweepLine == null)
+            initializeSweepLine();
+
         // Move SweepLine
         setSweepLinePosition(P.getY());
         Segment currSegment;
@@ -341,11 +357,14 @@ public class GraphXY extends AnchorPane
             currSegment = toSetInactive.pop();
             currSegment.setInactiveSegment();
         }
+        // Visits all segments impacted by P (i.e. contained into U, L and C)
         if(L != null)
         {
             for(SegmentTMP segmentTMP: L)
             {
                 segmentsShown.get(segmentTMP).setVisitedSegment();
+                // Segments contained in L, are going to be on top of the sweep line
+                // So they become inactive
                 toSetInactive.add(segmentsShown.get(segmentTMP));
                 segmentsShown.get(segmentTMP).toFront();
             }
@@ -363,14 +382,13 @@ public class GraphXY extends AnchorPane
             for(SegmentTMP segmentTMP : U)
             {
                 segmentsShown.get(segmentTMP).setVisitedSegment();
+                // Segments contained in U, are going to be touching the sweep line from now on
                 toSetActive.add(segmentsShown.get(segmentTMP));
+                // We highlight the point P
                 segmentsShown.get(segmentTMP).setVisitedPoint(translatePoint(scalePoint(P)));
                 segmentsShown.get(segmentTMP).toFront();
             }
-
         }
-
-
     }
     //_______________GETTER/SETTER
 

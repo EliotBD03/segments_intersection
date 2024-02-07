@@ -10,6 +10,7 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
 import static be.ac.umons.firstg.segmentintersector.Temp.Parser.getSegmentsFromFile;
 
@@ -48,19 +49,15 @@ public class Test extends Application {
         group.getChildren().add(graph);
 
 
-        //SegmentTMP segmentTMP2 = new SegmentTMP(new Point(1000,1500), new Point(4500, 4000));
         /*
         ArrayList<SegmentTMP> segmentTMPList = new ArrayList<>(
-                List.of(new SegmentTMP(new Point(0,0), new Point(100, 200)),
-                        new SegmentTMP(new Point(39.99, 188.38), new Point(99.78, 42.37)),
-                        new SegmentTMP(new Point(115.8, 45.6), new Point(69.65, 45.6)),
-                        new SegmentTMP(new Point(139.22, 134.68), new Point(83.03, 165.42))));
+                List.of(new SegmentTMP(new Point(0,0), new Point(25, 25))));
 
         graph.addSegments(segmentTMPList);
         */
 
 
-        ArrayList<SegmentTMP> segmentTMPList = getSegmentsFromFile("/home/foucart/Bureau/Git/segments_intersection/SegmentIntersector3000/src/main/java/be/ac/umons/firstg/segmentintersector/Temp/cartes/fichier2.txt");
+        ArrayList<SegmentTMP> segmentTMPList = getSegmentsFromFile("/home/foucart/Bureau/Git/segments_intersection/SegmentIntersector3000/src/main/java/be/ac/umons/firstg/segmentintersector/Temp/cartes/fichier1.txt");
         graph.addSegments(segmentTMPList);
         //graph.resetGraph();
         //graph.moveSweepLine(new Point(51.48,94.67), null,List.of(new SegmentTMP(new Point(39.99, 188.38), new Point(99.78, 42.37))),null);

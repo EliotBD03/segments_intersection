@@ -10,11 +10,13 @@ public class Parser
 {
     public static ArrayList<SegmentTMP> getSegmentsFromFile(String path)
     {
+        int count = 0;
         ArrayList<SegmentTMP> result = new ArrayList<>();
         try
         {
             BufferedReader buffer = new BufferedReader(new FileReader(path));
             String line;
+            SegmentTMP segmentTMP;
             while( (line = buffer.readLine()) != null)
             {
                 Float[] parsedLine = Arrays.stream(line.split("\\s"))
@@ -24,8 +26,10 @@ public class Parser
                 float[] coordinates = new float[parsedLine.length];
                 for(int i = 0; i < parsedLine.length; i++)
                     coordinates[i] = parsedLine[i];
-
-                result.add(new SegmentTMP(new Point(coordinates[0], coordinates[1]), new Point(coordinates[2], coordinates[3])));
+                segmentTMP = new SegmentTMP(new Point(coordinates[0], coordinates[1]), new Point(coordinates[2], coordinates[3]),"S" + count);
+                count ++;
+                System.out.println(segmentTMP.getName());
+                result.add(segmentTMP);
             }
             return result;
         }

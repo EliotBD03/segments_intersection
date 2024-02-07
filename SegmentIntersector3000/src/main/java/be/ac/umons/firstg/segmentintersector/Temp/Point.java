@@ -2,6 +2,9 @@ package be.ac.umons.firstg.segmentintersector.Temp;
 
 import java.util.Objects;
 
+/**
+ * This temporary class is supposed to be replaced by the EventPoint class or something like that
+ */
 public class Point {
     private double x,y;
 
