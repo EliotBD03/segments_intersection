@@ -9,15 +9,27 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+/**
+ * used to extract Segment from a txt file.
+ */
 public class Parser
 {
     private String path;
 
+    /**
+     * Verify if the file is a txt file.
+     * @return true if a txt file, false otherwise.
+     */
     private boolean isATxtFile()
     {
         return this.path.substring(this.path.length() - 3).equals("txt");
     }
 
+    /**
+     * Verify if the current line of a file contains exactly four floats.
+     * @param line the line of the file
+     * @return true if the condition respected, false otherwise.
+     */
     private boolean lineContainsFourFloats(String line)
     {
         String[] splitLine = line.split("\\s");
@@ -29,6 +41,12 @@ public class Parser
         return isCorrect;
     }
 
+    /**
+     * Verify if all the needed conditions are respected in the current file.
+     * - the file is a txt file
+     * - the file contains exactly four floats at each line.
+     * @throws IOException if one these conditions is not respected.
+     */
     private void checkIntegrityOfFile() throws  IOException
     {
         if(isATxtFile())
@@ -50,6 +68,12 @@ public class Parser
             throw new IOException("The file <"+path+"> is not a txt file");
     }
 
+    /**
+     * Default constructor of the Parser object
+     *
+     * @param txtFilePath the file path
+     * @throws IOException if the file does not exist.
+     */
     public Parser(String txtFilePath) throws IOException
     {
         File supposedFile = new File(txtFilePath);
@@ -61,6 +85,12 @@ public class Parser
     }
 
 
+    /**
+     * Extract all the segment from the file.
+     * @return an arraylist of segments.
+     * @throws IOException if the file is not ok with the conditions listed above
+     * or in the case of lecture error.
+     */
     public ArrayList<Segment> getSegmentsFromFile() throws IOException
     {
         checkIntegrityOfFile();
@@ -80,7 +110,7 @@ public class Parser
                 for(int i = 0; i < parsedLine.length; i++)
                     coordinates[i] = parsedLine[i];
 
-                result.add(new Segment(coordinates));
+                result.add(new Segment(coordinates, "SUSSY", "SUSSY"));
             }
         }
         return result;

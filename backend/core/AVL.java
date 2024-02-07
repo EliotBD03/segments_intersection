@@ -7,12 +7,18 @@ import java.util.Random;
  */
 public class AVL<T extends Comparable<T>>
 {
-    private Node<T> root;
+    protected Node<T> root;
 
     public AVL(T data)
     {
         root = new Node<>(data);
     }
+
+    public AVL()
+    {
+        root = null;
+    }
+
     private class Node<T extends Comparable<T>> implements Comparable<Node<T>>
     {
         private T data;
@@ -267,17 +273,21 @@ public class AVL<T extends Comparable<T>>
         }
     }
 
+    public T getRootData()
+    {
+        return root.getData();
+    }
+
     /**
      * Insert a node inside an AVL.
      * As the definition mentioned, the AVL will be balanced during the process.
      * @param current the current node in the tree.
      * @param nodeToInsert The node to insert.
-     * @return the AVL modified.
-     * @throws Exception if the data already exists.
+     * @return the AVL modified. (notice that the node if already exist will be replaced with the newest)
      */
-    private Node<T> insert(Node<T> current, Node<T> nodeToInsert) throws Exception
+    private Node<T> insert(Node<T> current, Node<T> nodeToInsert)
     {
-        if(current == null)
+        if(current == null || current.compareTo(nodeToInsert) == 0)
             return nodeToInsert;
         else if(nodeToInsert.compareTo(current) < 0)
         {
@@ -292,17 +302,14 @@ public class AVL<T extends Comparable<T>>
             current.updateHeight();
             current.balance();
         }
-        else
-            throw new Exception("The data already exist inside the tree");
         return current;
     }
 
     /**
      * Wrapper to the private insert method.
      * @param data the data to be inserted inside the tree.
-     * @throws Exception if the data already exists.
      */
-    public void insert(T data) throws Exception
+    protected void insert(T data)
     {
         root = insert(root, new Node<>(data));
     }
@@ -363,7 +370,7 @@ public class AVL<T extends Comparable<T>>
      * @param data the data to remove from the tree
      * @throws Exception if the data does not exist inside the tree.
      */
-    public void remove(T data) throws Exception
+    protected void remove(T data) throws Exception
     {
         remove(root, new Node<>(data));
     }
@@ -391,22 +398,9 @@ public class AVL<T extends Comparable<T>>
      * wrapper for the private display function.
      * Display the AVL in an inorder way.
      */
-    public void display()
+    protected void display()
     {
         display(root, 0);
-    }
-
-
-    public static void main(String[] args) throws Exception
-    {
-        AVL<Integer> avl = new AVL<>(0);
-        for(int i = 1; i < 10; i++)
-            avl.insert(i);
-        avl.display();
-        System.out.println("----------------------");
-        avl.remove(3);
-        avl.display();
-
     }
 }
 
