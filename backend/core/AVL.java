@@ -8,13 +8,7 @@ import java.util.Random;
 public class AVL<T extends Comparable<T>>
 {
     protected Node<T> root;
-
-    public AVL(T data)
-    {
-        root = new Node<>(data);
-    }
-
-    public AVL()
+    protected AVL()
     {
         root = null;
     }

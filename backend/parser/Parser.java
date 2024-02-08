@@ -99,7 +99,7 @@ public class Parser
         try(BufferedReader buffer = new BufferedReader(new FileReader(path)))
         {
             String line;
-
+            char identifier = 97; //TODO remove it
             while( (line = buffer.readLine()) != null)
             {
                 Float[] parsedLine = Arrays.stream(line.split("\\s"))
@@ -110,7 +110,8 @@ public class Parser
                 for(int i = 0; i < parsedLine.length; i++)
                     coordinates[i] = parsedLine[i];
 
-                result.add(new Segment(coordinates, "SUSSY", "SUSSY"));
+                result.add(new Segment(coordinates, Character.toString(identifier), Character.toString(identifier + 1)));
+                identifier += 2;
             }
         }
         return result;

@@ -7,7 +7,7 @@ import java.util.ArrayList;
  * - upper point
  * - lower point
  */
-public class Segment implements Comparable<Segment>
+public class Segment
 {
     private Point lowerPoint, upperPoint;
     public final float a,b,c;
@@ -44,6 +44,16 @@ public class Segment implements Comparable<Segment>
         c = lowerPoint.x * upperPoint.y - upperPoint.x * lowerPoint.y;
     }
 
+    protected Segment(Segment segment)
+    {
+        this.a = segment.a;
+        this.b = segment.b;
+        this.c = segment.c;
+        this.upperPoint = segment.upperPoint;
+        this.lowerPoint = segment.lowerPoint;
+        this.intersections = segment.intersections;
+    }
+
     public Point getLowerPoint()
     {
         return lowerPoint;
@@ -61,19 +71,6 @@ public class Segment implements Comparable<Segment>
     public void addIntersection(Point intersection)
     {
         this.intersections.add(intersection);
-    }
-
-    /**
-     * Override the method from Comparable interface.
-     * The order used is the same as for two points.
-     * This will be applied on the upper points of the two segments.
-     * @param otherSegment the object to be compared.
-     * @return -1 if current_segment < other_segment, 0 if equal or -1 otherwise.
-     */
-    @Override
-    public int compareTo(Segment otherSegment)
-    {
-        return upperPoint.compareTo(otherSegment.upperPoint);
     }
 
     @Override
@@ -99,5 +96,30 @@ public class Segment implements Comparable<Segment>
             return new Point(px, py, "intersection for " + s1 + " and " + s2);
         }
         return null;
+    }
+
+    /**
+     * Find a point which belongs to the segment with the same
+     * y-coordinates as p.
+     * @param p the point with the y-coordinate targeted.
+     * @param segment a non-horizontal segment.
+     * @return a point from the segment if it's not horizontal. Otherwise, the closest
+     * point from p.
+     */
+    public static Point getPointOnXAxis(Point p, Segment segment)
+    {
+        if(segment.a == 0)
+        {
+            if(p.x <= segment.upperPoint.x && p.x >= segment.lowerPoint.y)
+                return p;
+            if(Math.abs(segment.upperPoint.x - p.x) > Math.abs(segment.lowerPoint.x - p.x))
+                return segment.lowerPoint;
+            return segment.upperPoint;
+        }
+        else
+        {
+            float x = (-segment.c - (segment.b * p.y))/ segment.a;
+            return new Point(x, p.y, "Never gonna give you up");//TODO remove that name
+        }
     }
 }

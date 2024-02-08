@@ -5,8 +5,14 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="5b8b5f8a-6897-4db2-a06e-738fe56cb7fa" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/Point.java" beforeDir="false" afterPath="$PROJECT_DIR$/Point.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Segment.java" beforeDir="false" afterPath="$PROJECT_DIR$/Segment.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/AVL.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/AVL.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/Segment.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/Segment.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/backend/core/AVL$Node.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/backend/core/AVL$Node.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/backend/core/AVL.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/backend/core/AVL.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/backend/core/AVLNode.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/backend/core/Point.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/backend/core/Point.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/backend/core/Segment.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/backend/core/Segment.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/backend/parser/Parser.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/backend/parser/Parser.class" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -40,7 +46,9 @@
   </component>
   <component name="PropertiesComponent">{
   &quot;keyToString&quot;: {
+    &quot;Application.AVL.executor&quot;: &quot;Run&quot;,
     &quot;Application.Parser.executor&quot;: &quot;Run&quot;,
+    &quot;Application.Q.executor&quot;: &quot;Run&quot;,
     &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
     &quot;git-widget-placeholder&quot;: &quot;main&quot;,
@@ -54,16 +62,58 @@
     &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
 }</component>
-  <component name="RunManager">
-    <configuration name="Parser" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="Parser" />
+  <component name="RunManager" selected="Application.T">
+    <configuration name="AVL" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="core.AVL" />
       <module name="backend" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="core.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="Parser" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="parser.Parser" />
+      <module name="backend" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="Q" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="core.Q" />
+      <module name="backend" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="core.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="T" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="core.T" />
+      <module name="backend" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="core.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
     </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="Application.T" />
+        <item itemvalue="Application.Q" />
+        <item itemvalue="Application.AVL" />
         <item itemvalue="Application.Parser" />
       </list>
     </recent_temporary>
@@ -90,7 +140,12 @@
       <workItem from="1706714011229" duration="1854000" />
       <workItem from="1706793066371" duration="2000" />
       <workItem from="1706793410312" duration="598000" />
-      <workItem from="1706876805821" duration="451000" />
+      <workItem from="1706876805821" duration="9189000" />
+      <workItem from="1707146442690" duration="5177000" />
+      <workItem from="1707203818820" duration="7644000" />
+      <workItem from="1707232380441" duration="9134000" />
+      <workItem from="1707294400524" duration="7163000" />
+      <workItem from="1707398736626" duration="3794000" />
     </task>
     <servers />
   </component>
