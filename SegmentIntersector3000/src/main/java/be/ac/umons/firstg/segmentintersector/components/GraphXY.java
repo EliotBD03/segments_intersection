@@ -4,7 +4,9 @@ package be.ac.umons.firstg.segmentintersector.components;
 import be.ac.umons.firstg.segmentintersector.Interfaces.IShapeGen;
 import be.ac.umons.firstg.segmentintersector.Temp.Point;
 import be.ac.umons.firstg.segmentintersector.Temp.SegmentTMP;
-import javafx.scene.layout.AnchorPane;
+import javafx.geometry.Insets;
+import javafx.scene.Group;
+import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
 import javafx.scene.text.Text;
@@ -71,6 +73,7 @@ public class GraphXY extends AnchorPane
         this.sizePixelAxisX = sizePixelAxisX;
         this.sizePixelAxisY = sizePixelAxisY;
 
+
         this.maxAxisY = start;
         // Get points for the ends of the X and Y axis
         this.origin = new Point(this.maxAxisY.getX(), this.maxAxisY.getY() + sizePixelAxisY);
@@ -117,9 +120,9 @@ public class GraphXY extends AnchorPane
         {
             drawScaleMarkAxisY(distMarkY * i, markSize);
         }
-        //setBackground(new Background(new BackgroundFill(Color.BLUE, CornerRadii.EMPTY, Insets.EMPTY)));
+        setBackground(new Background(new BackgroundFill(Color.WHITE, CornerRadii.EMPTY, Insets.EMPTY)));
         updateLegend();
-
+        setOnMouseClicked(e -> System.out.println("fuck off"));
     }
 
 

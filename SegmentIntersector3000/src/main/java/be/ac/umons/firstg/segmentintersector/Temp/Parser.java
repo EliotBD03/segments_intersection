@@ -28,7 +28,6 @@ public class Parser
                     coordinates[i] = parsedLine[i];
                 segmentTMP = new SegmentTMP(new Point(coordinates[0], coordinates[1]), new Point(coordinates[2], coordinates[3]),"S" + count);
                 count ++;
-                System.out.println(segmentTMP.getName());
                 result.add(segmentTMP);
             }
             return result;
