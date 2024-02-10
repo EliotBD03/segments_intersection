@@ -4,8 +4,14 @@ import be.ac.umons.firstg.segmentintersector.Interfaces.IShapeGen;
 import be.ac.umons.firstg.segmentintersector.Temp.BinaryTree;
 import be.ac.umons.firstg.segmentintersector.Temp.Point;
 import javafx.geometry.Bounds;
+import javafx.geometry.Insets;
+import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
+import javafx.scene.layout.CornerRadii;
+import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
 
@@ -14,7 +20,7 @@ import java.util.ArrayList;
 /**
  * Tree Component
  */
-public class Tree<T> extends AnchorPane
+public class Tree<T> extends Group
 {
     private static final float minDistX = 50;
     private static final float minDistY = 100;
@@ -88,7 +94,7 @@ public class Tree<T> extends AnchorPane
         node.setLayoutX(curr.getX() - bounds.getWidth()/2);
         node.setLayoutY(curr.getY() - bounds.getHeight()/2);
 
-
+        //setBackground(new Background(new BackgroundFill(Color.DARKGREEN, CornerRadii.EMPTY, Insets.EMPTY)));
 
 
     }

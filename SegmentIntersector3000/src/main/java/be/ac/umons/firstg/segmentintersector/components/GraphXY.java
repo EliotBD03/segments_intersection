@@ -395,7 +395,16 @@ public class GraphXY extends AnchorPane
     }
     //_______________GETTER/SETTER
 
-/*
+    public double getSizePixelAxisX()
+    {
+        return sizePixelAxisX;
+    }
+
+    public double getSizePixelAxisY()
+    {
+        return sizePixelAxisY;
+    }
+    /*
     //              TODO Check if this is salvageable or if this is a lost cause
     public int getPaddingX()
     {

@@ -6,7 +6,7 @@
 <fx:root fx:id="table" stylesheets="@../test.css" type="TableView" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1">
   <columns>
     <TableColumn fx:id="intersectionsColumn" editable="false" reorderable="false" sortable="false" text="Intersections Found" />
-    <TableColumn fx:id="segmentsColumn" editable="false" reorderable="false" sortable="false" text="Segments Involved" />
+    <TableColumn fx:id="segmentsColumn" editable="false" reorderable="false" sortable="false" text="Segments Involved"  />
   </columns>
    <columnResizePolicy>
       <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />

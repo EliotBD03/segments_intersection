@@ -1,15 +1,21 @@
 package be.ac.umons.firstg.segmentintersector;
 
+import be.ac.umons.firstg.segmentintersector.Interfaces.IShapeGen;
+import be.ac.umons.firstg.segmentintersector.Temp.BinaryTree;
 import be.ac.umons.firstg.segmentintersector.Temp.Point;
 import be.ac.umons.firstg.segmentintersector.Temp.SegmentTMP;
 import be.ac.umons.firstg.segmentintersector.components.GraphXY;
 import be.ac.umons.firstg.segmentintersector.components.IntersectionTable;
+import be.ac.umons.firstg.segmentintersector.components.Tree;
+import be.ac.umons.firstg.segmentintersector.components.TreeSegmentNode;
 import javafx.application.Application;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Group;
 import javafx.scene.Scene;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.MapValueFactory;
@@ -30,14 +36,13 @@ public class Test extends Application {
         Scene scene = new Scene(fxmlLoader.load());
 
         MainPage mainPage = fxmlLoader.getController();
-        GraphXY graph = new GraphXY(new Point(50,25), 300, 300, 50, 50,  5, 5, true);
-        mainPage.GraphGroup.getChildren().add(graph);
-        ArrayList<SegmentTMP> segmentTMPList = getSegmentsFromFile("/home/foucart/Bureau/Git/segments_intersection/SegmentIntersector3000/src/main/java/be/ac/umons/firstg/segmentintersector/Temp/cartes/fichier4.txt");
-        graph.addSegments(segmentTMPList);
+
 
         IntersectionTable intersectionTable = new IntersectionTable();
 
         intersectionTable.addIntersection(new Point(3,1), List.of(
+                new SegmentTMP("s1"),
+                new SegmentTMP("s1"),
                 new SegmentTMP("s1")
         ));
         intersectionTable.addIntersection(new Point(3,1), List.of(
@@ -105,6 +110,45 @@ public class Test extends Application {
         ));
 
         mainPage.TableGroup.setCenter(intersectionTable);
+        mainPage.TableGroup.setPadding(new Insets(25,10,0,10));
+
+
+
+        // Tree Windows
+        Stage TWindow = new Stage();
+        TWindow.setTitle("T Tree");
+        //TWindow.show();
+
+
+        BinaryTree<SegmentTMP> bTree = new BinaryTree<>(new SegmentTMP("S1"));
+        bTree.left = new BinaryTree<>(new SegmentTMP("S2"));
+        bTree.right = new BinaryTree<>(new SegmentTMP("S3"));
+        bTree.right.right = new BinaryTree<>(new SegmentTMP("S4"));
+
+        bTree.right.right.right = new BinaryTree<>(new SegmentTMP("S8"));
+        bTree.right.right.right.right = new BinaryTree<>(new SegmentTMP("S9"));
+        bTree.left.right = new BinaryTree<>(new SegmentTMP("S5"));
+        bTree.left.left = new BinaryTree<>(new SegmentTMP("S6"));
+        bTree.right.left = new BinaryTree<>(new SegmentTMP("S7"));
+        bTree.height = 4;
+
+        IShapeGen<SegmentTMP> genLeaf = x -> new TreeSegmentNode(x,false, Color.AQUA);
+        IShapeGen<SegmentTMP> genNode = x -> new TreeSegmentNode(x,true);
+
+        Tree<SegmentTMP> tree = new Tree<>(bTree, new Point(0,0),genLeaf,genNode);
+        ScrollPane scrollPane = new ScrollPane(tree);
+        HBox borderPane = new HBox(scrollPane);
+        borderPane.setFillHeight(true);
+
+        borderPane.setAlignment(Pos.CENTER);
+
+
+        Scene sceneT = new Scene(borderPane, 600, 600);
+        TWindow.setResizable(true);
+        TWindow.setMinHeight(400);
+        TWindow.setMinWidth(400);
+        TWindow.setScene(sceneT);
+
         /*
         String css=  this.getClass().getResource("test.css").toExternalForm();
         scene.getStylesheets().add(css);
