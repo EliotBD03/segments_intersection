@@ -6,6 +6,7 @@ import be.ac.umons.firstg.segmentintersector.Temp.Point;
 import be.ac.umons.firstg.segmentintersector.Temp.SegmentTMP;
 import javafx.geometry.Insets;
 import javafx.scene.Group;
+import javafx.scene.Node;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
@@ -29,14 +30,18 @@ public class GraphXY extends AnchorPane
     private int markSize = 10;
     private int nbOfMarksX, nbOfMarksY;
     private double gapX,gapY;
+    private ArrayList<Line> markLinesX;
+    private ArrayList<Line> markLinesY;
     private ArrayList<Text> legendsX;
     private ArrayList<Text> legendsY;
     private IShapeGen<Point> textGen;
+    private boolean showGrid;
 
-    private final double sizePixelAxisX, sizePixelAxisY;
-    private final Point origin;
-    private final Point maxAxisX;
-    private final Point maxAxisY;
+    private double sizePixelAxisX, sizePixelAxisY;
+    private Point origin;
+    private Point maxAxisX;
+    private Point maxAxisY;
+    private Line xAxis,yAxis;
 
     // Used to scale the graph
     private double minScaleX, minScaleY;
@@ -73,23 +78,15 @@ public class GraphXY extends AnchorPane
         this.sizePixelAxisX = sizePixelAxisX;
         this.sizePixelAxisY = sizePixelAxisY;
 
+        // Draw and set the origin and axes
+        setAxes(start);
 
-        this.maxAxisY = start;
-        // Get points for the ends of the X and Y axis
-        this.origin = new Point(this.maxAxisY.getX(), this.maxAxisY.getY() + sizePixelAxisY);
-        this.maxAxisX = new Point(this.origin.getX() + sizePixelAxisX, this.origin.getY());
-        // Draw the axis using lines
-        // X axis
-        Line line = new Line(this.maxAxisX.getX(), this.maxAxisX.getY(), this.origin.getX(), this.origin.getY());
-        line.setStrokeWidth(3);
-        this.getChildren().add(line);
-        // Y axis
-        line = new Line(this.maxAxisY.getX(), this.maxAxisY.getY(), this.origin.getX(), this.origin.getY());
-        line.setStrokeWidth(3);
-        this.getChildren().add(line);
         // Text Legend settings
         legendsX = new ArrayList<>();
         legendsY = new ArrayList<>();
+        markLinesX = new ArrayList<>();
+        markLinesY = new ArrayList<>();
+
         // Add initial text marker
         textGen = x -> {
             Text text = new Text();
@@ -103,26 +100,77 @@ public class GraphXY extends AnchorPane
         this.minScaleY = minScaleY;
         // Scale marks
         // Draw Scale Marks
+        drawScale(nbOfMarksX, nbOfMarksY, showGrid);
 
+        setBackground(new Background(new BackgroundFill(Color.WHITE, CornerRadii.EMPTY, Insets.EMPTY)));
+
+        setOnMouseClicked(e -> System.out.println("fuck off"));
+    }
+
+    private void setAxes(Point start)
+    {
+        // Removes previously drawn axis
+        if(this.xAxis != null && this.yAxis != null)
+        {
+            getChildren().remove(xAxis);
+            getChildren().remove(yAxis);
+        }
+        // Sets the origin pixel position and the axis lines
+        this.maxAxisY = start;
+        // Get points for the ends of the X and Y axis
+        this.origin = new Point(this.maxAxisY.getX(), this.maxAxisY.getY() + sizePixelAxisY);
+        this.maxAxisX = new Point(this.origin.getX() + sizePixelAxisX, this.origin.getY());
+        // Draw the axis using lines
+        // X axis
+        xAxis = new Line(this.maxAxisX.getX(), this.maxAxisX.getY(), this.origin.getX(), this.origin.getY());
+        xAxis.setStrokeWidth(3);
+        this.getChildren().add(xAxis);
+        // Y axis
+        yAxis = new Line(this.maxAxisY.getX(), this.maxAxisY.getY(), this.origin.getX(), this.origin.getY());
+        yAxis.setStrokeWidth(3);
+        this.getChildren().add(yAxis);
+
+    }
+
+    private void drawScale(int nbOfMarksX, int nbOfMarksY, boolean showGrid)
+    {
+        // Scale definition
         this.nbOfMarksX = nbOfMarksX;
         this.nbOfMarksY = nbOfMarksY;
-        double distMarkX = sizePixelAxisX / nbOfMarksX;
-        double distMarkY = sizePixelAxisY / nbOfMarksY;
-        double markSize = showGrid ? sizePixelAxisY: this.markSize;
+        // Scale marks
+        // Draw Scale Marks
+        this.showGrid = showGrid;
+        double distMarkX = this.sizePixelAxisX / nbOfMarksX;
+        double distMarkY = this.sizePixelAxisY / nbOfMarksY;
+        double markSize = showGrid ? this.sizePixelAxisY: this.markSize;
+
+        // If they were already drawn, we remove them
+
+        getChildren().removeAll(markLinesY);
+        // also remove the text labels
+        getChildren().removeAll(legendsY);
+        legendsY.clear();
+        markLinesY.clear();
+
+        // If they were already drawn, we remove them
+
+        getChildren().removeAll(markLinesX);
+        getChildren().removeAll(legendsX);
+        legendsX.clear();
+        markLinesX.clear();
 
 
         for (int i = 0; i <= nbOfMarksX; i++)
         {
             drawScaleMarkAxisX(distMarkX * i, markSize);
         }
-        markSize = showGrid ? sizePixelAxisX: this.markSize;
+        markSize = showGrid ? this.sizePixelAxisX: this.markSize;
         for (int i = 0; i <= nbOfMarksY; i++)
         {
             drawScaleMarkAxisY(distMarkY * i, markSize);
         }
-        setBackground(new Background(new BackgroundFill(Color.WHITE, CornerRadii.EMPTY, Insets.EMPTY)));
         updateLegend();
-        setOnMouseClicked(e -> System.out.println("fuck off"));
+
     }
 
 
@@ -210,6 +258,7 @@ public class GraphXY extends AnchorPane
             Line mark = new Line(origin.getX() + position, origin.getY(), origin.getX() + position, origin.getY() - size);
             mark.setStroke(Color.GRAY);
             getChildren().add(mark);
+            markLinesX.add(mark);
         }
         Text text = (Text) textGen.createShape(new Point(position,20));
         getChildren().add(text);
@@ -224,11 +273,13 @@ public class GraphXY extends AnchorPane
             Line mark = new Line(origin.getX(), origin.getY() - position, origin.getX() + size, origin.getY() - position);
             mark.setStroke(Color.GRAY);
             getChildren().add(mark);
+            markLinesY.add(mark);
         }
         Text text = (Text) textGen.createShape(new Point(-50,-position));
         getChildren().add(text);
         legendsY.add(text);
     }
+
 
     private void updateLegend()
     {
@@ -299,6 +350,27 @@ public class GraphXY extends AnchorPane
         updateLegend();
     }
 
+    /**
+     * Updates the size of the graph
+     * @param sizePixelAxisX    The new size of the X axis in pixels
+     * @param sizePixelAxisY    The new size of the Y axis in pixels
+     */
+    public void updateSize(double sizePixelAxisX, double sizePixelAxisY)
+    {
+        // We have to change all the computed values
+        this.sizePixelAxisX = sizePixelAxisX;
+        this.sizePixelAxisY = sizePixelAxisY;
+        // And the origin position and axis size
+        setAxes(this.maxAxisY);
+        // But also the scales labels and lines
+        drawScale(this.nbOfMarksX, this.nbOfMarksY, this.showGrid);
+
+        // Update the segments using the keyset of the dictionary
+        // We cannot simply, re add them, because we need to maintain the sweep line state !
+        // So this just resets the sweep line
+        //      addSegments(this.segmentsShown.keySet().stream().toList());
+        addSegments(this.segmentsShown.keySet().stream().toList());
+    }
 
     //_______________SWEEPLINE and Visit Segments
 
@@ -404,6 +476,9 @@ public class GraphXY extends AnchorPane
     {
         return sizePixelAxisY;
     }
+
+
+
     /*
     //              TODO Check if this is salvageable or if this is a lost cause
     public int getPaddingX()

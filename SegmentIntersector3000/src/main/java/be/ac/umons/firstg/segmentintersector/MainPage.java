@@ -8,6 +8,7 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.fxml.FXML;
 import javafx.scene.Group;
 import javafx.scene.control.Button;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TextFormatter;
 import javafx.scene.layout.*;
@@ -22,7 +23,7 @@ import static be.ac.umons.firstg.segmentintersector.Temp.Parser.getSegmentsFromF
 public class MainPage
 {
     @FXML
-    public AnchorPane GraphGroup;
+    public ScrollPane GraphGroup;
     @FXML
     public BorderPane TableGroup;
     public StackPane TreeT;
@@ -60,7 +61,6 @@ public class MainPage
     @FXML
     public void initialize()
     {
-        System.out.println("hi bitch");
         // Forces the textfields to only accept integers values
         // Doesn't stop negative values !!!
 
@@ -75,21 +75,24 @@ public class MainPage
     @FXML
     private void loadGraph()
     {
-        System.out.println(xSizeInputs.get());
         // Creates graph and adds it to the side
         // If the graph scales was changed, we need to redraw the entire graph
-        if(graph == null || graph.getSizePixelAxisX() != xSizeInputs.get() || graph.getSizePixelAxisY() != ySizeInputs.get()){
+        if(graph == null){
             createGraph();
+        }else if (graph.getSizePixelAxisX() != xSizeInputs.get() || graph.getSizePixelAxisY() != ySizeInputs.get())
+        {
+            graph.updateSize(xSizeInputs.get(), ySizeInputs.get());
         }
         // TODO add a way to load files
-        ArrayList<SegmentTMP> segmentTMPList = getSegmentsFromFile("/home/foucart/Bureau/Git/segments_intersection/SegmentIntersector3000/src/main/java/be/ac/umons/firstg/segmentintersector/Temp/cartes/fichier5.txt");
-        graph.addSegments(segmentTMPList);
+
     }
 
     private void createGraph()
     {
         graph = new GraphXY(new Point(50,25), xSizeInputs.get(), ySizeInputs.get(), xScaleInputs.get(), yScaleInputs.get(),  5, 5, true);
-        GraphGroup.getChildren().add(graph);
+        GraphGroup.setContent(graph);
+        ArrayList<SegmentTMP> segmentTMPList = getSegmentsFromFile("/home/foucart/Bureau/Git/segments_intersection/SegmentIntersector3000/src/main/java/be/ac/umons/firstg/segmentintersector/Temp/cartes/fichier2.txt");
+        graph.addSegments(segmentTMPList);
     }
 
 
