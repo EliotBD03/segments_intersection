@@ -25,8 +25,9 @@ public class EventPointC extends Pane
 
     public void isVisited()
     {
+        circle.toFront();
         circle.setRadius(5f);
-        circle.setFill(Color.ROYALBLUE);
+        circle.setFill(Color.BLUEVIOLET);
     }
     public void isInactive()
     {

@@ -19,11 +19,11 @@ public class Parser
             SegmentTMP segmentTMP;
             while( (line = buffer.readLine()) != null)
             {
-                Float[] parsedLine = Arrays.stream(line.split("\\s"))
-                        .map(Float::parseFloat)
-                        .toArray(Float[]::new);
+                Double[] parsedLine = Arrays.stream(line.split("\\s"))
+                        .map(Double::parseDouble)
+                        .toArray(Double[]::new);
 
-                float[] coordinates = new float[parsedLine.length];
+                double[] coordinates = new double[parsedLine.length];
                 for(int i = 0; i < parsedLine.length; i++)
                     coordinates[i] = parsedLine[i];
                 segmentTMP = new SegmentTMP(new Point(coordinates[0], coordinates[1]), new Point(coordinates[2], coordinates[3]),"S" + count);

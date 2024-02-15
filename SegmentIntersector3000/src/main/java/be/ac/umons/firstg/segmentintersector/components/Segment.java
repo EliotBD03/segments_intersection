@@ -11,7 +11,7 @@ import javafx.scene.shape.Line;
  * A component representing a segment by simply drawing 2 points and a line between them
  */
 public class Segment extends Group {
-    private final SegmentTMP segment;
+    private SegmentTMP segment;
     private final Line line;
     private final EventPointC endPoint1;
     private final EventPointC endPoint2;
@@ -77,6 +77,29 @@ public class Segment extends Group {
         {
             endPoint2.isVisited();
         }
+
+    }
+
+    /**
+     * Change the segment position
+     * @param segment The segment to represent
+     */
+    public void setSegment(SegmentTMP segment)
+    {
+        this.segment = segment;
+        // Change line position
+        this.line.setStartX(segment.getPoint1().getX());
+        this.line.setStartY(segment.getPoint1().getY());
+
+        this.line.setEndX(segment.getPoint2().getX());
+        this.line.setEndY(segment.getPoint2().getY());
+
+        // Change endpoints location
+        endPoint1.setLayoutX(segment.getPoint1().getX());
+        endPoint1.setLayoutY(segment.getPoint1().getY());
+
+        endPoint2.setLayoutX(segment.getPoint2().getX());
+        endPoint2.setLayoutY(segment.getPoint2().getY());
 
     }
 

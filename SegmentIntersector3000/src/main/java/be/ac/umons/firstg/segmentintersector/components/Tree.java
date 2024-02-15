@@ -22,8 +22,8 @@ import java.util.ArrayList;
  */
 public class Tree<T> extends Group
 {
-    private static final float minDistX = 50;
-    private static final float minDistY = 100;
+    private static final float minDistX = 25;
+    private static final float minDistY = 50;
     private IShapeGen<T> leafShape;
     private IShapeGen<T> innerShape;
 

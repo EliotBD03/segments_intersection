@@ -5,8 +5,6 @@ import be.ac.umons.firstg.segmentintersector.Interfaces.IShapeGen;
 import be.ac.umons.firstg.segmentintersector.Temp.Point;
 import be.ac.umons.firstg.segmentintersector.Temp.SegmentTMP;
 import javafx.geometry.Insets;
-import javafx.scene.Group;
-import javafx.scene.Node;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
@@ -54,8 +52,11 @@ public class GraphXY extends AnchorPane
 
     // Sweep Line settings
     private Line sweepLine;
+    private double sweepLinePosition;
     private Stack<Segment> toSetInactive;
     private Stack<Segment> toSetActive;
+
+
 
     /**
      * Creates a graph using fixed values for his X and Y axis
@@ -72,9 +73,7 @@ public class GraphXY extends AnchorPane
     public GraphXY(Point start, double sizePixelAxisX, double sizePixelAxisY, double minScaleX, double minScaleY,  int nbOfMarksX, int nbOfMarksY, boolean showGrid)
     {
         segmentsShown = new HashMap<>();
-        // Infinity for both min values at start
-        minX = Double.POSITIVE_INFINITY;
-        minY = Double.POSITIVE_INFINITY;
+        resetScale();
         this.sizePixelAxisX = sizePixelAxisX;
         this.sizePixelAxisY = sizePixelAxisY;
 
@@ -104,7 +103,16 @@ public class GraphXY extends AnchorPane
 
         setBackground(new Background(new BackgroundFill(Color.WHITE, CornerRadii.EMPTY, Insets.EMPTY)));
 
-        setOnMouseClicked(e -> System.out.println("fuck off"));
+        //setOnMouseClicked(e -> System.out.println("interact ??"));
+    }
+
+    private void resetScale()
+    {
+        // Infinity for both min values at start
+        minX = Double.POSITIVE_INFINITY;
+        minY = Double.POSITIVE_INFINITY;
+        maxX = Double.NEGATIVE_INFINITY;
+        maxY = Double.NEGATIVE_INFINITY;
     }
 
     private void setAxes(Point start)
@@ -187,6 +195,7 @@ public class GraphXY extends AnchorPane
         this.getChildren().add(segmentNode);
     }
 
+
     /**
      * This method will reset the graph.
      * Add all segments to the graph, changing its scale to accommodate with the max and min values of the segments
@@ -195,13 +204,7 @@ public class GraphXY extends AnchorPane
     public void addSegments(List<SegmentTMP> segments)
     {
         resetGraph();
-        for(SegmentTMP segmentTMP: segments)
-        {
-            // Update scale of the graph
-            updateMinMax(segmentTMP);
-
-            updateScale();
-        }
+        setBoundaries(segments);
         // Then when the scale has been fixed we can add all segments
         for(SegmentTMP segmentTMP: segments)
         {
@@ -209,7 +212,33 @@ public class GraphXY extends AnchorPane
         }
         // Update legend
         updateLegend();
+    }
 
+    private void setBoundaries(Iterable<SegmentTMP> segments)
+    {
+        for(SegmentTMP segmentTMP: segments)
+        {
+            // Update scale of the graph
+            updateMinMax(segmentTMP);
+
+            updateScale();
+        }
+    }
+    /**
+     * Rescale all segments of the graph
+     */
+    private void rescaleSegments()
+    {
+        SegmentTMP newPosition;
+        setBoundaries(segmentsShown.keySet());
+        for(SegmentTMP segment : segmentsShown.keySet())
+        {
+            //System.out.println("Segment: " + segment);
+
+            newPosition = new SegmentTMP(translatePoint(scalePoint(segment.getPoint1())),
+                    translatePoint(scalePoint(segment.getPoint2())));
+            segmentsShown.get(segment).setSegment(newPosition);
+        }
     }
 
     /**
@@ -351,33 +380,52 @@ public class GraphXY extends AnchorPane
     }
 
     /**
+     *
      * Updates the size of the graph
      * @param sizePixelAxisX    The new size of the X axis in pixels
      * @param sizePixelAxisY    The new size of the Y axis in pixels
+     * @param minScaleX
+     * @param minScaleY
+     * @param nbOfMarksX
+     * @param nbOfMarksY
+     * @param showGrid
      */
-    public void updateSize(double sizePixelAxisX, double sizePixelAxisY)
+    public void updateSize(double sizePixelAxisX, double sizePixelAxisY, double minScaleX, double minScaleY,  int nbOfMarksX, int nbOfMarksY, boolean showGrid)
     {
+        // Change Scale
+        resetScale();
+        // Change nbOf Marks
+        this.nbOfMarksX = nbOfMarksX;
+        this.nbOfMarksY = nbOfMarksY;
+        // And grid
+        this.showGrid = showGrid;
+
+        this.minScaleX = minScaleX;
+        this.minScaleY = minScaleY;
         // We have to change all the computed values
         this.sizePixelAxisX = sizePixelAxisX;
         this.sizePixelAxisY = sizePixelAxisY;
         // And the origin position and axis size
         setAxes(this.maxAxisY);
         // But also the scales labels and lines
-        drawScale(this.nbOfMarksX, this.nbOfMarksY, this.showGrid);
-
         // Update the segments using the keyset of the dictionary
         // We cannot simply, re add them, because we need to maintain the sweep line state !
-        // So this just resets the sweep line
-        //      addSegments(this.segmentsShown.keySet().stream().toList());
-        addSegments(this.segmentsShown.keySet().stream().toList());
+        rescaleSegments();
+        //addSegments(this.segmentsShown.keySet().stream().toList());
+        drawScale(this.nbOfMarksX, this.nbOfMarksY, this.showGrid);
+        // Redraw SweepLine
+        if(sweepLine != null)
+            setSweepLinePosition(sweepLinePosition);
     }
+
+
 
     //_______________SWEEPLINE and Visit Segments
 
     /**
      * Initialises the sweep line and set all segment to be inactive at the next iteration
      */
-    public void initializeSweepLine()
+    public void initializeSweep()
     {
         // Initialises the sweepLine
         setSweepLinePosition(maxY);
@@ -390,6 +438,9 @@ public class GraphXY extends AnchorPane
     }
     private void setSweepLinePosition(double y)
     {
+        // Save the SweepLine position in case of resize
+        sweepLinePosition = y;
+
         // If the sweepline wasn't added yet
         if(sweepLine == null)
         {
@@ -402,6 +453,8 @@ public class GraphXY extends AnchorPane
         // Move the sweep line (simply doing sweepLine.setLayoutY() doesn't work for some reason
         double newPosition = origin.getY() - scaleOnY(y);
         sweepLine.setStartY(newPosition);
+        sweepLine.setStartX(maxAxisY.getX());
+        sweepLine.setEndX(maxAxisX.getX() + 5);
         sweepLine.setEndY(newPosition);
     }
 
@@ -415,11 +468,13 @@ public class GraphXY extends AnchorPane
     public void moveSweepLine(Point P, List<SegmentTMP> U, List<SegmentTMP> L, List<SegmentTMP> C)
     {
         if(sweepLine == null)
-            initializeSweepLine();
+            initializeSweep();
 
         // Move SweepLine
+
         setSweepLinePosition(P.getY());
-        Segment currSegment;
+        Segment currSegment = null;
+
         // Set segments that were active last iteration to active
         while (! toSetActive.isEmpty())
         {
@@ -437,9 +492,12 @@ public class GraphXY extends AnchorPane
         {
             for(SegmentTMP segmentTMP: L)
             {
-                segmentsShown.get(segmentTMP).setVisitedSegment();
+                currSegment = segmentsShown.get(segmentTMP);
+                currSegment.setVisitedSegment();
+                System.out.println(segmentsShown.get(segmentTMP));
                 // Segments contained in L, are going to be on top of the sweep line
                 // So they become inactive
+
                 toSetInactive.add(segmentsShown.get(segmentTMP));
                 segmentsShown.get(segmentTMP).toFront();
             }
@@ -448,22 +506,24 @@ public class GraphXY extends AnchorPane
         {
             for(SegmentTMP segmentTMP: C)
             {
-                segmentsShown.get(segmentTMP).setVisitedSegment();
-                segmentsShown.get(segmentTMP).toFront();
-                segmentsShown.get(segmentTMP).toFront();
+                currSegment = segmentsShown.get(segmentTMP);
+                currSegment.setVisitedSegment();
+                currSegment.toFront();
             }
         }
         if(U != null){
             for(SegmentTMP segmentTMP : U)
             {
-                segmentsShown.get(segmentTMP).setVisitedSegment();
+                currSegment = segmentsShown.get(segmentTMP);
+                currSegment.setVisitedSegment();
                 // Segments contained in U, are going to be touching the sweep line from now on
-                toSetActive.add(segmentsShown.get(segmentTMP));
+                toSetActive.add(currSegment);
                 // We highlight the point P
-                segmentsShown.get(segmentTMP).setVisitedPoint(translatePoint(scalePoint(P)));
-                segmentsShown.get(segmentTMP).toFront();
+                currSegment.toFront();
             }
         }
+        if(currSegment != null)
+            currSegment.setVisitedPoint(translatePoint(scalePoint(P)));
     }
     //_______________GETTER/SETTER
 

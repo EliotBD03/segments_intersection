@@ -25,6 +25,7 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.util.*;
+import java.util.random.RandomGenerator;
 
 import static be.ac.umons.firstg.segmentintersector.Temp.Parser.getSegmentsFromFile;
 
@@ -48,66 +49,6 @@ public class Test extends Application {
         intersectionTable.addIntersection(new Point(3,1), List.of(
                 new SegmentTMP("s1")
         ));
-        intersectionTable.addIntersection(new Point(3,1), List.of(
-                new SegmentTMP("s1")
-        ));
-        intersectionTable.addIntersection(new Point(3,1), List.of(
-                new SegmentTMP("s1")
-        ));
-        intersectionTable.addIntersection(new Point(3,1), List.of(
-                new SegmentTMP("s1")
-        ));
-        intersectionTable.addIntersection(new Point(3,1), List.of(
-                new SegmentTMP("s1")
-        ));
-        intersectionTable.addIntersection(new Point(3,1), List.of(
-                new SegmentTMP("s1")
-        ));
-        intersectionTable.addIntersection(new Point(3,1), List.of(
-                new SegmentTMP("s1")
-        ));
-        intersectionTable.addIntersection(new Point(3,1), List.of(
-                new SegmentTMP("s1")
-        ));
-        intersectionTable.addIntersection(new Point(3,1), List.of(
-                new SegmentTMP("s1")
-        ));
-        intersectionTable.addIntersection(new Point(3,1), List.of(
-                new SegmentTMP("s1")
-        ));
-        intersectionTable.addIntersection(new Point(3,1), List.of(
-                new SegmentTMP("s1")
-        ));
-        intersectionTable.addIntersection(new Point(3,1), List.of(
-                new SegmentTMP("s1")
-        ));
-        intersectionTable.addIntersection(new Point(3,1), List.of(
-                new SegmentTMP("s1")
-        ));
-        intersectionTable.addIntersection(new Point(3,1), List.of(
-                new SegmentTMP("s1")
-        ));
-        intersectionTable.addIntersection(new Point(3,1), List.of(
-                new SegmentTMP("s1")
-        ));
-        intersectionTable.addIntersection(new Point(3,1), List.of(
-                new SegmentTMP("s1")
-        ));
-        intersectionTable.addIntersection(new Point(3,1), List.of(
-                new SegmentTMP("s1")
-        ));
-        intersectionTable.addIntersection(new Point(3,1), List.of(
-                new SegmentTMP("s1")
-        ));
-        intersectionTable.addIntersection(new Point(3,1), List.of(
-                new SegmentTMP("s1")
-        ));
-        intersectionTable.addIntersection(new Point(3,1), List.of(
-                new SegmentTMP("s1")
-        ));
-        intersectionTable.addIntersection(new Point(3,1), List.of(
-                new SegmentTMP("s1")
-        ));
 
         mainPage.TableGroup.setCenter(intersectionTable);
         mainPage.TableGroup.setPadding(new Insets(25,10,0,10));
@@ -115,39 +56,24 @@ public class Test extends Application {
 
 
         // Tree Windows
-        Stage TWindow = new Stage();
-        TWindow.setTitle("T Tree");
+        //Stage TWindow = new Stage();
+        //TWindow.setTitle("T Tree");
         //TWindow.show();
 
+        //ScrollPane scrollPane = new ScrollPane(tree);
+        //HBox borderPane = new HBox(scrollPane);
+        //borderPane.setFillHeight(true);
 
-        BinaryTree<SegmentTMP> bTree = new BinaryTree<>(new SegmentTMP("S1"));
-        bTree.left = new BinaryTree<>(new SegmentTMP("S2"));
-        bTree.right = new BinaryTree<>(new SegmentTMP("S3"));
-        bTree.right.right = new BinaryTree<>(new SegmentTMP("S4"));
-
-        bTree.right.right.right = new BinaryTree<>(new SegmentTMP("S8"));
-        bTree.right.right.right.right = new BinaryTree<>(new SegmentTMP("S9"));
-        bTree.left.right = new BinaryTree<>(new SegmentTMP("S5"));
-        bTree.left.left = new BinaryTree<>(new SegmentTMP("S6"));
-        bTree.right.left = new BinaryTree<>(new SegmentTMP("S7"));
-        bTree.height = 4;
-
-        IShapeGen<SegmentTMP> genLeaf = x -> new TreeSegmentNode(x,false, Color.AQUA);
-        IShapeGen<SegmentTMP> genNode = x -> new TreeSegmentNode(x,true);
-
-        Tree<SegmentTMP> tree = new Tree<>(bTree, new Point(0,0),genLeaf,genNode);
-        ScrollPane scrollPane = new ScrollPane(tree);
-        HBox borderPane = new HBox(scrollPane);
-        borderPane.setFillHeight(true);
-
-        borderPane.setAlignment(Pos.CENTER);
+        //borderPane.setAlignment(Pos.CENTER);
 
 
-        Scene sceneT = new Scene(borderPane, 600, 600);
-        TWindow.setResizable(true);
-        TWindow.setMinHeight(400);
-        TWindow.setMinWidth(400);
-        TWindow.setScene(sceneT);
+
+
+        //Scene sceneT = new Scene(borderPane, 600, 600);
+        //TWindow.setResizable(true);
+        //TWindow.setMinHeight(400);
+        //TWindow.setMinWidth(400);
+        //TWindow.setScene(sceneT);
 
         /*
         String css=  this.getClass().getResource("test.css").toExternalForm();
