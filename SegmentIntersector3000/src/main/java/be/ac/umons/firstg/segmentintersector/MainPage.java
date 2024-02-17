@@ -3,6 +3,7 @@ package be.ac.umons.firstg.segmentintersector;
 import be.ac.umons.firstg.segmentintersector.Temp.Point;
 import be.ac.umons.firstg.segmentintersector.Temp.SegmentTMP;
 import be.ac.umons.firstg.segmentintersector.components.GraphXY;
+import be.ac.umons.firstg.segmentintersector.components.Segment;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.fxml.FXML;
@@ -11,8 +12,11 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TextFormatter;
 import javafx.scene.layout.*;
+import javafx.stage.FileChooser;
+import javafx.stage.Stage;
 import javafx.util.converter.DoubleStringConverter;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -39,7 +43,14 @@ public class MainPage
     @FXML
     private TextField xScaleInputField;
 
+    private Stage primaryStage;
+    private File file;
+    private boolean fileHasChanged = true;
 
+    public void setPrimaryStage(Stage primaryStage)
+    {
+        this.primaryStage = primaryStage;
+    }
 
     private ObjectProperty<Double> xSizeInputs = new SimpleObjectProperty<>(300d);
     private ObjectProperty<Double> ySizeInputs = new SimpleObjectProperty<>(300d);
@@ -80,9 +91,10 @@ public class MainPage
             createGraph();
         }else
         {
+            loadMap();
             graph.updateSize(xSizeInputs.get(), ySizeInputs.get(), xScaleInputs.get(), yScaleInputs.get(), 10, 10, true);
         }
-        // TODO add a way to load files
+
 
     }
 
@@ -90,9 +102,9 @@ public class MainPage
     {
         graph = new GraphXY(new Point(50,25), xSizeInputs.get(), ySizeInputs.get(), xScaleInputs.get(), yScaleInputs.get(),  5, 5, true);
         GraphGroup.setContent(graph);
-        ArrayList<SegmentTMP> segmentTMPList = getSegmentsFromFile("/home/foucart/Bureau/Git/segments_intersection/SegmentIntersector3000/src/main/java/be/ac/umons/firstg/segmentintersector/Temp/cartes/nocode.txt");
-        graph.addSegments(segmentTMPList);
 
+        loadMap();
+        //ArrayList<SegmentTMP> segmentTMPList = getSegmentsFromFile("/home/foucart/Bureau/Git/segments_intersection/SegmentIntersector3000/src/main/java/be/ac/umons/firstg/segmentintersector/Temp/cartes/nocode.txt");
         /*
         //107.56 190.65 186.97 121.64
         Point P = new Point(107.56d, 190.65d);
@@ -108,11 +120,33 @@ public class MainPage
          */
     }
 
+    private void loadMap()
+    {
+        if(fileHasChanged && file!= null)
+        {
+            fileHasChanged = false;
+            ArrayList<SegmentTMP> segmentTMPList = getSegmentsFromFile(file.getPath());
+            graph.addSegments(segmentTMPList);
+        }
+    }
+
 
     private static void setTextFormatter(TextField tf, ObjectProperty<Double> property)
     {
         TextFormatter<Double> textFormatter = new TextFormatter<>(new DoubleStringConverter());
         textFormatter.valueProperty().bindBidirectional(property);
         tf.setTextFormatter(textFormatter);
+    }
+
+    public void showFiles()
+    {
+        FileChooser fileChooser = new FileChooser();
+        File selection = fileChooser.showOpenDialog(primaryStage);
+        if(file == null || !file.equals(selection))
+        {
+            file = selection;
+            fileHasChanged = true;
+        }
+        System.out.println(file.getPath());
     }
 }

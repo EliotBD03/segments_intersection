@@ -37,7 +37,7 @@ public class Test extends Application {
         Scene scene = new Scene(fxmlLoader.load());
 
         MainPage mainPage = fxmlLoader.getController();
-
+        mainPage.setPrimaryStage(stage);
 
         IntersectionTable intersectionTable = new IntersectionTable();
 
@@ -185,8 +185,8 @@ public class Test extends Application {
 
 
         // Prevent window being too small
-        stage.setMinHeight(300);
-        stage.setMinWidth(400);
+        stage.setMinHeight(600);
+        stage.setMinWidth(800);
         stage.setTitle("Only pain and suffering are awaiting!");
         stage.setScene(scene);
         stage.show();

@@ -369,11 +369,9 @@ public class GraphXY extends AnchorPane
         {
             getChildren().remove(segmentsShown.get(segmentTMP));
         }
+        segmentsShown.clear();
         // Reset the scale
-        maxX = minScaleX;
-        minX = Double.POSITIVE_INFINITY;
-        minY = Double.POSITIVE_INFINITY;
-        maxY = minScaleY;
+        resetScale();
         updateScale();
         // And the labels too
         updateLegend();
