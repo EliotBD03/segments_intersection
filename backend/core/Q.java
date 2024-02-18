@@ -17,7 +17,7 @@ public class Q extends AVL<Point>
      */
     private Q()
     {
-        head = new Point(Float.POSITIVE_INFINITY, Float.POSITIVE_INFINITY, "duh");
+        head = new Point(Float.POSITIVE_INFINITY, Float.POSITIVE_INFINITY);
     }
 
     /**

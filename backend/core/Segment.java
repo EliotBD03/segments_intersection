@@ -10,22 +10,22 @@ import java.util.ArrayList;
 public class Segment
 {
     private Point lowerPoint, upperPoint;
-    public final float a,b,c;
-    private ArrayList<Point> intersections;
+    public final double a,b,c;
+
+    private String id;
 
     /**
      * From an array of coordinates representing two endpoints
      * first endpoint : (endpoints[0],endpoints[1])
      * second endpoint : (endpoints[2],endpoints[3])
      * Notice that we cannot have two endpoints with the same coordinates.
-     * @param endpoints a four-sized array of float
-     * @param name1 the name of the first endpoint
-     * @param name2 the name of the second endpoint
+     * @param endpoints a four-sized array of double
+     * @param id the name attributed to the segment.
      */
-    public Segment(float[] endpoints, String name1, String name2)
+    public Segment(double[] endpoints, String id)
     {
-        Point p = new Point(endpoints[0], endpoints[1], name1);
-        Point q = new Point(endpoints[2], endpoints[3], name2);
+        Point p = new Point(endpoints[0], endpoints[1]);
+        Point q = new Point(endpoints[2], endpoints[3]);
         switch (p.compareTo(q))
         {
             case -1:
@@ -42,6 +42,7 @@ public class Segment
         a = lowerPoint.y - upperPoint.y;
         b = lowerPoint.x - upperPoint.x;
         c = lowerPoint.x * upperPoint.y - upperPoint.x * lowerPoint.y;
+        this.id = id;
     }
 
     protected Segment(Segment segment)
@@ -51,7 +52,7 @@ public class Segment
         this.c = segment.c;
         this.upperPoint = segment.upperPoint;
         this.lowerPoint = segment.lowerPoint;
-        this.intersections = segment.intersections;
+        this.id = segment.id;
     }
 
     public Point getLowerPoint()
@@ -64,19 +65,10 @@ public class Segment
         return upperPoint;
     }
 
-    /**
-     * Add an intersection to the set of intersections of the segment.
-     * @param intersection the intersection to put in.
-     */
-    public void addIntersection(Point intersection)
-    {
-        this.intersections.add(intersection);
-    }
-
     @Override
     public String toString()
     {
-        return lowerPoint +"--"+ upperPoint;
+        return "{" + id + ":" + lowerPoint +"--"+ upperPoint + "}";
     }
 
     /**
@@ -86,14 +78,14 @@ public class Segment
      * @param s2 the second segment for intersection
      * @return a Point representing the intersection found, null otherwise.
      */
-    public static Point findIntersection(Segment s1, Segment s2)
+    public static Point findIntersection(Segment s1, Segment s2) //TODO used later
     {
-        float denominator = s1.a * s2.b - s2.a * s1.b;
+        double denominator = s1.a * s2.b - s2.a * s1.b;
         if(denominator != 0)
         {
-            float px = (s1.c * s2.b - s2.c * s1.b) / denominator;
-            float py = (s1.a * s2.c - s2.a * s1.c) / denominator;
-            return new Point(px, py, "intersection for " + s1 + " and " + s2);
+            double px = (s1.c * s2.b - s2.c * s1.b) / denominator;
+            double py = (s1.a * s2.c - s2.a * s1.c) / denominator;
+            return new Point(px, py);
         }
         return null;
     }
@@ -118,8 +110,8 @@ public class Segment
         }
         else
         {
-            float x = (-segment.c - (segment.b * p.y))/ segment.a;
-            return new Point(x, p.y, "Never gonna give you up");//TODO remove that name
+            double x = (-segment.c - (segment.b * p.y))/ segment.a;
+            return new Point(x, p.y);
         }
     }
 }

@@ -1,45 +1,89 @@
 package core;
 
-import parser.Parser;
 
-import java.io.IOException;
-import java.util.ArrayList;
-
+/**
+ * class which represents a status queue.
+ */
 public class T extends AVL<ComparableSegment>
 {
-    private float currentYAxis;
+    private double currentYAxis;
 
-    public T(float currentYAxis)
+    /**
+     * constructor of the tree T which a specified y-axis to perform
+     * the comparisons.
+     * @param currentYAxis the value of the y-axis of the tree.
+     */
+    public T(double currentYAxis)
     {
         super();
         this.currentYAxis = currentYAxis;
     }
 
-    public void add(Segment segment, int id)
+    /**
+     * Add a segment inside the tree.
+     * @param segment the segment to insert
+     */
+    public void add(Segment segment)
     {
-        ComparableSegment comparableSegment = new ComparableSegment(segment, currentYAxis, id);
-        super.insert(comparableSegment);
-        super.insert(comparableSegment);
+        ComparableSegment comparableSegment = new ComparableSegment(segment, currentYAxis);
+        this.insert(comparableSegment);
     }
 
-    public void remove(Segment segment, int id) throws Exception
+    /**
+     * Remove a segment from the tree.
+     * @param segment the segment to remove from the tree.
+     * @throws Exception if the segment does not exist.
+     */
+    public void remove(Segment segment) throws Exception
     {
-        ComparableSegment comparableSegment = new ComparableSegment(segment, currentYAxis, id);
+        ComparableSegment comparableSegment = new ComparableSegment(segment, currentYAxis);
         super.remove(comparableSegment);
         super.remove(comparableSegment);
     }
 
-
-    public static void main(String[] args) throws IOException
+    /**
+     * insert a Node in segment in accordance with the particular behavior of the tree.
+     * Another basis case is implemented -> the node is a leaf.
+     * @param current the current node we are in
+     * @param nodeToInsert the node to be inserted
+     * @return the tree modified
+     */
+    private Node<ComparableSegment> insert(Node<ComparableSegment> current, Node<ComparableSegment> nodeToInsert)
     {
-        Parser parser = new Parser("/Users/julienladeuze/Desktop/bac3Stuff/segments_intersection/backend/cartes/test.txt");
-        ArrayList<Segment> segments = parser.getSegmentsFromFile();
-        T t = new T(segments.getFirst().getUpperPoint().y);
-        for(int i = 0; i < segments.size(); i++)
+        if(current == null)
         {
-            t.add(segments.get(i), i+1);
+            nodeToInsert.setLeft(new Node<ComparableSegment>(nodeToInsert));
+            return nodeToInsert;
         }
-        t.display();
+        else if(current.getLeft() == null && current.getRight() == null)
+        {
+            Node<ComparableSegment> newNode = new Node<ComparableSegment>(nodeToInsert);
+            newNode.setLeft(nodeToInsert);
+            newNode.setRight(current);
+            return newNode;
+        }
+        else if(nodeToInsert.compareTo(current) <= 0)
+        {
+            current.setLeft(insert(current.getLeft(), nodeToInsert));
+            current.updateHeight();
+            current.balance();
 
+        }
+        else
+        {
+            current.setRight(insert(current.getRight(), nodeToInsert));
+            current.updateHeight();
+            current.balance();
+        }
+        return current;
+    }
+
+    /**
+     * Insert a comparable segment inside T
+     * @param data the data to be inserted inside the tree.
+     */
+    @Override
+    protected void insert(ComparableSegment data) {
+       super.root = this.insert(super.root, new Node<ComparableSegment>(data));
     }
 }

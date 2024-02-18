@@ -7,21 +7,18 @@ import java.util.ArrayList;
  */
 public class Point implements Comparable<Point>
 {
-    public final float x, y;
+    public final double x, y;
     private ArrayList<Segment> startOf;
-    public final String name;
 
     /**
      * Constructor of the Point
      * @param x the x coordinate
      * @param y the y coordinate
-     * @param name the name of the point
      */
-    public Point(float x, float y, String name)
+    public Point(double x, double y)
     {
         this.x = x;
         this.y = y;
-        this.name = name;
         this.startOf = new ArrayList<>();
     }
 
@@ -53,6 +50,6 @@ public class Point implements Comparable<Point>
 
     @Override
     public String toString() {
-        return "{"+name+" : ("+ x + "," + y + ")}";
+        return "("+ x + "," + y + ")";
     }
 }

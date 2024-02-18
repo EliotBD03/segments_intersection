@@ -37,7 +37,7 @@ public class AVL<T extends Comparable<T>>
          * This is uniquely used inside the leftRotation and RightRotation method
          * @param node an already existing node
          */
-        private Node(Node<T> node)
+        protected Node(Node<T> node)
         {
             if(node == null)
                 throw new NullPointerException("The constructor must be provided with a not null node");
@@ -68,7 +68,7 @@ public class AVL<T extends Comparable<T>>
         /**
          * Change the height of the current node according to the changes made earlier.
          */
-        private void updateHeight()
+        public void updateHeight()
         {
             if(left == null && right == null)
                 height = 1; //leaf
@@ -290,7 +290,7 @@ public class AVL<T extends Comparable<T>>
             current.balance();
 
         }
-        else if(nodeToInsert.compareTo(current) > 0)
+        else
         {
             current.setRight(insert(current.getRight(), nodeToInsert));
             current.updateHeight();
@@ -306,6 +306,11 @@ public class AVL<T extends Comparable<T>>
     protected void insert(T data)
     {
         root = insert(root, new Node<>(data));
+    }
+
+    protected void extend(Node<T> node)
+    {
+        root = insert(root, node);
     }
 
     /**
