@@ -21,10 +21,6 @@ import java.util.Stack;
  */
 public class GraphXY extends AnchorPane
 {
-    private int paddingX;
-    private int paddingY;
-
-
     private int markSize = 10;
     private int nbOfMarksX, nbOfMarksY;
     private double gapX,gapY;
@@ -290,6 +286,7 @@ public class GraphXY extends AnchorPane
             markLinesX.add(mark);
         }
         Text text = (Text) textGen.createShape(new Point(position,20));
+        text.toBack();
         getChildren().add(text);
         legendsX.add(text);
     }
@@ -305,6 +302,7 @@ public class GraphXY extends AnchorPane
             markLinesY.add(mark);
         }
         Text text = (Text) textGen.createShape(new Point(-50,-position));
+        text.toBack();
         getChildren().add(text);
         legendsY.add(text);
     }
@@ -318,7 +316,7 @@ public class GraphXY extends AnchorPane
         if(minX == Double.POSITIVE_INFINITY)
         {
             tmpMinX = 0d;
-            gapX = minScaleX / nbOfMarksY;
+            gapX = minScaleX / nbOfMarksX;
         }
         else
             gapX = (maxX-tmpMinX) / nbOfMarksX;
@@ -326,7 +324,7 @@ public class GraphXY extends AnchorPane
         if(minY == Double.POSITIVE_INFINITY)
         {
             tmpMinY = 0d;
-            gapY = minScaleX / nbOfMarksY;
+            gapY = minScaleY / nbOfMarksY;
         }
         else
             gapY = (maxY-tmpMinY) / nbOfMarksY;
@@ -351,10 +349,10 @@ public class GraphXY extends AnchorPane
         // Also add padding if needed
 
         // Careful using ceil and floor, this might require more testing
-        maxX = (Math.ceil(maxX/ minScaleX) * minScaleX) + paddingX;
-        minX = (Math.floor(minX/ minScaleX) * minScaleX) - paddingX;
-        maxY = (Math.ceil(maxY/ minScaleY) * minScaleY) + paddingY;
-        minY = (Math.floor(minY/ minScaleY) * minScaleY) - paddingY;
+        maxX = (Math.ceil(maxX/ minScaleX) * minScaleX);
+        minX = (Math.floor(minX/ minScaleX) * minScaleX);
+        maxY = (Math.ceil(maxY/ minScaleY) * minScaleY);
+        minY = (Math.floor(minY/ minScaleY) * minScaleY);
         scalePixelX = (maxX - minX) / sizePixelAxisX;
         scalePixelY = (maxY - minY) / sizePixelAxisY;
     }
@@ -523,41 +521,5 @@ public class GraphXY extends AnchorPane
         if(currSegment != null)
             currSegment.setVisitedPoint(translatePoint(scalePoint(P)));
     }
-    //_______________GETTER/SETTER
 
-    public double getSizePixelAxisX()
-    {
-        return sizePixelAxisX;
-    }
-
-    public double getSizePixelAxisY()
-    {
-        return sizePixelAxisY;
-    }
-
-
-
-    /*
-    //              TODO Check if this is salvageable or if this is a lost cause
-    public int getPaddingX()
-    {
-        return paddingX;
-    }
-
-    public int getPaddingY()
-    {
-        return paddingY;
-    }
-
-    public void setPaddingX(int paddingX)
-    {
-        this.paddingX = paddingX;
-    }
-
-    public void setPaddingY(int paddingY)
-    {
-        this.paddingY = paddingY;
-    }
-
- */
 }

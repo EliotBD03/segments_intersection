@@ -3,22 +3,18 @@ package be.ac.umons.firstg.segmentintersector;
 import be.ac.umons.firstg.segmentintersector.Temp.Point;
 import be.ac.umons.firstg.segmentintersector.Temp.SegmentTMP;
 import be.ac.umons.firstg.segmentintersector.components.GraphXY;
-import be.ac.umons.firstg.segmentintersector.components.Segment;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
-import javafx.scene.control.ScrollPane;
-import javafx.scene.control.TextField;
-import javafx.scene.control.TextFormatter;
+import javafx.scene.control.*;
 import javafx.scene.layout.*;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.util.converter.DoubleStringConverter;
+import javafx.util.converter.IntegerStringConverter;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.List;
 
 import static be.ac.umons.firstg.segmentintersector.Temp.Parser.getSegmentsFromFile;
 
@@ -30,6 +26,9 @@ public class MainPage
     public BorderPane TableGroup;
     public StackPane TreeT;
     public StackPane TreeQ;
+    public TextField xNbLabelsInputField;
+    public TextField yNbLabelsInputField;
+    public CheckBox showGridInput;
 
     // Graph Inputs
     @FXML
@@ -56,9 +55,15 @@ public class MainPage
     private ObjectProperty<Double> ySizeInputs = new SimpleObjectProperty<>(300d);
     private ObjectProperty<Double> xScaleInputs = new SimpleObjectProperty<>(10d);
     private ObjectProperty<Double> yScaleInputs = new SimpleObjectProperty<>(10d);
+    private ObjectProperty<Integer> xNbLabelsInputs = new SimpleObjectProperty<>(5);
+    private ObjectProperty<Integer> yNbLabelsInputs = new SimpleObjectProperty<>(5);
+
 
     // Components added
     private GraphXY graph;
+
+
+    private boolean hasChanged;
 
 
     public MainPage()
@@ -74,10 +79,14 @@ public class MainPage
         // Forces the textfields to only accept integers values
         // Doesn't stop negative values !!!
 
-        setTextFormatter(xSizeInputField, xSizeInputs);
-        setTextFormatter(ySizeInputField, ySizeInputs);
-        setTextFormatter(xScaleInputField, xScaleInputs);
-        setTextFormatter(yScaleInputField, yScaleInputs);
+        setDoubleFormatter(xSizeInputField, xSizeInputs);
+        setDoubleFormatter(ySizeInputField, ySizeInputs);
+        setDoubleFormatter(xScaleInputField, xScaleInputs);
+        setDoubleFormatter(yScaleInputField, yScaleInputs);
+
+        setIntegerFormatter(xNbLabelsInputField, xNbLabelsInputs);
+        setIntegerFormatter(yNbLabelsInputField, yNbLabelsInputs);
+
 
 
     }
@@ -92,7 +101,10 @@ public class MainPage
         }else
         {
             loadMap();
-            graph.updateSize(xSizeInputs.get(), ySizeInputs.get(), xScaleInputs.get(), yScaleInputs.get(), 10, 10, true);
+            if(hasChanged){
+                hasChanged = false;
+                graph.updateSize(xSizeInputs.get(), ySizeInputs.get(), xScaleInputs.get(), yScaleInputs.get(), xNbLabelsInputs.get(), yNbLabelsInputs.get(), showGridInput.isSelected());
+            }
         }
 
 
@@ -100,7 +112,7 @@ public class MainPage
 
     private void createGraph()
     {
-        graph = new GraphXY(new Point(50,25), xSizeInputs.get(), ySizeInputs.get(), xScaleInputs.get(), yScaleInputs.get(),  5, 5, true);
+        graph = new GraphXY(new Point(50,25), xSizeInputs.get(), ySizeInputs.get(), xScaleInputs.get(), yScaleInputs.get(), xNbLabelsInputs.get(), yNbLabelsInputs.get(), showGridInput.isSelected());
         GraphGroup.setContent(graph);
 
         loadMap();
@@ -131,9 +143,17 @@ public class MainPage
     }
 
 
-    private static void setTextFormatter(TextField tf, ObjectProperty<Double> property)
+    private void setDoubleFormatter(TextField tf, ObjectProperty<Double> property)
     {
+        tf.setOnKeyTyped(e -> this.hasChanged = true);
         TextFormatter<Double> textFormatter = new TextFormatter<>(new DoubleStringConverter());
+        textFormatter.valueProperty().bindBidirectional(property);
+        tf.setTextFormatter(textFormatter);
+    }
+    private void setIntegerFormatter(TextField tf, ObjectProperty<Integer> property)
+    {
+        tf.setOnKeyTyped(e -> this.hasChanged = true);
+        TextFormatter<Integer> textFormatter = new TextFormatter<>(new IntegerStringConverter());
         textFormatter.valueProperty().bindBidirectional(property);
         tf.setTextFormatter(textFormatter);
     }
