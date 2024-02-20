@@ -87,6 +87,7 @@ public class GraphXY extends AnchorPane
             Text text = new Text();
             text.setLayoutX(origin.getX() + x.getX());
             text.setLayoutY(origin.getY() + x.getY());
+            text.toBack();
             return text;
         };
 
@@ -193,14 +194,15 @@ public class GraphXY extends AnchorPane
 
 
     /**
-     * This method will reset the graph.
-     * Add all segments to the graph, changing its scale to accommodate with the max and min values of the segments
+     * Add all segments to the graph, changing its scale to accommodate with the max and min values of the segments (and the previously added ones)
      * @param segments  The segments to add
      */
     public void addSegments(List<SegmentTMP> segments)
     {
-        resetGraph();
+        // Set new boundaries
         setBoundaries(segments);
+        // Resize previous segments to current scale
+        rescaleSegments(false);
         // Then when the scale has been fixed we can add all segments
         for(SegmentTMP segmentTMP: segments)
         {
@@ -223,10 +225,11 @@ public class GraphXY extends AnchorPane
     /**
      * Rescale all segments of the graph
      */
-    private void rescaleSegments()
+    private void rescaleSegments(boolean updateBoundaries)
     {
         SegmentTMP newPosition;
-        setBoundaries(segmentsShown.keySet());
+        if(updateBoundaries)
+            setBoundaries(segmentsShown.keySet());
         for(SegmentTMP segment : segmentsShown.keySet())
         {
             //System.out.println("Segment: " + segment);
@@ -406,7 +409,7 @@ public class GraphXY extends AnchorPane
         // But also the scales labels and lines
         // Update the segments using the keyset of the dictionary
         // We cannot simply, re add them, because we need to maintain the sweep line state !
-        rescaleSegments();
+        rescaleSegments(true);
         //addSegments(this.segmentsShown.keySet().stream().toList());
         drawScale(this.nbOfMarksX, this.nbOfMarksY, this.showGrid);
         // Redraw SweepLine

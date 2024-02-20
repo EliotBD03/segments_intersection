@@ -29,6 +29,7 @@ public class MainPage
     public TextField xNbLabelsInputField;
     public TextField yNbLabelsInputField;
     public CheckBox showGridInput;
+    public Button loadFileButton;
 
     // Graph Inputs
     @FXML
@@ -86,6 +87,7 @@ public class MainPage
 
         setIntegerFormatter(xNbLabelsInputField, xNbLabelsInputs);
         setIntegerFormatter(yNbLabelsInputField, yNbLabelsInputs);
+        showGridInput.setOnAction(e -> hasChanged = true);
 
 
 
@@ -165,8 +167,8 @@ public class MainPage
         if(file == null || !file.equals(selection))
         {
             file = selection;
+            loadFileButton.setText(file.getName());
             fileHasChanged = true;
         }
-        System.out.println(file.getPath());
     }
 }

@@ -5,9 +5,7 @@ import be.ac.umons.firstg.segmentintersector.Temp.SegmentTMP;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Group;
-import javafx.scene.control.ScrollPane;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.MapValueFactory;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
@@ -29,6 +27,11 @@ public class IntersectionTable extends TableView
     @FXML
     private TableColumn<Map, String> segmentsColumn;
 
+    @FXML
+    private TableColumn<Map, Button> highlightColumn;
+
+    private int current;
+
     public IntersectionTable()
     {
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("IntersectionTable.fxml"));
@@ -41,10 +44,16 @@ public class IntersectionTable extends TableView
         {
             throw new RuntimeException(e);
         }
+        current = 0;
         intersectionsColumn.setCellValueFactory(new MapValueFactory<>("Point"));
-        segmentsColumn.setCellValueFactory(new MapValueFactory<>("Segments"));
-    }
 
+        segmentsColumn.setCellValueFactory(new MapValueFactory<>("Segments"));
+        highlightColumn.setCellValueFactory(new MapValueFactory<>("Highlight"));
+    }
+    public void onClicked()
+    {
+        System.out.println(table.getSelectionModel().getSelectedIndex());
+    }
     /**
      * Add a new line of information the table view
      * @param intersection  The intersection to add
@@ -52,7 +61,7 @@ public class IntersectionTable extends TableView
      */
     public void addIntersection(Point intersection, List<SegmentTMP> segments)
     {
-
+        int curr = current;
         Map<String, Object> item = new HashMap<>();
         String segmentToString = "";
         for (int i = 0; i < segments.size(); i++)
@@ -65,6 +74,13 @@ public class IntersectionTable extends TableView
         }
         item.put("Point", intersection.toString());
         item.put("Segments", segmentToString);
+        Button highlightSegment = new Button("H");
+        highlightSegment.setOnAction(e ->{
+                    table.getSelectionModel().select(curr);
+                    onClicked();
+        });
+        current ++;
+        item.put("Highlight", highlightSegment);
         table.getItems().add(item);
 
     }
