@@ -143,7 +143,7 @@ public class T extends AVL<ComparableSegment>
     }
 
     public static void main(String[] args) throws IOException {
-        Parser parser = new Parser("/Users/julienladeuze/Desktop/bac3Stuff/segments_intersection/backend/cartes/test.txt");
+        Parser parser = new Parser("cartes/test.txt");
         ArrayList<Segment> segments = parser.getSegmentsFromFile();
         T t = new T(segments.getFirst().getUpperPoint().y);
         for(int i = 0; i < segments.size(); i++)

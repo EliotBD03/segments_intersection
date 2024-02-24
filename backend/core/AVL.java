@@ -1,4 +1,5 @@
 package core;
+import java.util.ArrayList;
 import java.util.Random;
 
 /**
@@ -45,6 +46,15 @@ public class AVL<T extends Comparable<T>>
             this.left = node.left;
             this.right = node.right;
             this.height = node.height;
+        }
+
+        /**
+         * Determines if the node is a leaf or not
+         * @return true if the node is a leaf, false otherwise
+         */
+        public boolean isLeaf()
+        {
+            return this.left == null && this.right == null;
         }
 
         /**
@@ -239,7 +249,8 @@ public class AVL<T extends Comparable<T>>
         @Override
         public String toString()
         {
-            return "(" + data.toString() + ","+ height +","+ getBalanceFactor()+")";
+            return treeToString(0, false, new ArrayList<>());
+            //return "(" + data.toString() + ","+ height +","+ getBalanceFactor()+")";
         }
 
         /**
@@ -264,6 +275,49 @@ public class AVL<T extends Comparable<T>>
             while(current.right != null)
                 current = current.right;
             return current;
+        }
+        //_____________________Pretty Printer______________________
+
+        private String leafToString(int depth, boolean dir, ArrayList<Integer> barList)
+        {
+            String res = "";
+            for (int i = 0; i < depth; i++)
+            {
+                if(barList.contains(i))
+                    res = res.concat("| ");
+                else
+                {
+                    if (i == depth - 1)
+                    {
+                        if(dir)
+                            res = res.concat(" ↱ ");
+                        else
+                            res = res.concat(" ↳ ");
+                    }else
+                        res = res.concat(" ");
+                }
+            }
+            return res + "("+ this.data + ": " +height +", "+ getBalanceFactor() + ")\n";
+        }
+        private String treeToString(int depth, boolean goRight, ArrayList<Integer> barList)
+        {
+            String res = "";
+            ArrayList<Integer> next;
+            if(root.isLeaf())
+                return leafToString(depth, goRight, barList);
+
+            next = new ArrayList<>(barList);
+            if (depth != 0 && ! goRight)
+                next.add(depth - 1);
+            if(this.right != null)
+                res += this.right.treeToString(depth + 1, true, next);
+            res += this.leafToString(depth, goRight, barList);
+            next = new ArrayList<>(barList);
+            if(depth != 0 && goRight)
+                next.add(depth - 1);
+            if(this.left != null)
+                res += this.left.treeToString(depth + 1, false, next);
+            return res;
         }
     }
 
@@ -399,8 +453,13 @@ public class AVL<T extends Comparable<T>>
      */
     protected void display()
     {
-        display(root, 0);
+        System.out.println(root);
+        //display(root, 0);
     }
+
+
 }
+
+
 
 
