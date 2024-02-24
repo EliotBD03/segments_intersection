@@ -32,7 +32,7 @@ import static be.ac.umons.firstg.segmentintersector.Temp.Parser.getSegmentsFromF
 public class Test extends Application {
     @Override
     public void start(Stage stage) throws IOException {
-        FXMLLoader fxmlLoader = new FXMLLoader(Test.class.getResource("MainPage.fxml"));
+        FXMLLoader fxmlLoader = new FXMLLoader(Test.class.getResource("MainPage2.fxml"));
 
         Scene scene = new Scene(fxmlLoader.load());
 

@@ -4,13 +4,8 @@ import be.ac.umons.firstg.segmentintersector.Temp.Point;
 import be.ac.umons.firstg.segmentintersector.Temp.SegmentTMP;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Group;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.MapValueFactory;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.Pane;
-import javafx.scene.layout.VBox;
-
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
@@ -32,6 +27,10 @@ public class IntersectionTable extends TableView
 
     private int current;
 
+
+    /**
+     * The constructor for the table component that will use the IntersectionTable.fxml file
+     */
     public IntersectionTable()
     {
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("IntersectionTable.fxml"));
@@ -52,7 +51,7 @@ public class IntersectionTable extends TableView
     }
     public void onClicked()
     {
-        System.out.println(table.getSelectionModel().getSelectedIndex());
+        System.out.println(table.getItems().get(table.getSelectionModel().getSelectedIndex()).get("Segments"));
     }
     /**
      * Add a new line of information the table view

@@ -7,21 +7,19 @@ import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
-import javafx.scene.layout.*;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.StackPane;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
-import javafx.util.StringConverter;
 import javafx.util.converter.DoubleStringConverter;
 import javafx.util.converter.IntegerStringConverter;
 
 import java.io.File;
-import java.text.NumberFormat;
-import java.text.ParseException;
 import java.util.ArrayList;
 
 import static be.ac.umons.firstg.segmentintersector.Temp.Parser.getSegmentsFromFile;
 
-public class MainPage
+public class MainPage2
 {
     @FXML
     public ScrollPane GraphGroup;
@@ -70,7 +68,7 @@ public class MainPage
     private boolean hasChanged;
 
 
-    public MainPage()
+    public MainPage2()
     {
 
         //textFormatter.valueProperty().bindBidirectional(va);
@@ -171,8 +169,7 @@ public class MainPage
         if(file == null || !file.equals(selection))
         {
             file = selection;
-            if (file != null)
-                loadFileButton.setText(file.getName());
+            loadFileButton.setText(file.getName());
             fileHasChanged = true;
         }
     }
