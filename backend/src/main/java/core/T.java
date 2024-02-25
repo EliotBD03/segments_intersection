@@ -146,7 +146,8 @@ public class T extends AVL<ComparableSegment>
     }
 
     public static void main(String[] args) throws IOException {
-        Parser parser = new Parser("cartes/test.txt");
+        Parser parser = new Parser("/home/foucart/Bureau/Git/segments_intersection/backend/src/main/resources/cartes/test.txt");
+
         ArrayList<Segment> segments = parser.getSegmentsFromFile();
         T t = new T(segments.getFirst().getUpperPoint().y);
         for(int i = 0; i < segments.size(); i++)
@@ -157,5 +158,7 @@ public class T extends AVL<ComparableSegment>
         Segment[] neighborhood = t.getNeighborhood(segments.get(1));
         System.out.println(segments.get(1));
         System.out.println(neighborhood[0] + " " + neighborhood[1]);
+
+
     }
 }
