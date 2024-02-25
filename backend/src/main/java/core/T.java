@@ -100,6 +100,9 @@ public class T extends AVL<ComparableSegment>
      */
     private Node<ComparableSegment> findFather(ComparableSegment segment)
     {
+        if(root.getData().compareTo(segment) == 0)
+            return root;
+
         Node<ComparableSegment> currentNode = this.root;
         while((currentNode.getLeft() != null && currentNode.getLeft().getData().compareTo(segment) != 0) && (currentNode.getRight() != null && currentNode.getRight().getData().compareTo(segment) != 0))
         {
@@ -152,6 +155,7 @@ public class T extends AVL<ComparableSegment>
         }
         t.display();
         Segment[] neighborhood = t.getNeighborhood(segments.get(1));
+        System.out.println(segments.get(1));
         System.out.println(neighborhood[0] + " " + neighborhood[1]);
     }
 }
