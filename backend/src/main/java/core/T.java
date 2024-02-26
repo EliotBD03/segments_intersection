@@ -4,6 +4,8 @@ package core;
 import parser.Parser;
 
 import java.io.IOException;
+import java.net.URISyntaxException;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 
 /**
@@ -145,9 +147,8 @@ public class T extends AVL<ComparableSegment>
         return new Segment[]{leftNeighbor, rightNeighbor};
     }
 
-    public static void main(String[] args) throws IOException {
-        Parser parser = new Parser("/home/foucart/Bureau/Git/segments_intersection/backend/src/main/resources/cartes/test.txt");
-
+    public static void main(String[] args) throws URISyntaxException, IOException {
+        Parser parser = new Parser(Parser.getPathFromResource("test.txt"));
         ArrayList<Segment> segments = parser.getSegmentsFromFile();
         T t = new T(segments.getFirst().getUpperPoint().y);
         for(int i = 0; i < segments.size(); i++)

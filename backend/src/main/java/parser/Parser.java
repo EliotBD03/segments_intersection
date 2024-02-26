@@ -1,11 +1,14 @@
 package parser;
 
 import core.Segment;
+import core.T;
 
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.net.URISyntaxException;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -115,5 +118,10 @@ public class Parser
             }
         }
         return result;
+    }
+
+    public static String getPathFromResource(String filePathFromResource) throws URISyntaxException
+    {
+        return Paths.get(T.class.getResource(filePathFromResource).toURI()).toString();
     }
 }
