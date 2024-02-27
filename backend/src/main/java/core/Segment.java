@@ -44,6 +44,17 @@ public class Segment
         c = lowerPoint.x * upperPoint.y - upperPoint.x * lowerPoint.y;
         this.id = id;
     }
+    /**
+     * From two endpoints
+     * Notice that we cannot have two endpoints with the same coordinates.
+     * @param endpoint1 the first endpoint
+     * @param endpoint2 the second endpoint
+     * @param id the name attributed to the segment.
+     */
+    public Segment(Point endpoint1, Point endpoint2, String id)
+    {
+        this(new double[] {endpoint1.x,endpoint1.y, endpoint2.x, endpoint2.y}, id);
+    }
 
     protected Segment(Segment segment)
     {
@@ -54,6 +65,7 @@ public class Segment
         this.lowerPoint = segment.lowerPoint;
         this.id = segment.id;
     }
+
 
     public Point getLowerPoint()
     {

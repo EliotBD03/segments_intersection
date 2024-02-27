@@ -17,8 +17,10 @@ dependencies {
 
 tasks.test {
     useJUnitPlatform()
+    testLogging{
+        showStandardStreams = true
+    }
 }
-
 application{
     mainClass = "core.T"
 }

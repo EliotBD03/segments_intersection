@@ -148,7 +148,7 @@ public class T extends AVL<ComparableSegment>
     }
 
     public static void main(String[] args) throws URISyntaxException, IOException {
-        Parser parser = new Parser(Parser.getPathFromResource("test.txt"));
+        Parser parser = new Parser(Parser.getPathFromResource("/cartes/fichier2.txt"));
         ArrayList<Segment> segments = parser.getSegmentsFromFile();
         T t = new T(segments.getFirst().getUpperPoint().y);
         for(int i = 0; i < segments.size(); i++)
