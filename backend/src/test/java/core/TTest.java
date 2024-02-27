@@ -8,6 +8,7 @@ import parser.Parser;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+@DisplayName("TTest \uD83C\uDF32 ")
 class TTest
 {
     static T testTree1;
@@ -40,7 +41,7 @@ class TTest
         E = new Point(2,3);
         F = new Point(3,-1);
         G = new Point(4,2);
-        H = new Point(2.75f, 0);
+        H = new Point(2.75d, 0);
         I = new Point(1,-2);
         P = new Point(1,0);
 
@@ -57,12 +58,8 @@ class TTest
 
     @Test
     @Order(1)
-    @DisplayName("\uD83C\uDF32 Add in T ")
     void add()
     {
-
-        System.out.println("Add Test");
-        System.out.println("T: ");
         // Test that the graph's segments are correctly placed in T
         // Sweep line is at point E
         //      Insert s3
@@ -75,7 +72,7 @@ class TTest
 
         // Sweep line is at point A
         //      Insert s1
-        testTree1.display();
+        //testTree1.display();
     }
     @Test
     @Order(2)

@@ -1,6 +1,7 @@
 package core;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 /**
  * Class to represent a point as a couple defined on R^2
@@ -31,6 +32,11 @@ public class Point implements Comparable<Point>
         startOf.add(newSegment);
     }
 
+    public ArrayList<Segment> getStartOf()
+    {
+        return this.startOf;
+    }
+
     /**
      * Compare two points with the following criteria : p < q iff p.y > q.y or (p.y = q.y and p.x < q.x)
      * where p is the point of the current instance record and q the argument.
@@ -46,6 +52,22 @@ public class Point implements Comparable<Point>
             return 0;
         }
         return y > otherPoint.y || (y == otherPoint.y && x < otherPoint.x) ? -1 : 1;
+    }
+
+    @Override
+    public boolean equals(Object o)
+    {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Point point = (Point) o;
+
+        return Double.compare(x, point.x) == 0 && Double.compare(y, point.y) == 0;
+    }
+
+    @Override
+    public int hashCode()
+    {
+        return Objects.hash(x, y, startOf);
     }
 
     @Override
