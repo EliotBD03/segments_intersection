@@ -342,7 +342,6 @@ public class AVL<T extends Comparable<T>>
             current.setLeft(insert(current.getLeft(), nodeToInsert));
             current.updateHeight();
             current.balance();
-
         }
         else
         {
@@ -360,11 +359,6 @@ public class AVL<T extends Comparable<T>>
     protected void insert(T data)
     {
         root = insert(root, new Node<>(data));
-    }
-
-    protected void extend(Node<T> node)
-    {
-        root = insert(root, node);
     }
 
     /**

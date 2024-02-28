@@ -13,7 +13,6 @@ import java.util.ArrayList;
  */
 public class T extends AVL<ComparableSegment>
 {
-    private double currentYAxis;
 
     /**
      * constructor of the tree T which a specified y-axis to perform
@@ -23,14 +22,14 @@ public class T extends AVL<ComparableSegment>
     public T(double currentYAxis)
     {
         super();
-        this.currentYAxis = currentYAxis;
     }
 
     /**
      * Add a segment inside the tree.
      * @param segment the segment to insert
+     * @param currentYAxis the y-coordinate to perform comparisons
      */
-    public void add(Segment segment)
+    public void add(Segment segment, double currentYAxis)
     {
         ComparableSegment comparableSegment = new ComparableSegment(segment, currentYAxis);
         this.insert(comparableSegment);
@@ -39,9 +38,10 @@ public class T extends AVL<ComparableSegment>
     /**
      * Remove a segment from the tree.
      * @param segment the segment to remove from the tree.
+     * @param currentYAxis the y-coordinate to perform comparisons
      * @throws Exception if the segment does not exist.
      */
-    public void remove(Segment segment) throws Exception
+    public void remove(Segment segment, double currentYAxis) throws Exception
     {
         ComparableSegment comparableSegment = new ComparableSegment(segment, currentYAxis);
         super.remove(comparableSegment);
@@ -122,9 +122,10 @@ public class T extends AVL<ComparableSegment>
      * - the closest left segment to the segment
      * - the closest right segment to the segment
      * @param segment the segment to find the neighborhood
+     * @param currentYAxis the y-coordinate to perform comparisons
      * @return an array of segments which is {closest left segment, closest right segment}
      */
-    public Segment[] getNeighborhood(Segment segment)
+    public Segment[] getNeighborhood(Segment segment, double currentYAxis)
     {
         Segment leftNeighbor = null;
         Segment rightNeighbor = null;
@@ -146,7 +147,7 @@ public class T extends AVL<ComparableSegment>
             rightNeighbor = fatherFromFather.getLeft().lookForMaximum().getData();
         return new Segment[]{leftNeighbor, rightNeighbor};
     }
-
+/*
     public static void main(String[] args) throws URISyntaxException, IOException {
         Parser parser = new Parser(Parser.getPathFromResource("/cartes/fichier2.txt"));
         ArrayList<Segment> segments = parser.getSegmentsFromFile();
@@ -162,4 +163,6 @@ public class T extends AVL<ComparableSegment>
 
 
     }
+    TODO in standby, waiting for unit tests
+ */
 }

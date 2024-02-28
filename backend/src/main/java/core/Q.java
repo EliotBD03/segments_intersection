@@ -38,6 +38,7 @@ public class Q extends AVL<Point>
         Q q = new Q();
         for(Segment segment : segments)
         {
+            segment.getUpperPoint().addSegment(segment);
             q.insert(segment.getUpperPoint());
             q.insert(segment.getLowerPoint());
         }
@@ -58,7 +59,7 @@ public class Q extends AVL<Point>
 
     /**
      * Basic dequeue method.
-     * This will remove the root node from the tree
+     * This will remove the minimum node (lower left)@ from the tree
      * @throws Exception if the root does not exist. In other words, the tree is empty.
      */
     public void dequeue() throws Exception
