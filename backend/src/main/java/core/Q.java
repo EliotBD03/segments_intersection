@@ -60,11 +60,14 @@ public class Q extends AVL<Point>
     /**
      * Basic dequeue method.
      * This will remove the minimum node (lower left)@ from the tree
+     * @return the removed point
      * @throws Exception if the root does not exist. In other words, the tree is empty.
      */
-    public void dequeue() throws Exception
+    public Point dequeue() throws Exception
     {
-        remove(head);
+        Point pointToRemove = head;
+        remove(pointToRemove);
         lookForNewHead();
+        return pointToRemove;
     }
 }
