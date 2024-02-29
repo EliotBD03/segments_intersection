@@ -55,4 +55,6 @@ class AVLTest {
 
         return respected && orderIsRespected(node.getLeft()) && orderIsRespected(node.getRight());
     }
+
+
 }
