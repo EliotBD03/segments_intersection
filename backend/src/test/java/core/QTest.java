@@ -4,57 +4,20 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
+import java.util.*;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.HashSet;
-
+import static core.AVLTestTools.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 
 @DisplayName("QTest \uD83C\uDF33")
 class QTest
 {
-    static Point A;
-    static Point B;
-    static Point C;
-    static Point D;
-    static Point E;
-    static Point F;
-    static Point G;
-    static Point H;
-    static Point I;
-    static Point P;
-
-    static Segment s1;
-    static Segment s2;
-    static Segment s3;
-    static Segment s4;
-    static Segment s5;
-
     static Q qTest;
 
     @BeforeAll
     static void initQ()
     {
-        A = new Point(0,0);
-        B = new Point(5,0);
-        C = new Point(1,2);
-        D = new Point(1,-1);
-        E = new Point(2,3);
-        F = new Point(3,-1);
-        G = new Point(4,2);
-        H = new Point(2.75d, 0);
-        I = new Point(1,-2);
-        P = new Point(1,0);
-
-        s1 = new Segment(A,B,"s1");
-        s2 = new Segment(C,D,"s2");
-        s3 = new Segment(E,F,"s3");
-        s4 = new Segment(G,H,"s4");
-        s5 = new Segment(H,I,"s5");
-
         qTest = Q.initQ(new ArrayList<>(
                 Arrays.asList(s1,s2,s3,s4,s5)
         ));
@@ -78,13 +41,22 @@ class QTest
     {
         // Check if segments got the correct upper segments
 
-        assertEquals(qTest.getRootData().getStartOf(), Arrays.asList(s1));
+        assertEquals(qTest.getRootData().getStartOf(), Collections.singletonList(s1));
+        assertEquals(qTest.root.getLeft().getData().getStartOf(), Collections.singletonList(s2));
+        assertEquals(qTest.root.getRight().getData().getStartOf(), List.of());
+        assertEquals(qTest.root.getRight().getLeft().getLeft().getData().getStartOf(), Collections.singletonList(s5));
+        assertEquals(qTest.root.getLeft().getData().getStartOf(), List.of(s2));
+        assertEquals(qTest.root.getLeft().getRight().getData().getStartOf(), List.of(s4));
+
     }
 
     @Test
     @Order(2)
     void dequeue()
     {
+        // Check that the min node was really removed
+
+        //assertEquals(qTest.dequeue(), qTest.);
     }
 
     @Test
@@ -96,19 +68,5 @@ class QTest
         qTest.enqueue(I);
         assertFalse(checkForDoubles(qTest.root, new HashSet<>()));
 
-    }
-
-
-
-    private boolean checkForDoubles(AVL<Point>.Node<Point> node, HashSet<Point> points)
-    {
-        if(node == null){
-            return false;
-        }
-        Point rootData = node.getData();
-        if(points.contains(rootData))
-            return true;
-        points.add(rootData);
-        return checkForDoubles(node.getLeft(), points) || checkForDoubles(node.getRight(), points);
     }
 }

@@ -5,6 +5,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+import static core.AVLTestTools.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 @DisplayName("AVLTest \uD83C\uDF84")
@@ -44,17 +45,5 @@ class AVLTest {
         // Check what happens when empty
         assertThrows(Exception.class, ()-> tree.remove(-11212d));
     }
-
-    private static boolean orderIsRespected(AVL<Double>.Node<Double> node)
-    {
-        if(node == null || node.isLeaf())
-            return true;
-
-        boolean respected = (node.getLeft() != null && (node.getLeft().getData().compareTo(node.getData()) <= 0))
-                            || (node.getRight() != null && (node.getRight().getData().compareTo(node.getData()) >= 0));
-
-        return respected && orderIsRespected(node.getLeft()) && orderIsRespected(node.getRight());
-    }
-
 
 }
