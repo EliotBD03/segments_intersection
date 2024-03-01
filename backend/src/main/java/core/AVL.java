@@ -132,6 +132,11 @@ public class AVL<T extends Comparable<T>>
             return data;
         }
 
+        public void setData(T data)
+        {
+            this.data = data;
+        }
+
         /**
          * Getter for the balance factor of the node.
          * @return an integer corresponding to the balance factor.
@@ -290,11 +295,11 @@ public class AVL<T extends Comparable<T>>
                     if (i == depth - 1)
                     {
                         if(dir)
-                            res = res.concat(" ↱ ");
+                            res = res.concat("↱ ");
                         else
-                            res = res.concat(" ↳ ");
+                            res = res.concat("↳ ");
                     }else
-                        res = res.concat(" ");
+                        res = res.concat("  ");
                 }
             }
             return res + "("+ this.data + ": " +height +", "+ getBalanceFactor() + ")\n";

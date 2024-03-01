@@ -49,29 +49,28 @@ public class T extends AVL<ComparableSegment>
     {
         if(current == null)
         {
-            nodeToInsert.setLeft(new Node<ComparableSegment>(nodeToInsert));
+            nodeToInsert.setLeft(new Node<ComparableSegment>(nodeToInsert.getData()));
             return nodeToInsert;
         }
         else if(current.getLeft() == null && current.getRight() == null)
         {
-            Node<ComparableSegment> newNode = new Node<ComparableSegment>(nodeToInsert);
-            newNode.setLeft(nodeToInsert);
-            newNode.setRight(current);
-            return newNode;
+            current.setLeft(new Node<ComparableSegment>(nodeToInsert.getData()));
+            current.setRight(new Node<ComparableSegment>(current.getData()));
+            current.setData(nodeToInsert.getData());
+
         }
-        else if(nodeToInsert.compareTo(current) <= 0)
+        else if(current.compareTo(nodeToInsert) <= 0)
         {
             current.setLeft(insert(current.getLeft(), nodeToInsert));
-            current.updateHeight();
             current.balance();
 
         }
         else
         {
             current.setRight(insert(current.getRight(), nodeToInsert));
-            current.updateHeight();
             current.balance();
         }
+        current.updateHeight();
         return current;
     }
 

@@ -35,9 +35,12 @@ class TTest
         testTree1.display();
         // Sweep line is at point G
         //      Insert s4
-
+        testTree1.add(s4, G.y);
+        testTree1.display();
         // Sweep line is at point A
         //      Insert s1
+        //testTree1.add(s1, A.y);
+        //testTree1.display();
         //testTree1.display();
     }
     @Test

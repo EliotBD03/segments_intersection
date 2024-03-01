@@ -18,6 +18,6 @@ public class ComparableSegment extends Segment implements Comparable<ComparableS
     public int compareTo(ComparableSegment otherSegment)
     {
         Point ref = new Point(0, currentYAxis);
-        return Double.compare(getPointOnXAxis(ref, this).x,getPointOnXAxis(ref, otherSegment).x);
+        return Double.compare(getPointOnXAxis(ref, otherSegment).x,getPointOnXAxis(ref, this).x);
     }
 }
