@@ -15,16 +15,6 @@ public class T extends AVL<ComparableSegment>
 {
 
     /**
-     * constructor of the tree T which a specified y-axis to perform
-     * the comparisons.
-     * @param currentYAxis the value of the y-axis of the tree.
-     */
-    public T(double currentYAxis)
-    {
-        super();
-    }
-
-    /**
      * Add a segment inside the tree.
      * @param segment the segment to insert
      * @param currentYAxis the y-coordinate to perform comparisons
