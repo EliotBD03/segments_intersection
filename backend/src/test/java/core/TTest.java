@@ -17,7 +17,7 @@ class TTest
     @DisplayName("\uD83C\uDF32 T test starting")
     static void createTree()
     {
-        testTree1 =  new T(E.y);
+        testTree1 =  new T();
     }
 
     @Test
@@ -27,10 +27,12 @@ class TTest
         // Test that the graph's segments are correctly placed in T
         // Sweep line is at point E
         //      Insert s3
-
+        testTree1.add(s3, E.y);
+        testTree1.display();
         // Sweep line is at point C
         //      Insert s2
-
+        testTree1.add(s2, C.y);
+        testTree1.display();
         // Sweep line is at point G
         //      Insert s4
 
@@ -43,7 +45,7 @@ class TTest
     void remove()
     {
         // Try to remove from empty tree
-        T empty = new T(E.y);
+        T empty = new T();
         assertThrows(Exception.class,() -> empty.remove((ComparableSegment) s3));
     }
 
