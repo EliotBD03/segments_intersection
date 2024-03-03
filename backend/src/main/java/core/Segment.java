@@ -39,9 +39,10 @@ public class Segment
             default:
                 throw new IllegalArgumentException("cannot have a segment with exactly the same coordinates");
         }
-        a = lowerPoint.y - upperPoint.y;
-        b = lowerPoint.x - upperPoint.x;
-        c = lowerPoint.x * upperPoint.y - upperPoint.x * lowerPoint.y;
+        this.a = upperPoint.y - lowerPoint.y;
+        this.b = - upperPoint.x + lowerPoint.x;
+
+        c = -(a * upperPoint.x) - (b * upperPoint.y);
         this.id = id;
     }
     /**
@@ -114,11 +115,11 @@ public class Segment
     {
         if(segment.a == 0)
         {
-            if(p.x <= segment.upperPoint.x && p.x >= segment.lowerPoint.y)
+            if(p.x >= segment.upperPoint.x && p.x <= segment.lowerPoint.y)
                 return p;
-            if(Math.abs(segment.upperPoint.x - p.x) > Math.abs(segment.lowerPoint.x - p.x))
-                return segment.lowerPoint;
-            return segment.upperPoint;
+            if(segment.upperPoint.x > p.x)
+                return segment.upperPoint;
+            return segment.lowerPoint;
         }
         else
         {
