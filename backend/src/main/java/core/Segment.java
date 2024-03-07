@@ -1,6 +1,7 @@
 package core;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 /**
  * A segment representation with two specific endpoints:
@@ -81,7 +82,8 @@ public class Segment
     @Override
     public String toString()
     {
-        return "{" + id + ":" + lowerPoint +"--"+ upperPoint + "}";
+        //return "{" + id + ":" + lowerPoint +"--"+ upperPoint + "}";
+        return id;
     }
 
     /**
@@ -127,4 +129,5 @@ public class Segment
             return new Point(x, p.y);
         }
     }
+
 }

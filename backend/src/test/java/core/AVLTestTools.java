@@ -3,10 +3,10 @@ package core;
 import core.Point;
 import core.Segment;
 
-import java.util.HashSet;
+import java.util.*;
 
 
-public class AVLTestTools
+public class AVLTestTools<T extends Comparable<T>> extends AVL<T>
 {
     protected static final Point A = new Point(0,0);
     protected static final Point B = new Point(5,0);
@@ -24,6 +24,8 @@ public class AVLTestTools
     protected static final Segment s3 = new Segment(E,F,"s3");
     protected static final Segment s4 = new Segment(G,H,"s4");
     protected static final Segment s5 = new Segment(H,I,"s5");
+
+
 
 
     /**
@@ -61,4 +63,27 @@ public class AVLTestTools
         content.add(rootData);
         return checkForDoubles(node.getLeft(), content) || checkForDoubles(node.getRight(), content);
     }
+
+    public static <T extends Comparable<T>> boolean checkInorder(AVL<T>.Node<T> node, List<T> inorderList)
+    {
+        Queue<T> queue = new LinkedList<>(inorderList);
+        // Checks that after the exploration, the queue is empty meaning there aren't any extra nodes
+        return checkInorder(node, queue) && queue.isEmpty();
+    }
+    private static <T extends Comparable<T>> boolean checkInorder(AVL<T>.Node<T> node, Queue<T> inorderQueue)
+    {
+        if (node == null)
+            return true;
+        if(node.isLeaf())
+            return checkQueue(node.getData(), inorderQueue);
+        else{
+            return checkInorder(node.getLeft(), inorderQueue) && checkQueue(node.getData(), inorderQueue) && checkInorder(node.getRight(), inorderQueue);
+        }
+    }
+    private static <T extends Comparable<T>> boolean checkQueue(T current, Queue<T> queue)
+    {
+        return !queue.isEmpty() && queue.remove().compareTo(current) == 0;
+    }
+
+
 }

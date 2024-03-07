@@ -1,28 +1,21 @@
 package core;
 
 
-import parser.Parser;
-
-import java.io.IOException;
-import java.net.URISyntaxException;
-import java.nio.file.Paths;
-import java.util.ArrayList;
-
 /**
  * class which represents a status queue.
  */
-public class T extends AVL<ComparableSegment>
+public class StatusQueue extends AVL<ComparableSegment>
 {
 
     /**
      * Add a segment inside the tree.
      * @param segment the segment to insert
-     * @param currentYAxis the y-coordinate to perform comparisons
+     *
      */
-    public void add(Segment segment, double currentYAxis)
+    public void add(Segment segment, Point currP)
     {
-        ComparableSegment comparableSegment = new ComparableSegment(segment, currentYAxis);
-        this.insert(comparableSegment);
+        ComparableSegment comparableSegment = new ComparableSegment(segment, currP.y);
+        this.insert(comparableSegment, currP);
     }
 
     /**
@@ -43,33 +36,38 @@ public class T extends AVL<ComparableSegment>
      * Another basis case is implemented -> the node is a leaf.
      * @param current the current node we are in
      * @param nodeToInsert the node to be inserted
+     * @param currP
      * @return the tree modified
      */
-    private Node<ComparableSegment> insert(Node<ComparableSegment> current, Node<ComparableSegment> nodeToInsert)
+    private Node<ComparableSegment> insert(Node<ComparableSegment> current, Node<ComparableSegment> nodeToInsert, Point currP)
     {
         if(current == null)
         {
             nodeToInsert.setLeft(new Node<ComparableSegment>(nodeToInsert.getData()));
+            // Let's not forget to update the height since we added two nodes at once
+            nodeToInsert.updateHeight();
             return nodeToInsert;
         }
-        else if(current.getLeft() == null && current.getRight() == null)
+        else if(current.isLeaf())
         {
             current.setLeft(new Node<ComparableSegment>(nodeToInsert.getData()));
             current.setRight(new Node<ComparableSegment>(current.getData()));
             current.setData(nodeToInsert.getData());
+        }
+        else{
+            int compareTo = current.getData().compareToPoint(nodeToInsert.getData(), currP);
+            if(compareTo <= 0)
+            {
+                current.setLeft(insert(current.getLeft(), nodeToInsert, currP));
+                current.balance();
+            }
+            else
+            {
+                current.setRight(insert(current.getRight(), nodeToInsert, currP));
+                current.balance();
+            }
+        }
 
-        }
-        else if(current.compareTo(nodeToInsert) <= 0)
-        {
-            current.setLeft(insert(current.getLeft(), nodeToInsert));
-            current.balance();
-
-        }
-        else
-        {
-            current.setRight(insert(current.getRight(), nodeToInsert));
-            current.balance();
-        }
         current.updateHeight();
         return current;
     }
@@ -78,9 +76,9 @@ public class T extends AVL<ComparableSegment>
      * Insert a comparable segment inside T
      * @param data the data to be inserted inside the tree.
      */
-    @Override
-    protected void insert(ComparableSegment data) {
-       super.root = this.insert(super.root, new Node<ComparableSegment>(data));
+
+    protected void insert(ComparableSegment data, Point currentP) {
+       super.root = this.insert(super.root, new Node<ComparableSegment>(data), currentP);
     }
 
     /**
@@ -136,6 +134,34 @@ public class T extends AVL<ComparableSegment>
             rightNeighbor = fatherFromFather.getLeft().lookForMaximum().getData();
         return new Segment[]{leftNeighbor, rightNeighbor};
     }
+
+
+    public static StatusQueue getClosestRoot(StatusQueue tree, Point p)
+    {
+        if(tree == null)
+            return null;
+        Node<ComparableSegment> father = tree.root;
+        Node<ComparableSegment> tmp = tree.root.getRight();
+        Point p2 = Segment.getPointOnXAxis(p ,tmp.getData());
+        while(p2.x < p.x && !tmp.isLeaf())
+        {
+            father = tmp;
+            tmp = tmp.getRight();
+            p2 = Segment.getPointOnXAxis(p, tmp.getData());
+        }
+        tmp = tmp.getLeft();
+        p2 = Segment.getPointOnXAxis(p, tmp.getData());
+        while(p2.x < p.x && !tmp.isLeaf())
+        {
+            father = tmp;
+            tmp = tmp.getRight();
+            p2 = Segment.getPointOnXAxis(p, tmp.getData());
+        }
+        StatusQueue res = new StatusQueue();
+        res.root = father;
+        return res;
+    }
+
 /*
     public static void main(String[] args) throws URISyntaxException, IOException {
         Parser parser = new Parser(Parser.getPathFromResource("/cartes/fichier2.txt"));

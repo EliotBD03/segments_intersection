@@ -23,15 +23,8 @@ class QTest
         ));
         //qTest.display();
         // Check for correct order
-        assertEquals(qTest.root.getData(), A);
-        assertEquals(qTest.root.getRight().getData(), D);
-        assertEquals(qTest.root.getLeft().getData(), C);
-        assertEquals(qTest.root.getLeft().getLeft().getData(), E);
-        assertEquals(qTest.root.getLeft().getRight().getData(), G);
-        assertEquals(qTest.root.getRight().getLeft().getData(), B);
-        assertEquals(qTest.root.getRight().getLeft().getLeft().getData(), H);
-        assertEquals(qTest.root.getRight().getRight().getData(), F);
-        assertEquals(qTest.root.getRight().getRight().getRight().getData(), I);
+        qTest.display();
+        assertTrue(checkInorder(qTest.root, List.of(E, C, G, A, H, B, D, F, I)));
     }
 
 

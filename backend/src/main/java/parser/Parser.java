@@ -1,7 +1,7 @@
 package parser;
 
 import core.Segment;
-import core.T;
+import core.StatusQueue;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -122,6 +122,6 @@ public class Parser
 
     public static String getPathFromResource(String filePathFromResource) throws URISyntaxException
     {
-        return Paths.get(T.class.getResource(filePathFromResource).toURI()).toString();
+        return Paths.get(StatusQueue.class.getResource(filePathFromResource).toURI()).toString();
     }
 }
