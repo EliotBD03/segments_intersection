@@ -10,7 +10,7 @@ public class StatusQueue extends AVL<ComparableSegment>
     /**
      * Add a segment inside the tree.
      * @param segment the segment to insert
-     *
+     * @param currP the current point representing the status of the StatusQueue
      */
     public void add(Segment segment, Point currP)
     {
@@ -32,11 +32,25 @@ public class StatusQueue extends AVL<ComparableSegment>
     }
 
     /**
+     * Remove the leaf containing the given segment
+     * @param segment   The segment to remove
+     * @param currP the current point representing the status of the StatusQueue
+     */
+    private void removeLeaf(ComparableSegment segment, Point currP)
+    {
+        if(root == null || (root.isLeaf() && root.getData().equals(segment))){
+            root = null;
+            return;
+        }
+
+    }
+
+    /**
      * insert a Node in segment in accordance with the particular behavior of the tree.
      * Another basis case is implemented -> the node is a leaf.
      * @param current the current node we are in
      * @param nodeToInsert the node to be inserted
-     * @param currP
+     * @param currP the current point representing the status of the StatusQueue
      * @return the tree modified
      */
     private Node<ComparableSegment> insert(Node<ComparableSegment> current, Node<ComparableSegment> nodeToInsert, Point currP)
@@ -44,8 +58,6 @@ public class StatusQueue extends AVL<ComparableSegment>
         if(current == null)
         {
             nodeToInsert.setLeft(new Node<ComparableSegment>(nodeToInsert.getData()));
-            // Let's not forget to update the height since we added two nodes at once
-            nodeToInsert.updateHeight();
             return nodeToInsert;
         }
         else if(current.isLeaf())
@@ -135,7 +147,12 @@ public class StatusQueue extends AVL<ComparableSegment>
         return new Segment[]{leftNeighbor, rightNeighbor};
     }
 
-
+    /**
+     * To test later
+     * @param tree
+     * @param p
+     * @return
+     */
     public static StatusQueue getClosestRoot(StatusQueue tree, Point p)
     {
         if(tree == null)

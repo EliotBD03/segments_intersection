@@ -51,6 +51,7 @@ class StatusQueueTest
         testTree1.add(s1, A);
         //testTree1.display();
         assertTrue(checkInorder(testTree1.root, convertList(List.of(s1,s1,s2,s2,s3,s3,s4,s4))));
+        testTree1.display();
         //testTree1.display();
     }
     @Test

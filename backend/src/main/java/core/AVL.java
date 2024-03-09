@@ -64,6 +64,7 @@ public class AVL<T extends Comparable<T>>
         public void setRight(Node<T> node)
         {
             this.right = node;
+            this.updateHeight();
         }
 
         /**
@@ -73,6 +74,7 @@ public class AVL<T extends Comparable<T>>
         public void setLeft(Node<T> node)
         {
             this.left = node;
+            this.updateHeight();
         }
 
         /**
@@ -345,13 +347,11 @@ public class AVL<T extends Comparable<T>>
         else if(nodeToInsert.compareTo(current) < 0)
         {
             current.setLeft(insert(current.getLeft(), nodeToInsert));
-            current.updateHeight();
             current.balance();
         }
         else
         {
             current.setRight(insert(current.getRight(), nodeToInsert));
-            current.updateHeight();
             current.balance();
         }
         return current;
@@ -373,20 +373,18 @@ public class AVL<T extends Comparable<T>>
      * @return the modified tree
      * @throws Exception if the data does not exist inside the tree.
      */
-    private Node<T> remove(Node<T> current, Node<T> nodeToRemove) throws Exception
+    protected Node<T> remove(Node<T> current, Node<T> nodeToRemove) throws Exception
     {
         if (current == null)
             throw new Exception("the current AVL does not have the node with the given data : " + nodeToRemove.data);
         else if(nodeToRemove.compareTo(current) < 0)
         {
             current.setLeft(remove(current.getLeft(), nodeToRemove));
-            current.updateHeight();
             current.balance();
         }
         else if(nodeToRemove.compareTo(current) > 0)
         {
             current.setRight(remove(current.getRight(), nodeToRemove));
-            current.updateHeight();
             current.balance();
         }
         else
@@ -426,26 +424,6 @@ public class AVL<T extends Comparable<T>>
     {
         remove(root, new Node<>(data));
     }
-
-    /**
-     * Display the AVL in an inorder way.
-     * @param currentNode the current node were in.
-     * @param space the space between each father-children.
-     */
-    private void display(Node<T> currentNode, int space)
-    {
-        if(currentNode != null)
-        {
-            space += 5;
-            display(currentNode.getRight(), space);
-            System.out.print("\n");
-            for(int i = 5; i < space; i++)
-                System.out.print(" ");
-            System.out.print(currentNode + "\n");
-            display(currentNode.getLeft(), space);
-        }
-
-    }
     /**
      * wrapper for the private display function.
      * Display the AVL in an inorder way.
@@ -453,7 +431,6 @@ public class AVL<T extends Comparable<T>>
     protected void display()
     {
         System.out.println(root);
-        //display(root, 0);
     }
 
 
