@@ -7,7 +7,7 @@ import java.util.ArrayList;
  * It has a queue-like behavior.
  * Furthermore, it has no special constructor. Only a generator.
  */
-public class Q extends AVL<Point>
+public class PointQueue extends AVL<Point>
 {
 
     private Point head;
@@ -15,7 +15,7 @@ public class Q extends AVL<Point>
     /**
      * private contructor to init the head to infinity
      */
-    private Q()
+    private PointQueue()
     {
         head = new Point(Float.POSITIVE_INFINITY, Float.POSITIVE_INFINITY);
     }
@@ -33,9 +33,9 @@ public class Q extends AVL<Point>
      * @param segments an arraylist of segments
      * @return Q object with the corresponding endpoints inside.
      */
-    public static Q initQ(ArrayList<Segment> segments)
+    public static PointQueue initQ(ArrayList<Segment> segments)
     {
-        Q q = new Q();
+        PointQueue q = new PointQueue();
         for(Segment segment : segments)
         {
             segment.getUpperPoint().addSegment(segment);
