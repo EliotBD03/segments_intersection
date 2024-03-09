@@ -11,14 +11,14 @@ import static org.junit.jupiter.api.Assertions.*;
 
 
 @DisplayName("QTest \uD83C\uDF33")
-class QTest
+class PointQueueTest
 {
-    static Q qTest;
+    static PointQueue qTest;
 
     @BeforeAll
     static void initQ()
     {
-        qTest = Q.initQ(new ArrayList<>(
+        qTest = PointQueue.initQ(new ArrayList<>(
                 Arrays.asList(s1,s2,s3,s4,s5)
         ));
         //qTest.display();
