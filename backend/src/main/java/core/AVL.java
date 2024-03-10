@@ -1,6 +1,6 @@
 package core;
 import java.util.ArrayList;
-import java.util.Random;
+
 
 /**
  * main representation of an AVL (abstraction of the inner class : Node)
@@ -283,6 +283,8 @@ public class AVL<T extends Comparable<T>>
                 current = current.right;
             return current;
         }
+
+
         //_____________________Pretty Printer______________________
 
         private String leafToString(int depth, boolean dir, ArrayList<Integer> barList)
@@ -368,7 +370,7 @@ public class AVL<T extends Comparable<T>>
 
     /**
      * Remove a given node from the tree
-     * @param current the current node were in.
+     * @param current the current node we are in.
      * @param nodeToRemove the node to remove from the tree.
      * @return the modified tree
      * @throws Exception if the data does not exist inside the tree.
@@ -389,7 +391,7 @@ public class AVL<T extends Comparable<T>>
         }
         else
         {
-            if(current.getLeft() == null && current.getRight() == null)
+            if(current.isLeaf())
                 return null;
             else if(current.getLeft() == null)
                 return current.getRight();
@@ -397,22 +399,52 @@ public class AVL<T extends Comparable<T>>
                 return current.getLeft();
             else
             {
+                Pair<Node<T>, T> newCurr;
                 if(current.getLeft().getHeight() < current.getRight().getHeight())
                 {
-                    Node<T> minimum = current.right.lookForMinimum();
-                    remove(current, minimum); //TODO could both removing and saving data
-                    current.data = minimum.data;
+                    newCurr = removeMax(current.right);
+                    current.right = newCurr.getItem1();
                 }
                 else
                 {
-                    Node<T> maximum = current.left.lookForMaximum();
-                    remove(current, maximum); //TODO could both removing and saving data
-                    current.data = maximum.data;
-
+                    newCurr = removeMax(current.left);
+                    current.left = newCurr.getItem1();
                 }
+                current.data = newCurr.getItem2();
             }
         }
         return current;
+    }
+
+    /**
+     * Removes the node containing the max value of the given node.
+     * Keep in mind, this will also modify the tree structure of curr, so
+     * it is recommended to assign the returned value in item1.
+     * @param curr  The node to remove the max
+     * @return      A pair containing curr without its max and the max value
+     */
+    protected Pair<Node<T>, T> removeMax(Node<T> curr)
+    {
+        // Tree is empty
+        if(curr == null)
+            return null;
+
+        T max = curr.data;
+        // The current node is max
+        if(curr.right == null)
+        {
+            // we replace it with his left node
+            curr = curr.left;
+        }else
+        {
+            // Else remove the max from the right child
+            Pair<Node<T>, T> rec = removeMax(curr.right);
+            curr.right = rec.getItem1();
+            max = rec.getItem2();
+        }
+        if(curr != null)
+            curr.balance();
+        return new Pair<>(curr, max);
     }
 
     /**
@@ -422,7 +454,8 @@ public class AVL<T extends Comparable<T>>
      */
     protected void remove(T data) throws Exception
     {
-        remove(root, new Node<>(data));
+        // Replace the root with the new tree
+        this.root = remove(root, new Node<>(data));
     }
     /**
      * wrapper for the private display function.

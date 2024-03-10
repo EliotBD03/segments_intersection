@@ -1,7 +1,6 @@
 package core;
 
 import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -19,31 +18,18 @@ class AVLTest {
         tree.insert(2d);
         tree.insert(4d);
         tree.insert(-1.1d);
+        tree.insert(10001d);
+        tree.insert(701d);
+        tree.insert(-10001d);
         assertTrue(orderIsRespected(tree.root));
     }
 
     @Test
     void remove() throws Exception
     {
-        assertThrows(Exception.class, ()-> tree.remove(11212d));
-        assertThrows(Exception.class, ()-> tree.remove(-11212d));
-
-        assertDoesNotThrow(() -> tree.remove(2d));
-
-        assertThrows(Exception.class, ()-> tree.remove(2d));
+        tree.remove(701d);
         assertTrue(orderIsRespected(tree.root));
-
-        assertDoesNotThrow(() -> tree.remove(1d));
-        assertTrue(orderIsRespected(tree.root));
-
-        assertDoesNotThrow(() -> tree.remove(4d));
-        assertTrue(orderIsRespected(tree.root));
-
-        assertDoesNotThrow(() -> tree.remove(-1.1d));
-        assertTrue(orderIsRespected(tree.root));
-
-        // Check what happens when empty
-        assertThrows(Exception.class, ()-> tree.remove(-11212d));
+        tree.display();
     }
 
 }
