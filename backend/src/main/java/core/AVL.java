@@ -413,6 +413,7 @@ public class AVL<T extends Comparable<T>>
                 current.data = newCurr.getItem2();
             }
         }
+
         return current;
     }
 
@@ -455,7 +456,7 @@ public class AVL<T extends Comparable<T>>
     protected void remove(T data) throws Exception
     {
         // Replace the root with the new tree
-        this.root = remove(root, new Node<>(data));
+        this.root = remove(this.root, new Node<>(data));
     }
     /**
      * wrapper for the private display function.

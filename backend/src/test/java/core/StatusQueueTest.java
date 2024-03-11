@@ -1,9 +1,6 @@
 package core;
 
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Order;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -17,18 +14,13 @@ class StatusQueueTest
 {
     static StatusQueue testTree1;
 
+
     @BeforeAll
     @DisplayName("\uD83C\uDF32 StatusQueue test starting")
-    static void createTree()
+    static void add()
     {
         testTree1 =  new StatusQueue();
-    }
 
-    @Test
-    @Order(1)
-    void add()
-    {
-        AVLTestTools<ComparableSegment> s = new AVLTestTools<>();
         // Test that the graph's segments are correctly placed in T
         // Sweep line is at point E
         //      Insert s3
@@ -65,21 +57,38 @@ class StatusQueueTest
 
     @Test
     @Order(3)
-    void orderSwapped()
+    void orderSwapped() throws Exception
     {
         // Sweep line is at point P
         //      Remove s1 then s2
+        testTree1.display();
+        testTree1.remove(s1, P);
+        testTree1.display();
+        testTree1.remove(s2, P);
+        testTree1.display();
+        testTree1.add(s1,P);
+        System.out.println("_=_=_=_=_=_==_=_=_=_");
+        testTree1.add(s2,P);
+        testTree1.display();
+
+        testTree1.remove(s1,H);
+        testTree1.remove(s3,H);
+        testTree1.remove(s4,H);
+        testTree1.add(s1,H);
+        testTree1.add(s3,H);
+        testTree1.add(s5,H);
+        testTree1.display();
         //      Add s1 then s2
         //      Check if they were correctly exchanged
 
     }
 
-    private List<ComparableSegment> convertList(List<Segment> segments)
+    private static List<ComparableSegment> convertList(List<Segment> segments)
     {
         List<ComparableSegment> res = new ArrayList<>();
         for(Segment s : segments)
         {
-            res.add(new ComparableSegment(s, 0));
+            res.add(new ComparableSegment(s, new Point(0,0)));
         }
         return res;
     }

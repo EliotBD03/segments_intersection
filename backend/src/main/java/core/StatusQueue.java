@@ -14,35 +14,56 @@ public class StatusQueue extends AVL<ComparableSegment>
      */
     public void add(Segment segment, Point currP)
     {
-        ComparableSegment comparableSegment = new ComparableSegment(segment, currP.y);
+        ComparableSegment comparableSegment = new ComparableSegment(segment, currP);
         this.insert(comparableSegment, currP);
     }
 
     /**
-     * Remove a segment from the tree.
-     * @param segment the segment to remove from the tree.
-     * @param currentYAxis the y-coordinate to perform comparisons
-     * @throws Exception if the segment does not exist.
+     * Removes both nodes containing the desired segment if it exist.
+     * @param segment           The segment to remove both nodes from this tree
+     * @param currPoint         The reference point used to navigate the tree
+     * @throws Exception        If the present is not present
      */
-    public void remove(Segment segment, double currentYAxis) throws Exception
+    public void remove(Segment segment, Point currPoint) throws Exception
     {
-        ComparableSegment comparableSegment = new ComparableSegment(segment, currentYAxis);
-        super.remove(comparableSegment);
-        super.remove(comparableSegment);
+        ComparableSegment comparableSegment = new ComparableSegment(segment, currPoint);
+        // Remove the leaf segment first
+        root = removeLeaf(root, comparableSegment);
+        System.out.println("huiu");
+        // Remove the inner segment
+        remove(comparableSegment);
+        root.balance();
     }
 
-    /**
-     * Remove the leaf containing the given segment
-     * @param segment   The segment to remove
-     * @param currP the current point representing the status of the StatusQueue
-     */
-    private void removeLeaf(ComparableSegment segment, Point currP)
-    {
-        if(root == null || (root.isLeaf() && root.getData().equals(segment))){
-            root = null;
-            return;
-        }
 
+    /**
+     * Removes the desired segment leaf inside T
+     * @param currNode  The current node of the tree
+     * @param segment   The segment in the leaf to remove
+     * @return The resulting tree from the deletion of the leaf
+     */
+    private Node<ComparableSegment> removeLeaf(Node<ComparableSegment> currNode, ComparableSegment segment) throws Exception
+    {
+        if(currNode == null || currNode.isLeaf())
+            throw new Exception("the current AVL does not have the node with the given data : " + segment);
+
+        if(currNode.getData().equals(segment))
+        {
+            // Remove the maximum element which by logic is the leaf we are looking for
+            currNode.setLeft(removeMax(currNode.getLeft()).getItem1());
+            currNode.balance();
+            return currNode;
+        }
+        if (currNode.getData().compareToPoint(segment, segment.currentPoint) >= 0)
+        {
+            currNode.setLeft(removeLeaf(currNode.getLeft(), segment));
+            currNode.balance();
+        }else
+        {
+            currNode.setRight(removeLeaf(currNode.getRight(), segment));
+            currNode.balance();
+        }
+        return currNode;
     }
 
     /**
@@ -66,9 +87,9 @@ public class StatusQueue extends AVL<ComparableSegment>
             current.setRight(new Node<ComparableSegment>(current.getData()));
             current.setData(nodeToInsert.getData());
         }
-        else{
-            int compareTo = current.getData().compareToPoint(nodeToInsert.getData(), currP);
-            if(compareTo <= 0)
+        else
+        {
+            if(current.getData().compareToPoint(nodeToInsert.getData(), currP) >= 0)
             {
                 current.setLeft(insert(current.getLeft(), nodeToInsert, currP));
                 current.balance();
@@ -121,14 +142,14 @@ public class StatusQueue extends AVL<ComparableSegment>
      * - the closest left segment to the segment
      * - the closest right segment to the segment
      * @param segment the segment to find the neighborhood
-     * @param currentYAxis the y-coordinate to perform comparisons
+     * @param currentPoint the current point of the tree
      * @return an array of segments which is {closest left segment, closest right segment}
      */
-    public Segment[] getNeighborhood(Segment segment, double currentYAxis)
+    public Segment[] getNeighborhood(Segment segment, Point currentPoint)
     {
         Segment leftNeighbor = null;
         Segment rightNeighbor = null;
-        ComparableSegment comparableSegment = new ComparableSegment(segment, currentYAxis);
+        ComparableSegment comparableSegment = new ComparableSegment(segment, currentPoint);
         boolean flag = true;
         Node<ComparableSegment> father = findFather(comparableSegment);
         if(father.getLeft().getData().compareTo(comparableSegment) == 0)

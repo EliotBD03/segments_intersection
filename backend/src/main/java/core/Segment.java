@@ -117,7 +117,7 @@ public class Segment
     {
         if(segment.a == 0)
         {
-            if(p.x >= segment.upperPoint.x && p.x <= segment.lowerPoint.y)
+           if(p.x >= segment.upperPoint.x && p.x <= segment.lowerPoint.x)
                 return p;
             if(segment.upperPoint.x > p.x)
                 return segment.upperPoint;
@@ -130,4 +130,24 @@ public class Segment
         }
     }
 
+    /**
+     * Checks if the segment has the same cartesian equation than this one
+     * @param o The other object to check
+     * @return  true only if the object to check is the same segment
+     */
+    @Override
+    public boolean equals(Object o)
+    {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Segment segment = (Segment) o;
+        return Double.compare(a, segment.a) == 0 && Double.compare(b, segment.b) == 0 && Double.compare(c, segment.c) == 0;
+    }
+
+    // Obliged to override hashcode if we override equals.
+    @Override
+    public int hashCode()
+    {
+        return Objects.hash(a, b, c);
+    }
 }
