@@ -29,7 +29,6 @@ public class    StatusQueue extends AVL<ComparableSegment>
         ComparableSegment comparableSegment = new ComparableSegment(segment, currPoint);
         // Remove the leaf segment first
         root = removeLeaf(root, comparableSegment);
-        System.out.println("huiu");
         // Remove the inner segment
         remove(comparableSegment);
         root.balance();
