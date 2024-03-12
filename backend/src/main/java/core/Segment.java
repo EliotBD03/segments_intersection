@@ -29,11 +29,11 @@ public class Segment
         Point q = new Point(endpoints[2], endpoints[3]);
         switch (p.compareTo(q))
         {
-            case -1:
+            case 1:
                 upperPoint = q;
                 lowerPoint = p;
                 break;
-            case 1:
+            case -1:
                 upperPoint = p;
                 lowerPoint = q;
                 break;
