@@ -30,12 +30,12 @@ public class Segment
         switch (p.compareTo(q))
         {
             case -1:
-                upperPoint = p;
-                lowerPoint = q;
-                break;
-            case 1:
                 upperPoint = q;
                 lowerPoint = p;
+                break;
+            case 1:
+                upperPoint = p;
+                lowerPoint = q;
                 break;
             default:
                 throw new IllegalArgumentException("cannot have a segment with exactly the same coordinates");
@@ -98,8 +98,8 @@ public class Segment
         double denominator = s1.a * s2.b - s2.a * s1.b;
         if(denominator != 0)
         {
-            double px = (s1.c * s2.b - s2.c * s1.b) / denominator;
-            double py = (s1.a * s2.c - s2.a * s1.c) / denominator;
+            double px = (s2.c * s1.b - s1.c * s2.b) / denominator;
+            double py = (s2.a * s1.c - s1.a * s2.c) / denominator;
             return new Point(px, py);
         }
         return null;

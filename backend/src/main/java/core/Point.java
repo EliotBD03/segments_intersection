@@ -29,7 +29,12 @@ public class Point implements Comparable<Point>
      */
     public void addSegment(Segment newSegment)
     {
-        startOf.add(newSegment);
+        if (newSegment.getUpperPoint().compareTo(this) == 0)
+            startOf.add(newSegment);
+        else
+            throw new IllegalArgumentException("the upper point of the segment does not contain the actual point.\n" +
+                    "upper point of segment : " + newSegment.getUpperPoint() + "\n" +
+                    "current point : " + this);
     }
 
     public ArrayList<Segment> getStartOf()
