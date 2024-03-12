@@ -22,7 +22,7 @@ class SegmentTest {
 
     @Test
     void getPointOnXAxis() {
-        assertEquals(Segment.getPointOnXAxis(new Point(0.286, 0.286), segment2).x, segment2.getLowerPoint().x, 0.0001);
+        assertEquals(Segment.getPointOnXAxis(new Point(0.286, 0.286), segment2).x, segment2.getUpperPoint().x, 0.0001);
     }
 
     @Test
@@ -40,11 +40,11 @@ class SegmentTest {
 
     @Test
     void getLowerPoint() {
-        assertEquals(new Point(0.286, 0.286), segment2.getLowerPoint());
+        assertEquals(new Point(0.8, 0.2), segment2.getLowerPoint());
     }
 
     @Test
     void getUpperPoint() {
-        assertEquals(new Point(0.8, 0.2), segment2.getUpperPoint());
+        assertEquals(new Point(0.286, 0.286), segment2.getUpperPoint());
     }
 }
