@@ -38,9 +38,9 @@ public class Segment extends Group {
         line.setStroke(Color.BLACK);
         this.getChildren().add(line);
         // Add the 2 end points
-        endPoint1 = (EventPointC) getEventPoint.createShape(segment.getPoint1());
+        endPoint1 = (EventPointC) getEventPoint.createNode(segment.getPoint1());
         this.getChildren().add(endPoint1);
-        endPoint2 = (EventPointC) getEventPoint.createShape(segment.getPoint2());
+        endPoint2 = (EventPointC) getEventPoint.createNode(segment.getPoint2());
         this.getChildren().add(endPoint2);
     }
 

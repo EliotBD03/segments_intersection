@@ -4,14 +4,8 @@ import be.ac.umons.firstg.segmentintersector.Interfaces.IShapeGen;
 import be.ac.umons.firstg.segmentintersector.Temp.BinaryTree;
 import be.ac.umons.firstg.segmentintersector.Temp.Point;
 import javafx.geometry.Bounds;
-import javafx.geometry.Insets;
 import javafx.scene.Group;
 import javafx.scene.Node;
-import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.Background;
-import javafx.scene.layout.BackgroundFill;
-import javafx.scene.layout.CornerRadii;
-import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
 
@@ -77,9 +71,9 @@ public class Tree<T> extends Group
         // Then we can start drawing shapes ( so we can avoid lines getting on top of nodes )
         Node node;
         if(tree.isLeaf()){
-            node = this.leafShape.createShape(tree.data);
+            node = this.leafShape.createNode(tree.data);
         }else{
-            node = this.innerShape.createShape(tree.data);
+            node = this.innerShape.createNode(tree.data);
         }
         // If there is a parent, we add a line from that to the new node created
         if(parent != null){

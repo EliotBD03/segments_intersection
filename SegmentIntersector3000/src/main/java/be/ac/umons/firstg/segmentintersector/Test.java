@@ -1,41 +1,22 @@
 package be.ac.umons.firstg.segmentintersector;
 
-import be.ac.umons.firstg.segmentintersector.Interfaces.IShapeGen;
-import be.ac.umons.firstg.segmentintersector.Temp.BinaryTree;
-import be.ac.umons.firstg.segmentintersector.Temp.Point;
-import be.ac.umons.firstg.segmentintersector.Temp.SegmentTMP;
-import be.ac.umons.firstg.segmentintersector.components.GraphXY;
-import be.ac.umons.firstg.segmentintersector.components.IntersectionTable;
-import be.ac.umons.firstg.segmentintersector.components.Tree;
-import be.ac.umons.firstg.segmentintersector.components.TreeSegmentNode;
+import be.ac.umons.firstg.segmentintersector.Pages.MainPage;
 import javafx.application.Application;
-import javafx.collections.FXCollections;
 import javafx.fxml.FXMLLoader;
-import javafx.geometry.Insets;
-import javafx.geometry.Pos;
-import javafx.scene.Group;
 import javafx.scene.Scene;
-import javafx.scene.control.ScrollPane;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
-import javafx.scene.control.cell.MapValueFactory;
-import javafx.scene.layout.*;
-import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
 import java.io.IOException;
-import java.util.*;
-import java.util.random.RandomGenerator;
-
-import static be.ac.umons.firstg.segmentintersector.Temp.Parser.getSegmentsFromFile;
 
 public class Test extends Application {
     @Override
     public void start(Stage stage) throws IOException {
-        FXMLLoader fxmlLoader = new FXMLLoader(Test.class.getResource("MainPage2.fxml"));
+        FXMLLoader fxmlLoader = new FXMLLoader(Test.class.getResource("MainPage.fxml"));
 
-        Scene scene = new Scene(fxmlLoader.load());
 
+        //Scene scene = new Scene(fxmlLoader.load());
+        Scene scene = new Scene(new MainPage());
+        /*
         MainPage mainPage = fxmlLoader.getController();
         mainPage.setPrimaryStage(stage);
 
@@ -53,7 +34,7 @@ public class Test extends Application {
         mainPage.TableGroup.setCenter(intersectionTable);
         mainPage.TableGroup.setPadding(new Insets(25,10,0,10));
 
-
+        */
 
         // Tree Windows
         //Stage TWindow = new Stage();

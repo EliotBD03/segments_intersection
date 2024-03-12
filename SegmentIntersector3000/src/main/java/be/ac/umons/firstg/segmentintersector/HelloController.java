@@ -11,15 +11,9 @@ import javafx.scene.control.TableView;
 import java.util.Map;
 
 public class HelloController {
-    @FXML
-    private IntersectionTable interTable;
 
     public HelloController()
     {
     }
 
-    public IntersectionTable getInterTable()
-    {
-        return interTable;
-    }
 }
