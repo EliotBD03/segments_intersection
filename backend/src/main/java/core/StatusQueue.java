@@ -4,7 +4,7 @@ package core;
 /**
  * class which represents a status queue.
  */
-public class StatusQueue extends AVL<ComparableSegment>
+public class    StatusQueue extends AVL<ComparableSegment>
 {
 
     /**
@@ -113,30 +113,10 @@ public class StatusQueue extends AVL<ComparableSegment>
     protected void insert(ComparableSegment data, Point currentP) {
        super.root = this.insert(super.root, new Node<ComparableSegment>(data), currentP);
     }
-
-    /**
-     * find the father of a given segment inside the tree meaning
-     * that one of its child is the segment
-     * @param segment the segment to find the father
-     * @return the father
-     */
-    private Node<ComparableSegment> findFather(ComparableSegment segment)
+    private static double distance(ComparableSegment segment1, ComparableSegment segment2)
     {
-        if(root.getData().compareTo(segment) == 0)
-            return root;
-
-        Node<ComparableSegment> currentNode = this.root;
-        while((currentNode.getLeft() != null && currentNode.getLeft().getData().compareTo(segment) != 0) && (currentNode.getRight() != null && currentNode.getRight().getData().compareTo(segment) != 0))
-        {
-            if(currentNode.getData().compareTo(segment) < 0)
-                currentNode = currentNode.getLeft();
-            else
-                currentNode = currentNode.getRight();
-        }
-        return currentNode;
+        return Math.pow(Segment.getPointOnXAxis(segment1.currentPoint, segment1).x - Segment.getPointOnXAxis(segment1.currentPoint, segment2).x,2);
     }
-
-
     /**
      * Get the neighborhood of a given segment which is
      * - the closest left segment to the segment
@@ -147,25 +127,39 @@ public class StatusQueue extends AVL<ComparableSegment>
      */
     public Segment[] getNeighborhood(Segment segment, Point currentPoint)
     {
-        Segment leftNeighbor = null;
-        Segment rightNeighbor = null;
-        ComparableSegment comparableSegment = new ComparableSegment(segment, currentPoint);
-        boolean flag = true;
-        Node<ComparableSegment> father = findFather(comparableSegment);
-        if(father.getLeft().getData().compareTo(comparableSegment) == 0)
-        {
-            leftNeighbor = father.getRight().lookForMinimum().getData();
-            flag = false;
-            System.out.println("je passe");
-        }
-        else
-            rightNeighbor = father.getLeft().lookForMaximum().getData();
-        Node<ComparableSegment> fatherFromFather = findFather(father.getData());
-        if(flag)
-            leftNeighbor = fatherFromFather.getRight().lookForMinimum().getData();
-        else
-            rightNeighbor = fatherFromFather.getLeft().lookForMaximum().getData();
-        return new Segment[]{leftNeighbor, rightNeighbor};
+       Segment ln = null;
+       Segment rn = null;
+       ComparableSegment comparableSegment = new ComparableSegment(segment, currentPoint);
+       Node<ComparableSegment> current = root;
+       double dist = distance(current.getData(), comparableSegment);
+       while(!current.isLeaf())
+       {
+           double currentDist = distance(current.getData(), comparableSegment);
+           if(current.getData().compareTo(comparableSegment) < 0 && currentDist <= dist)
+               current = current.getRight();
+           else
+               current = current.getLeft();
+           dist = currentDist;
+
+       }
+       if(!current.getData().equals(comparableSegment))
+        ln = current.getData();
+
+       current = root;
+       dist = distance(current.getData(), comparableSegment);
+       while(!current.isLeaf())
+       {
+           double currentDist = distance(current.getData(), comparableSegment);
+           if(current.getData().compareTo(comparableSegment) > 0 && currentDist <= dist)
+               current = current.getLeft();
+           else
+               current = current.getRight();
+           dist = currentDist;
+
+       }
+       if(!current.getData().equals(comparableSegment))
+           rn = current.getData();
+       return new Segment[]{ln, rn};
     }
 
     /**
