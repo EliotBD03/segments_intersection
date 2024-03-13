@@ -1,10 +1,9 @@
 package be.ac.umons.firstg.segmentintersector.Pages;
 
 import be.ac.umons.firstg.segmentintersector.Interfaces.INodeGen;
-import be.ac.umons.firstg.segmentintersector.Interfaces.IShapeGen;
 import be.ac.umons.firstg.segmentintersector.Temp.Point;
 import be.ac.umons.firstg.segmentintersector.components.GraphXY;
-import javafx.geometry.Pos;
+import javafx.beans.Observable;
 import javafx.geometry.Side;
 import javafx.scene.control.Button;
 import javafx.scene.control.ScrollPane;
@@ -22,6 +21,10 @@ public class MainPage extends HBox
     private final ScrollPane graphPane;
     private final HBox timelinePane;
     private final TabPane tabPane;
+
+    // The currently shown tab
+    private boolean tabClosed;
+    private Tab currentTab;
 
     public MainPage()
     {
@@ -58,29 +61,81 @@ public class MainPage extends HBox
 
     private void createTabs()
     {
+        int tabSize = 100;
         INodeGen<Tab, String> tabGen = data ->
         {
             Tab tab = new Tab();
-            tab.setGraphic(getIcon(data));
-            AnchorPane content = new AnchorPane();
+            if(data != null)
+                tab.setGraphic(getIcon(data, tabSize/1000f + 0.01f));
+            VBox content = new VBox();
+            content.setVisible(false);
+            content.managedProperty().bind(content.visibleProperty());
             content.setPrefHeight(600);
-            content.setPrefWidth(164);
+            content.setPrefWidth(300);
+            Button button = new Button();
+            button.setOnAction(e -> handleTabInteraction(true));
+            content.getChildren().add(button);
             tab.setContent(content);
             return tab;
         };
         tabPane.getTabs().addAll(tabGen.createNode("icons/GraphSettingsIcon.png"),
                                  tabGen.createNode("icons/MapSettingsIcon.png"));
-        tabPane.setTabMaxHeight(40);
-        tabPane.setTabMinHeight(40);
-        tabPane.setTabMaxWidth(40);
-        tabPane.setTabMinWidth(40);
+        tabPane.setTabMaxHeight(tabSize);
+        tabPane.setTabMinHeight(tabSize);
+        tabPane.setTabMaxWidth(tabSize);
+        tabPane.setTabMinWidth(tabSize);
         tabPane.setSide(Side.LEFT);
+        // Clear the starting selection
+        tabPane.getSelectionModel().clearSelection();
+        // Listen for interaction with the tabPane
+        tabPane.getSelectionModel().selectedItemProperty().addListener(e -> handleTabInteraction(false));
+
     }
-    private ImageView getIcon(String fromResourcePath)
+    private ImageView getIcon(String fromResourcePath, float size)
     {
         ImageView imageView = new ImageView(String.valueOf(getClass().getResource(fromResourcePath)));
-        imageView.setScaleX(0.05);
-        imageView.setScaleY(0.05);
+        imageView.setScaleX(size);
+        imageView.setScaleY(size);
         return imageView;
     }
+
+    private void handleTabInteraction(boolean closing)
+    {
+        if(tabPane.getSelectionModel().getSelectedItem() == null)
+            return;
+        System.out.println("_-_-_");
+        if(currentTab == null && !closing)
+        {
+            System.out.println("no tab is open and is opening");
+            currentTab = tabPane.getSelectionModel().getSelectedItem();
+            System.out.println("Selected: " + tabPane.getSelectionModel().getSelectedIndex());
+            if(currentTab == null)
+                return;
+            currentTab.getContent().setVisible(true);
+        }// If a tab is open and is closing
+        else if (currentTab != null && closing)
+        {
+            System.out.println("a tab is open and is closing");
+            currentTab.getContent().setVisible(false);
+            System.out.println("Just Cleared !");
+            tabPane.getSelectionModel().clearSelection();
+            System.out.println("What remains: " + tabPane.getSelectionModel().getSelectedIndex());
+            currentTab = null;
+        }
+        // If a tab is open and is opening -> Close previous tab, show the content of the new one and change current tab
+        else if (currentTab != null)
+        {
+            System.out.println("a tab is open and is opening");
+            System.out.println("Selected: " + tabPane.getSelectionModel().getSelectedIndex());
+            currentTab.getContent().setVisible(false);
+            currentTab = tabPane.getSelectionModel().getSelectedItem();
+            if(currentTab == null)
+                return;
+            currentTab.getContent().setVisible(true);
+        }
+        // If no tab is open and is opening
+        // If no tab is open and is closing -> nothing happens
+    }
+
+
 }
