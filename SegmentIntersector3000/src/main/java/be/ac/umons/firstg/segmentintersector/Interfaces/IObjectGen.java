@@ -1,14 +1,15 @@
 package be.ac.umons.firstg.segmentintersector.Interfaces;
 
 /**
- * Interface that can be used to create lambda expressions to generate nodes, helping with keeping the code generic
+ * Interface that can be used to create lambda expressions to instantiate objects, helping with keeping the code generic
+ * and clean.
  */
 @FunctionalInterface
-public interface INodeGen<T, K> {
+public interface IObjectGen<T, K> {
     /**
      * Creates an instance of a node
      * @return A new instance of a node
      */
-    T createNode(K data);
+    T createObject(K data);
 }
 // TODO: Add a paramater to the lambda create shape expression to allow the use of data from binary trees
