@@ -3,6 +3,7 @@ package core;
 import org.junit.jupiter.api.*;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -105,5 +106,23 @@ class StatusQueueTest
             res.add(new ComparableSegment(s, new Point(0,0)));
         }
         return res;
+    }
+
+    @Test
+    void getNeighborhoodTest()
+    {
+        testTree1.display();
+        Segment[] expected = {s1, s3};
+        ComparableSegment[] test = Arrays.stream(testTree1.getNeighborhood(s2, A))
+                .map(segment -> new ComparableSegment(segment, A))
+                .toArray(ComparableSegment[]::new);
+
+        for(int i = 0; i < 2; i++)
+        {
+            assertEquals(0, test[i].compareTo(new ComparableSegment(expected[i], A)));
+            System.out.println(expected[i]);
+            System.out.println(test[i]);
+        }
+        //TODO with one left neighbour, right neighbour (and maybe completeness optimality)
     }
 }
