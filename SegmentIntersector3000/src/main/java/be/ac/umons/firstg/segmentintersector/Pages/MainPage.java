@@ -2,13 +2,16 @@ package be.ac.umons.firstg.segmentintersector.Pages;
 
 import be.ac.umons.firstg.segmentintersector.Interfaces.IObjectGen;
 import be.ac.umons.firstg.segmentintersector.Temp.Point;
+import be.ac.umons.firstg.segmentintersector.Temp.SegmentTMP;
 import be.ac.umons.firstg.segmentintersector.components.GraphXY;
+import be.ac.umons.firstg.segmentintersector.components.SegmentsTable;
 import be.ac.umons.firstg.segmentintersector.customUtil.CustomConverter;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.geometry.Side;
+import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
@@ -246,26 +249,51 @@ public class MainPage extends HBox
     }
 
     /**
-     * Encapsulates the textfield into an HBox in a way that the label and the textField are taking all the line space
+     * Calls the {@link MainPage#encapsNode(Node...)} method with a label and the textField
      * @param tf    The textfield to encapsulate, with the label coming from the textField prompt text
      * @return      The promised HBox
      */
     private HBox encapsTextField(TextField tf)
     {
+        Label label = new Label(tf.getPromptText());
+        return encapsNode(label, tf);
+    }
+
+    /**
+     * Encapsulates nodes in a way that they are all placed uniformly on a row using
+     * an {@link HBox}
+     * @param nodes The nodes to encapsulate
+     * @return  The promised HBox
+     */
+    private HBox encapsNode(Node... nodes)
+    {
         HBox box = new HBox();
         box.setSpacing(10);
-        Label label = new Label(tf.getPromptText());
+        if(nodes.length == 0)
+            return box;
         AnchorPane left = new AnchorPane();
+        AnchorPane other;
         HBox.setHgrow(left, Priority.ALWAYS);
-        AnchorPane right = new AnchorPane();
-        box.getChildren().addAll(left,right);
-        left.getChildren().add(label);
-        right.getChildren().add(tf);
+        left.getChildren().add(nodes[0]);
+        box.getChildren().add(left);
+        for (int i = 1; i < nodes.length; i++)
+        {
+            other = new AnchorPane(nodes[i]);
+            box.getChildren().add(other);
+            if(i < nodes.length -1)
+                HBox.setHgrow(other, Priority.ALWAYS);
+
+        }
         return box;
     }
 
 
     //______________________________Tabs
+
+    /**
+     * Fills the graphTab with all the necessary input for the user
+     * @param graphTab  The tab to fill
+     */
     private void setGraphSettings(Tab graphTab)
     {
         IObjectGen<TextField, String> textFieldGen = data ->
@@ -314,6 +342,10 @@ public class MainPage extends HBox
         content.getChildren().add(box);
     }
 
+    /**
+     * Fills the mapTab with all the necessary inputs for the user
+     * @param mapTab The tab to fill
+     */
     private void setMapSettings(Tab mapTab)
     {
         IObjectGen<TextField, String> textFieldGen = data ->
@@ -324,7 +356,16 @@ public class MainPage extends HBox
             return inputField;
         };
         VBox outer = (VBox) mapTab.getContent();
-        // No map Loaded Content
+        // Load File Content
+        HBox loadFileContent = new HBox(20);
+        loadFileContent.setAlignment(Pos.CENTER_LEFT);
+        //loadFileContent.setBackground(new Background(new BackgroundFill(Color.GREENYELLOW, CornerRadii.EMPTY, Insets.EMPTY)));
+        Button loadMapButton = new Button("Import");
+        Label label = new Label("No file selected");
+
+        loadFileContent.getChildren().addAll(loadMapButton, label);
+
+        // Current Map Content
         VBox noMapContent = new VBox();
         noMapContent.setAlignment(Pos.CENTER);
 
@@ -340,11 +381,12 @@ public class MainPage extends HBox
         noMapContent.getChildren().addAll(noMapText, importButton, createButton);
 
         // Shared Content
-        VBox shareContent = new VBox();
+        //      Add Segment
+        VBox currentMapContent = new VBox();
+        currentMapContent.setAlignment(Pos.CENTER);
 
-        VBox addSegments = new VBox();
-        //shareContent.setBackground(new Background(new BackgroundFill(Color.RED, CornerRadii.EMPTY, Insets.EMPTY)));
-        shareContent.setSpacing(10);
+        VBox inputBox = new VBox();
+        currentMapContent.setSpacing(10);
         HBox point1 = new HBox();
         point1.setSpacing(10);
         TextField x1 = textFieldGen.createObject("X1");
@@ -354,20 +396,40 @@ public class MainPage extends HBox
         TextField y2 = textFieldGen.createObject("Y2");
         point2.setSpacing(10);
 
-        //VBox.setVgrow(shareContent,Priority.ALWAYS);
-
-        addSegments.setAlignment(Pos.CENTER);
         point1.getChildren().addAll(encapsTextField(x1), encapsTextField(y1));
         point2.getChildren().addAll(encapsTextField(x2), encapsTextField(y2));
 
-        addSegments.getChildren().addAll(point1, point2);
-        addSegments.setSpacing(20);
-        HBox.setHgrow(addSegments, Priority.ALWAYS);
+        inputBox.getChildren().addAll(point1, point2);
+        inputBox.setSpacing(20);
+        inputBox.setAlignment(Pos.CENTER);
+        HBox.setHgrow(inputBox, Priority.ALWAYS);
+
+        Button addButton = new Button();
+        addButton.setText("Add");
+
+        HBox addSegmentsBox = new HBox();
+        addSegmentsBox.setAlignment(Pos.CENTER);
+        addSegmentsBox.getChildren().addAll(inputBox, addButton);
+        currentMapContent.getChildren().add(addSegmentsBox);
 
 
-        //HBox.setHgrow(point2, Priority.ALWAYS);
+        //      Segments table
+        SegmentsTable segTable = new SegmentsTable();
 
-        shareContent.getChildren().add(addSegments);
-        outer.getChildren().add(shareContent);
+        currentMapContent.getChildren().add(segTable);
+
+        //      Export and Unload buttons
+        Button exportButton = new Button("Export");
+        Button unloadButton = new Button("Unload");
+        currentMapContent.getChildren().add(encapsNode(exportButton, unloadButton));
+
+
+        VBox.setVgrow(outer,Priority.ALWAYS);
+        VBox.setVgrow(segTable,Priority.ALWAYS);
+        outer.setAlignment(Pos.CENTER);
+        VBox.setVgrow(currentMapContent, Priority.ALWAYS);
+        //currentMapContent.setBackground(new Background(new BackgroundFill(Color.ROYALBLUE, CornerRadii.EMPTY, Insets.EMPTY)));
+
+        outer.getChildren().addAll(loadFileContent, currentMapContent);
     }
 }

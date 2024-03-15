@@ -14,7 +14,7 @@ import java.util.Map;
 public class IntersectionTable extends TableView
 {
     @FXML
-    private TableView<Map> table;
+    private TableView<Map<String,Object>> table;
 
     @FXML
     private TableColumn<Map, Point> intersectionsColumn;
