@@ -28,6 +28,7 @@ import javafx.util.converter.IntegerStringConverter;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 import static be.ac.umons.firstg.segmentintersector.Temp.Parser.getSegmentsFromFile;
@@ -336,21 +337,21 @@ public class MainPage extends HBox
 
 
         TextField inputField = textFieldGen.createObject("Size X");
-        setDoubleFormatter(inputField, xSizeInputs, 100d, 100, 1000, event -> hasChanged = true);
+        setDoubleFormatter(inputField, xSizeInputs, 100d, 100, 100000, event -> hasChanged = true);
         content.getChildren().add(encapsTextField(inputField));
 
         inputField = textFieldGen.createObject("Size Y");
-        setDoubleFormatter(inputField, ySizeInputs, 100d, 100, 1000, event -> hasChanged = true);
+        setDoubleFormatter(inputField, ySizeInputs, 100d, 100, 100000, event -> hasChanged = true);
         content.getChildren().add(encapsTextField(inputField));
 
 
         inputField = textFieldGen.createObject("Scale X");
-        setDoubleFormatter(inputField, xScaleInputs, 100d, 100, 1000, event -> hasChanged = true);
+        setDoubleFormatter(inputField, xScaleInputs, 100d, 1, 100000, event -> hasChanged = true);
         content.getChildren().add(encapsTextField(inputField));
 
 
         inputField = textFieldGen.createObject("Scale Y");
-        setDoubleFormatter(inputField, yScaleInputs, 100d, 100, 1000, event -> hasChanged = true);
+        setDoubleFormatter(inputField, yScaleInputs, 100d, 1, 100000, event -> hasChanged = true);
         content.getChildren().add(encapsTextField(inputField));
 
         inputField = textFieldGen.createObject("Legends X");
@@ -442,6 +443,7 @@ public class MainPage extends HBox
         addButton.setText("Add");
         //      The add button must be disabled at first
         addButton.setDisable(true);
+        addButton.setOnAction(e -> addSegment());
 
         HBox addSegmentsBox = new HBox();
         addSegmentsBox.setAlignment(Pos.CENTER);
@@ -451,7 +453,7 @@ public class MainPage extends HBox
 
         //      Segments table
         segmentsTable = new SegmentsTable();
-
+        segmentsTable.setRemoveSegmentEvent(segment -> removeSegment(segment));
         currentMapContent.getChildren().add(segmentsTable);
 
         //      Export and Unload buttons
@@ -513,6 +515,9 @@ public class MainPage extends HBox
 
     }
 
+    /**
+     * Loads the segments contained in the selected file if it was changed since last call
+     */
     private void loadMap()
     {
         if(fileHasChanged && file!= null)
@@ -526,6 +531,10 @@ public class MainPage extends HBox
         }
     }
 
+    /**
+     * Change the addButton state, the button will be enabled if all the input fields are correctly filled
+     * @param newValue  The value received from the text field
+     */
     private void changeAddButtonState(Double newValue)
     {
         // If the new value is null we can directly show the button as turned off
@@ -539,15 +548,41 @@ public class MainPage extends HBox
         IObjectGen<Double,TextField> inputValGen = data-> (Double) data.getTextFormatter().getValueConverter().fromString(data.getText());
         // Button is disabled if one or more input is empty
         addButton.setDisable(inputValGen.createObject(x1PointInput) == null ||
-                inputValGen.createObject(y1PointInput) == null ||
-                inputValGen.createObject(x2PointInput) == null ||
-                inputValGen.createObject(y2PointInput) == null) ;
-
-
+                            inputValGen.createObject(y1PointInput) == null ||
+                            inputValGen.createObject(x2PointInput) == null ||
+                            inputValGen.createObject(y2PointInput) == null) ;
     }
+
+    /**
+     * Add the segment from the textFields. Since this method is called when the add button is enabled,
+     * we can suppose that all fields are filled with correct values. (i.e. no null inputs)
+     */
     private void addSegment()
     {
+        IObjectGen<Double,TextField> getValueGen = data -> (Double) data.getTextFormatter().getValue();
+        Point point1 = new Point(getValueGen.createObject(x1PointInput), getValueGen.createObject(y1PointInput));
+        Point point2 = new Point(getValueGen.createObject(x2PointInput), getValueGen.createObject(y2PointInput));
 
+        SegmentTMP segmentTMP = new SegmentTMP(point1, point2);
+
+        // Add segment to the graph and the table
+        graph.addSegments(List.of(segmentTMP));
+        segmentsTable.addSegment(segmentTMP);
+
+
+        x1PointInput.setText("");
+        x2PointInput.setText("");
+        y1PointInput.setText("");
+        y2PointInput.setText("");
+    }
+
+    /**
+     * Removes a segment from the graph
+     * @param segment the segment to remove from the graph
+     */
+    private void removeSegment(SegmentTMP segment)
+    {
+        graph.removeSegmentFrom(segment);
     }
 
 }

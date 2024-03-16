@@ -1,5 +1,6 @@
 package be.ac.umons.firstg.segmentintersector.components;
 
+import be.ac.umons.firstg.segmentintersector.Interfaces.ILambdaEvent;
 import be.ac.umons.firstg.segmentintersector.Interfaces.IObjectGen;
 import be.ac.umons.firstg.segmentintersector.Temp.Point;
 import be.ac.umons.firstg.segmentintersector.Temp.SegmentTMP;
@@ -22,6 +23,10 @@ import java.util.Map;
 public class SegmentsTable extends HBox
 {
     private TableView<Map> tableView;
+
+    private int current;
+
+    private ILambdaEvent<SegmentTMP> removeSegmentEvent;
 
     /**
      * Creates a SegmentsTable
@@ -72,7 +77,11 @@ public class SegmentsTable extends HBox
      */
     public void addSegment(SegmentTMP segment)
     {
+        int curr = current;
         Map<String, Object> item = new HashMap<>();
+        // We also store the segment inside the map for later use
+        item.put("segment",segment);
+
         item.put("name", segment.getName());
 
         //TODO: Change with real upperPoint and lowerPoint
@@ -88,7 +97,22 @@ public class SegmentsTable extends HBox
 
         Button button = new Button();
         item.put("remove",button);
+
+        button.setOnAction(e -> {
+            tableView.getSelectionModel().select(item);
+            // Gets the segment stored in the hash
+
+            if(removeSegmentEvent != null)
+            {
+                removeSegmentEvent.callMethod((SegmentTMP) tableView.getSelectionModel().getSelectedItem().get("segment"));
+            }
+            // Removes the segment from this table
+            tableView.getItems().remove(item);
+
+
+        });
         tableView.getItems().add(item);
+        current++;
     }
 
     /**
@@ -107,5 +131,16 @@ public class SegmentsTable extends HBox
     public void resetTable()
     {
         tableView.getItems().clear();
+    }
+
+
+    /**
+     * Setter for the lambda function to call when the remove
+     * segment button is pressed
+     * @param event The event to call when the button is pressed
+     */
+    public void setRemoveSegmentEvent(ILambdaEvent<SegmentTMP> event)
+    {
+        removeSegmentEvent = event;
     }
 }

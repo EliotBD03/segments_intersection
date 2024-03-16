@@ -192,6 +192,24 @@ public class GraphXY extends AnchorPane
         this.getChildren().add(segmentNode);
     }
 
+    /**
+     * Remove the segment, if it exists from the graph and if necessary, rescales the graph
+     * @param segment The segment to remove
+     */
+    public void removeSegmentFrom(SegmentTMP segment)
+    {
+        Segment segmentShown = segmentsShown.get(segment);
+        // Removes segment from the pane
+        if (segmentShown != null)
+            getChildren().remove(segmentShown);
+        // Remove the segment from storage
+        segmentsShown.remove(segment);
+        // Update the scale
+        resetScale();
+        rescaleSegments(true);
+        updateLegend();
+        drawScale(this.nbOfMarksX, this.nbOfMarksY, this.showGrid);
+    }
 
     /**
      * Add all segments to the graph, changing its scale to accommodate with the max and min values of the segments (and the previously added ones)
@@ -237,6 +255,7 @@ public class GraphXY extends AnchorPane
             newPosition = new SegmentTMP(translatePoint(scalePoint(segment.getPoint1())),
                     translatePoint(scalePoint(segment.getPoint2())));
             segmentsShown.get(segment).setSegment(newPosition);
+            segmentsShown.get(segment).toFront();
         }
     }
 
@@ -285,6 +304,7 @@ public class GraphXY extends AnchorPane
         {
             Line mark = new Line(origin.getX() + position, origin.getY(), origin.getX() + position, origin.getY() - size);
             mark.setStroke(Color.GRAY);
+            mark.toBack();
             getChildren().add(mark);
             markLinesX.add(mark);
         }
@@ -301,6 +321,7 @@ public class GraphXY extends AnchorPane
         {
             Line mark = new Line(origin.getX(), origin.getY() - position, origin.getX() + size, origin.getY() - position);
             mark.setStroke(Color.GRAY);
+            mark.toBack();
             getChildren().add(mark);
             markLinesY.add(mark);
         }
