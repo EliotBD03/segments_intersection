@@ -15,7 +15,7 @@ public class Test extends Application {
 
 
         //Scene scene = new Scene(fxmlLoader.load());
-        Scene scene = new Scene(new MainPage());
+        Scene scene = new Scene(new MainPage(stage));
         /*
         MainPage mainPage = fxmlLoader.getController();
         mainPage.setPrimaryStage(stage);

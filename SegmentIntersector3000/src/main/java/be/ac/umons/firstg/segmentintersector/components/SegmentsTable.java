@@ -1,5 +1,7 @@
 package be.ac.umons.firstg.segmentintersector.components;
 
+import be.ac.umons.firstg.segmentintersector.Interfaces.IObjectGen;
+import be.ac.umons.firstg.segmentintersector.Temp.Point;
 import be.ac.umons.firstg.segmentintersector.Temp.SegmentTMP;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -7,6 +9,7 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.MapValueFactory;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -41,7 +44,7 @@ public class SegmentsTable extends HBox
         lowerPointColumn.setCellValueFactory(new MapValueFactory<>("lower"));
         removeColumn.setCellValueFactory(new MapValueFactory<>("remove"));
 
-        removeColumn.setPrefWidth(40);
+        //removeColumn.setPrefWidth(40);
 
         tableView.getColumns().addAll(nameColumn,upperPointColumn,lowerPointColumn,removeColumn);
         for (TableColumn column: tableView.getColumns())
@@ -52,7 +55,7 @@ public class SegmentsTable extends HBox
             column.setSortable(false);
         }
         Label placeHolderText1 = new Label("This map is empty");
-        Label placeHolderText2 = new Label("Load a file and/or add segments");
+        Label placeHolderText2 = new Label("Import a file and/or add segments");
         VBox placeHolder = new VBox(10, placeHolderText1, placeHolderText2);
         placeHolder.setAlignment(Pos.CENTER);
         tableView.setPlaceholder(placeHolder);
@@ -74,15 +77,18 @@ public class SegmentsTable extends HBox
 
         //TODO: Change with real upperPoint and lowerPoint
 
-        // The '\' forces the text to print entirely
-        item.put("upper", segment.getPoint1() + "\n");
-        item.put("lower", segment.getPoint2() + "\n");
+        IObjectGen<Label, Point> labelGen = data -> {
+          Label label = new Label("x: " + data.getX() + "\ny: " + data.getY());
+          label.setFont(new Font(15));
+          return label;
+        };
+
+        item.put("upper", labelGen.createObject(segment.getPoint1()));
+        item.put("lower", labelGen.createObject(segment.getPoint2()));
 
         Button button = new Button();
         item.put("remove",button);
         tableView.getItems().add(item);
-
-
     }
 
     /**
@@ -93,5 +99,13 @@ public class SegmentsTable extends HBox
     {
         for (SegmentTMP segment: segments)
             addSegment(segment);
+    }
+
+    /**
+     * Removes all stored data from the table
+     */
+    public void resetTable()
+    {
+        tableView.getItems().clear();
     }
 }

@@ -1,5 +1,6 @@
 package be.ac.umons.firstg.segmentintersector.Pages;
 
+import be.ac.umons.firstg.segmentintersector.Interfaces.ILambdaEvent;
 import be.ac.umons.firstg.segmentintersector.Interfaces.IObjectGen;
 import be.ac.umons.firstg.segmentintersector.Temp.Point;
 import be.ac.umons.firstg.segmentintersector.Temp.SegmentTMP;
@@ -8,49 +9,77 @@ import be.ac.umons.firstg.segmentintersector.components.SegmentsTable;
 import be.ac.umons.firstg.segmentintersector.customUtil.CustomConverter;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
+import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.geometry.Side;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.*;
-import javafx.scene.paint.Color;
 import javafx.scene.text.*;
+import javafx.stage.FileChooser;
+import javafx.stage.Stage;
 import javafx.util.Pair;
 import javafx.util.StringConverter;
 import javafx.util.converter.DoubleStringConverter;
 import javafx.util.converter.IntegerStringConverter;
 
-import java.util.function.UnaryOperator;
+import java.io.File;
+import java.util.ArrayList;
+import java.util.Objects;
+
+import static be.ac.umons.firstg.segmentintersector.Temp.Parser.getSegmentsFromFile;
 
 public class MainPage extends HBox
 {
+    // Primary Stage to open windows
+    private Stage primaryStage;
+
     private final VBox leftPane;
     private final ScrollPane graphPane;
     private final HBox timelinePane;
     private final TabPane tabPane;
 
+
     // The currently shown tab
+    private SegmentsTable segmentsTable;
+    private GraphXY graph;
     private boolean tabClosed;
     private Tab currentTab;
 
     // Graph Settings
     private boolean hasChanged;
-    private ObjectProperty<Double> xSizeInputs = new SimpleObjectProperty<>(300d);
-    private ObjectProperty<Double> ySizeInputs = new SimpleObjectProperty<>(300d);
+
+    private ObjectProperty<Double> xSizeInputs = new SimpleObjectProperty<>(600d);
+    private ObjectProperty<Double> ySizeInputs = new SimpleObjectProperty<>(600d);
     private ObjectProperty<Double> xScaleInputs = new SimpleObjectProperty<>(10d);
     private ObjectProperty<Double> yScaleInputs = new SimpleObjectProperty<>(10d);
-    private ObjectProperty<Integer> xNbLabelsInputs = new SimpleObjectProperty<>(5);
-    private ObjectProperty<Integer> yNbLabelsInputs = new SimpleObjectProperty<>(5);
+    private ObjectProperty<Integer> xNbLabelsInputs = new SimpleObjectProperty<>(10);
+    private ObjectProperty<Integer> yNbLabelsInputs = new SimpleObjectProperty<>(10);
 
-    public MainPage()
+
+    // Map Settings
+    private Label fileNameLabel;
+    private CheckBox showGridInput;
+    private File file;
+    private boolean fileHasChanged = true;
+
+    private Button addButton;
+    private TextField x1PointInput = new TextField();
+    private TextField y1PointInput = new TextField();
+    private TextField x2PointInput = new TextField();
+    private TextField y2PointInput = new TextField();
+
+    public MainPage(Stage primaryStage)
     {
         // Create this HBox
         super();
         prefHeight(600);
         prefWidth(800);
 
+        this.primaryStage = primaryStage;
         // Create children
         leftPane = new VBox();
         tabPane = new TabPane();
@@ -66,13 +95,11 @@ public class MainPage extends HBox
         leftPane.getChildren().addAll(graphPane, timelinePane);
         //  Resize the graph pane with the leftPane
         VBox.setVgrow(graphPane, Priority.ALWAYS);
-        GraphXY graph = new GraphXY(new Point(50,25), 600, 600, 10, 10, 10, 10, true);
+        graph = new GraphXY(new Point(50,25), 600, 600, 10, 10, 10, 10, true);
         graphPane.setContent(graph);
 
         // Creating the TabPane
         createTabs();
-
-        tabPane.getSelectionModel().select(1);
 
     }
 
@@ -85,6 +112,8 @@ public class MainPage extends HBox
             if(data.getValue() != null)
                 tab.setGraphic(getIcon(data.getValue(), tabSize/1000f + 0.01f));
             // Create the content of the tab
+            // Title
+            HBox titleBox = new HBox();
             VBox content = new VBox();
             content.setPadding(new Insets(10,10,10,10));
             content.setSpacing(20);
@@ -101,9 +130,10 @@ public class MainPage extends HBox
             text.setTextAlignment(TextAlignment.CENTER);
             Button button = new Button();
             button.setOnAction(e -> handleTabInteraction(true));
+            titleBox.getChildren().addAll(text);
 
             //HBox.setHgrow(text, Priority.ALWAYS);
-            content.getChildren().addAll(text,button);
+            content.getChildren().addAll(encapsNode(titleBox, button));
             tab.setContent(content);
             return tab;
         };
@@ -135,7 +165,7 @@ public class MainPage extends HBox
         tabPane.getSelectionModel().selectedItemProperty().addListener(e -> handleTabInteraction(false));
         //  Stops user from closing tabs
         tabPane.setTabClosingPolicy(TabPane.TabClosingPolicy.UNAVAILABLE);
-        tabPane.getSelectionModel().clearSelection(3);
+
 
     }
 
@@ -204,12 +234,12 @@ public class MainPage extends HBox
      * @param tf        The textField
      * @param property  The property to assign
      */
-    private void  setDoubleFormatter(TextInputControl tf, ObjectProperty<Double> property)
+    private void  setDoubleFormatter(TextInputControl tf, ObjectProperty<Double> property, Double current, double min, double max, ILambdaEvent<Double> event)
     {
         //
-        StringConverter<Double> stringConverter = new CustomConverter<Double>(new DoubleStringConverter(), 100d, 1000d);
+        StringConverter<Double> stringConverter = new CustomConverter<Double>(new DoubleStringConverter(), current, min, max);
         TextFormatter<Double> textFormatter = new TextFormatter<>(stringConverter);
-        setFormatter(tf, property, textFormatter);
+        setFormatter(tf, property, textFormatter, event);
     }
 
     /**
@@ -217,11 +247,11 @@ public class MainPage extends HBox
      * @param tf        The textField
      * @param property  The property to assign
      */
-    private void setIntegerFormatter(TextInputControl tf, ObjectProperty<Integer> property)
+    private void setIntegerFormatter(TextInputControl tf, ObjectProperty<Integer> property, ILambdaEvent<Integer> event)
     {
         StringConverter<Integer> stringConverter = new CustomConverter<Integer>(new IntegerStringConverter(), 1, 20);
         TextFormatter<Integer> textFormatter = new TextFormatter<>(stringConverter);
-        setFormatter(tf, property, textFormatter);
+        setFormatter(tf, property, textFormatter, event);
     }
 
     /**
@@ -231,15 +261,14 @@ public class MainPage extends HBox
      * @param textFormat    The format of the textField
      * @param <E>           The class of the formatter
      */
-    private <E> void setFormatter(TextInputControl tf, ObjectProperty<E> property, TextFormatter<E>  textFormat)
+    private <E> void setFormatter(TextInputControl tf, ObjectProperty<E> property, TextFormatter<E>  textFormat, ILambdaEvent<E> event)
     {
-        tf.setOnKeyTyped(e ->
-        {
-            this.hasChanged = true;
-            System.out.println(e.getText());
-        });
+        //tf.setOnKeyTyped(event);
         tf.textProperty().addListener((observable, oldValue, newValue) -> {
             //tf.setText(newValue);
+            if (!Objects.equals(oldValue, newValue) && event != null)
+                event.callMethod(textFormat.getValueConverter().fromString(newValue));
+
             System.out.println("textfield changed from " + oldValue + " to " + newValue);
         });
         textFormat.valueProperty().bindBidirectional(property);
@@ -307,39 +336,48 @@ public class MainPage extends HBox
 
 
         TextField inputField = textFieldGen.createObject("Size X");
-        setDoubleFormatter(inputField, xSizeInputs);
+        setDoubleFormatter(inputField, xSizeInputs, 100d, 100, 1000, event -> hasChanged = true);
         content.getChildren().add(encapsTextField(inputField));
 
         inputField = textFieldGen.createObject("Size Y");
-        setDoubleFormatter(inputField, ySizeInputs);
+        setDoubleFormatter(inputField, ySizeInputs, 100d, 100, 1000, event -> hasChanged = true);
         content.getChildren().add(encapsTextField(inputField));
 
 
         inputField = textFieldGen.createObject("Scale X");
-        setDoubleFormatter(inputField, xScaleInputs);
+        setDoubleFormatter(inputField, xScaleInputs, 100d, 100, 1000, event -> hasChanged = true);
         content.getChildren().add(encapsTextField(inputField));
 
 
         inputField = textFieldGen.createObject("Scale Y");
-        setDoubleFormatter(inputField, yScaleInputs);
+        setDoubleFormatter(inputField, yScaleInputs, 100d, 100, 1000, event -> hasChanged = true);
         content.getChildren().add(encapsTextField(inputField));
 
         inputField = textFieldGen.createObject("Legends X");
-        setIntegerFormatter(inputField, xNbLabelsInputs);
+        setIntegerFormatter(inputField, xNbLabelsInputs, null);
         content.getChildren().add(encapsTextField(inputField));
 
         inputField = textFieldGen.createObject("Legends Y");
-        setIntegerFormatter(inputField, yNbLabelsInputs);
+        setIntegerFormatter(inputField, yNbLabelsInputs, null);
         content.getChildren().add(encapsTextField(inputField));
 
         HBox box = new HBox();
         box.setSpacing(20);
-        CheckBox cb = new CheckBox();
-        cb.setOnAction(e -> hasChanged = true);
+        showGridInput = new CheckBox();
+        showGridInput.setSelected(true);
+        showGridInput.setOnAction(e -> hasChanged = true);
         Label text = new Label("Show Grid");
-        box.getChildren().addAll(text, cb);
+        box.getChildren().addAll(text, showGridInput);
 
         content.getChildren().add(box);
+
+        // Draw graph button
+        Button drawButton = new Button("Draw Graph");
+        hasChanged =true;
+        drawButton.setOnAction(e -> loadGraph());
+        content.getChildren().add(drawButton);
+
+
     }
 
     /**
@@ -361,24 +399,13 @@ public class MainPage extends HBox
         loadFileContent.setAlignment(Pos.CENTER_LEFT);
         //loadFileContent.setBackground(new Background(new BackgroundFill(Color.GREENYELLOW, CornerRadii.EMPTY, Insets.EMPTY)));
         Button loadMapButton = new Button("Import");
-        Label label = new Label("No file selected");
 
-        loadFileContent.getChildren().addAll(loadMapButton, label);
+        fileNameLabel = new Label("No file selected");
+        loadMapButton.setOnAction(e -> showFiles());
+
+        loadFileContent.getChildren().addAll(loadMapButton, fileNameLabel);
 
         // Current Map Content
-        VBox noMapContent = new VBox();
-        noMapContent.setAlignment(Pos.CENTER);
-
-        Text noMapText = new Text("No map loaded");
-        noMapText.setFont(new Font(20));
-
-
-
-        Button importButton = new Button("import");
-        Button createButton = new Button("create");
-
-
-        noMapContent.getChildren().addAll(noMapText, importButton, createButton);
 
         // Shared Content
         //      Add Segment
@@ -389,23 +416,32 @@ public class MainPage extends HBox
         currentMapContent.setSpacing(10);
         HBox point1 = new HBox();
         point1.setSpacing(10);
-        TextField x1 = textFieldGen.createObject("X1");
-        TextField y1 = textFieldGen.createObject("Y1");
+        x1PointInput = textFieldGen.createObject("X1");
+        y1PointInput = textFieldGen.createObject("Y1");
         HBox point2 = new HBox();
-        TextField x2 = textFieldGen.createObject("X2");
-        TextField y2 = textFieldGen.createObject("Y2");
+        x2PointInput = textFieldGen.createObject("X2");
+        y2PointInput = textFieldGen.createObject("Y2");
         point2.setSpacing(10);
 
-        point1.getChildren().addAll(encapsTextField(x1), encapsTextField(y1));
-        point2.getChildren().addAll(encapsTextField(x2), encapsTextField(y2));
+        // Set Formatters -> current will be null
+        setDoubleFormatter(x1PointInput, new SimpleObjectProperty<>(),null, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY, this::changeAddButtonState);
+        setDoubleFormatter(y1PointInput, new SimpleObjectProperty<>(), null, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY, this::changeAddButtonState);
+
+        setDoubleFormatter(x2PointInput, new SimpleObjectProperty<>(),null, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY, this::changeAddButtonState);
+        setDoubleFormatter(y2PointInput, new SimpleObjectProperty<>(),null, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY, this::changeAddButtonState);
+
+        point1.getChildren().addAll(encapsTextField(x1PointInput), encapsTextField(y1PointInput));
+        point2.getChildren().addAll(encapsTextField(x2PointInput), encapsTextField(y2PointInput));
 
         inputBox.getChildren().addAll(point1, point2);
         inputBox.setSpacing(20);
         inputBox.setAlignment(Pos.CENTER);
         HBox.setHgrow(inputBox, Priority.ALWAYS);
 
-        Button addButton = new Button();
+        addButton = new Button();
         addButton.setText("Add");
+        //      The add button must be disabled at first
+        addButton.setDisable(true);
 
         HBox addSegmentsBox = new HBox();
         addSegmentsBox.setAlignment(Pos.CENTER);
@@ -414,22 +450,104 @@ public class MainPage extends HBox
 
 
         //      Segments table
-        SegmentsTable segTable = new SegmentsTable();
+        segmentsTable = new SegmentsTable();
 
-        currentMapContent.getChildren().add(segTable);
+        currentMapContent.getChildren().add(segmentsTable);
 
         //      Export and Unload buttons
         Button exportButton = new Button("Export");
         Button unloadButton = new Button("Unload");
-        currentMapContent.getChildren().add(encapsNode(exportButton, unloadButton));
+        unloadButton.setOnAction(e -> resetMap());
+        HBox buttons = encapsNode(exportButton, unloadButton);
+        buttons.setPadding(new Insets(0,20,0,20));
+        currentMapContent.getChildren().add(buttons);
 
 
         VBox.setVgrow(outer,Priority.ALWAYS);
-        VBox.setVgrow(segTable,Priority.ALWAYS);
+        VBox.setVgrow(segmentsTable,Priority.ALWAYS);
         outer.setAlignment(Pos.CENTER);
         VBox.setVgrow(currentMapContent, Priority.ALWAYS);
         //currentMapContent.setBackground(new Background(new BackgroundFill(Color.ROYALBLUE, CornerRadii.EMPTY, Insets.EMPTY)));
 
         outer.getChildren().addAll(loadFileContent, currentMapContent);
     }
+
+    //______________Input Handlers__________________
+    private void showFiles()
+    {
+        FileChooser fileChooser = new FileChooser();
+        File selection = fileChooser.showOpenDialog(primaryStage);
+        if(file == null || !file.equals(selection))
+        {
+            file = selection;
+            fileNameLabel.setText(file.getName());
+            fileHasChanged = true;
+            loadMap();
+        }
+    }
+
+
+    /**
+     * Resets the graph and table
+     */
+    private void resetMap()
+    {
+        graph.resetGraph();
+        segmentsTable.resetTable();
+        fileNameLabel.setText("No file selected");
+    }
+
+    private void loadGraph()
+    {
+        // If the graph scales was changed, we need to redraw the entire graph
+        if(hasChanged){
+            loadMap();
+            if(hasChanged){
+                hasChanged = false;
+                graph.updateSize(xSizeInputs.get(), ySizeInputs.get(),
+                                xScaleInputs.get(), yScaleInputs.get(),
+                                xNbLabelsInputs.get(), yNbLabelsInputs.get(),
+                                showGridInput.isSelected());
+            }
+        }
+
+    }
+
+    private void loadMap()
+    {
+        if(fileHasChanged && file!= null)
+        {
+            // Reset
+            resetMap();
+            fileHasChanged = false;
+            ArrayList<SegmentTMP> segmentTMPList = getSegmentsFromFile(file.getPath());
+            segmentsTable.addAll(segmentTMPList);
+            graph.addSegments(segmentTMPList);
+        }
+    }
+
+    private void changeAddButtonState(Double newValue)
+    {
+        // If the new value is null we can directly show the button as turned off
+        if (newValue == null)
+        {
+            addButton.setDisable(true);
+            return;
+        }
+        // Cast the actual text data into a double value
+        // If we get null, this means the string entered was incorrect or unfinished
+        IObjectGen<Double,TextField> inputValGen = data-> (Double) data.getTextFormatter().getValueConverter().fromString(data.getText());
+        // Button is disabled if one or more input is empty
+        addButton.setDisable(inputValGen.createObject(x1PointInput) == null ||
+                inputValGen.createObject(y1PointInput) == null ||
+                inputValGen.createObject(x2PointInput) == null ||
+                inputValGen.createObject(y2PointInput) == null) ;
+
+
+    }
+    private void addSegment()
+    {
+
+    }
+
 }
