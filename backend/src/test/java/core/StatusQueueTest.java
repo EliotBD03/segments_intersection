@@ -107,7 +107,7 @@ class StatusQueueTest
         }
         return res;
     }
-
+/*
     @Test
     void getNeighborhoodTest()
     {
@@ -120,9 +120,14 @@ class StatusQueueTest
         for(int i = 0; i < 2; i++)
         {
             assertEquals(0, test[i].compareTo(new ComparableSegment(expected[i], A)));
-            System.out.println(expected[i]);
-            System.out.println(test[i]);
         }
+
+        System.out.println(testTree1.getNeighborhood(s4, A)[0]);
+        assertEquals(new ComparableSegment(s3, A).compareTo(new ComparableSegment(testTree1.getNeighborhood(s4, A)[0], A)), 0);
         //TODO with one left neighbour, right neighbour (and maybe completeness optimality)
     }
+
+    @Test
+
+ */
 }

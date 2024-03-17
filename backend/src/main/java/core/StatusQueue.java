@@ -1,10 +1,12 @@
 package core;
 
 
+import java.util.Objects;
+
 /**
  * class which represents a status queue.
  */
-public class    StatusQueue extends AVL<ComparableSegment>
+public class StatusQueue extends AVL<ComparableSegment>
 {
 
     /**
@@ -116,6 +118,8 @@ public class    StatusQueue extends AVL<ComparableSegment>
     {
         return Math.pow(Segment.getPointOnXAxis(segment1.currentPoint, segment1).x - Segment.getPointOnXAxis(segment1.currentPoint, segment2).x,2);
     }
+
+
     /**
      * Get the neighborhood of a given segment which is
      * - the closest left segment to the segment
@@ -124,43 +128,12 @@ public class    StatusQueue extends AVL<ComparableSegment>
      * @param currentPoint the current point of the tree
      * @return an array of segments which is {closest left segment, closest right segment}
      */
+    /*
     public Segment[] getNeighborhood(Segment segment, Point currentPoint)
     {
-       Segment ln = null;
-       Segment rn = null;
-       ComparableSegment comparableSegment = new ComparableSegment(segment, currentPoint);
-       Node<ComparableSegment> current = root;
-       double dist = distance(current.getData(), comparableSegment);
-       while(!current.isLeaf())
-       {
-           double currentDist = distance(current.getData(), comparableSegment);
-           if(current.getData().compareTo(comparableSegment) < 0 && currentDist <= dist)
-               current = current.getRight();
-           else
-               current = current.getLeft();
-           dist = currentDist;
 
-       }
-       if(!current.getData().equals(comparableSegment))
-        ln = current.getData();
-
-       current = root;
-       dist = distance(current.getData(), comparableSegment);
-       while(!current.isLeaf())
-       {
-           double currentDist = distance(current.getData(), comparableSegment);
-           if(current.getData().compareTo(comparableSegment) > 0 && currentDist <= dist)
-               current = current.getLeft();
-           else
-               current = current.getRight();
-           dist = currentDist;
-
-       }
-       if(!current.getData().equals(comparableSegment))
-           rn = current.getData();
-       return new Segment[]{ln, rn};
     }
-
+    */
     /**
      * To test later
      * @param tree
@@ -193,22 +166,11 @@ public class    StatusQueue extends AVL<ComparableSegment>
         return res;
     }
 
-/*
-    public static void main(String[] args) throws URISyntaxException, IOException {
-        Parser parser = new Parser(Parser.getPathFromResource("/cartes/fichier2.txt"));
-        ArrayList<Segment> segments = parser.getSegmentsFromFile();
-        T t = new T(segments.getFirst().getUpperPoint().y);
-        for(int i = 0; i < segments.size(); i++)
-        {
-            t.add(segments.get(i));
-        }
-        t.display();
-        Segment[] neighborhood = t.getNeighborhood(segments.get(1));
-        System.out.println(segments.get(1));
-        System.out.println(neighborhood[0] + " " + neighborhood[1]);
-
-
+    public static Segment[] findNeighbors(StatusQueue tree, Point p)
+    {
+        StatusQueue father = getClosestRoot(tree, p);
+        return new Segment[]{father.root.getLeft().lookForMaximum().getData(), father.root.getRight().lookForMinimum().getData()};
     }
-    TODO in standby, waiting for unit tests
- */
+
+    //TODO public static Segment[] find_leftmost_rightmost()
 }

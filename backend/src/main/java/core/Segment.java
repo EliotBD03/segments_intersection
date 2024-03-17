@@ -13,7 +13,7 @@ public class Segment
     private Point lowerPoint, upperPoint;
     public final double a,b,c;
 
-    private String id;
+    public final String id;
 
     /**
      * From an array of coordinates representing two endpoints
