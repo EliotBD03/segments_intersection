@@ -50,7 +50,8 @@ public class StatusQueue extends AVL<ComparableSegment>
             currNode = removeRoot(currNode);
             return currNode;
         }
-        if (currNode.getData().compareToPoint(segment, ref) >= 0)
+        //if (currNode.getData().compareToPoint(segment, ref) >= 0)
+        if(statusQueueRelation(currNode.getData(), segment, ref))
         {
             currNode.setLeft(removeInner(currNode.getLeft(), segment, ref));
         }else
@@ -67,6 +68,7 @@ public class StatusQueue extends AVL<ComparableSegment>
      */
     private Node<ComparableSegment> removeLeaf(Node<ComparableSegment> currNode, ComparableSegment segment) throws Exception
     {
+        System.out.println("curr:: " + currNode.getData());
         if(currNode == null || currNode.isLeaf())
             throw new Exception("the current AVL does not have the node with the given data : " + segment);
         if(currNode.getData().equals(segment))
@@ -76,7 +78,8 @@ public class StatusQueue extends AVL<ComparableSegment>
             currNode.balance();
             return currNode;
         }
-        if (currNode.getData().compareToPoint(segment, segment.getCurrentPoint()) >= 0)
+        //if (currNode.getData().compareToPoint(segment, segment.getCurrentPoint()) >= 0)
+        if(statusQueueRelation(currNode.getData(), segment, segment.getCurrentPoint()))
         {
             currNode.setLeft(removeLeaf(currNode.getLeft(), segment));
             currNode.balance();
@@ -111,7 +114,8 @@ public class StatusQueue extends AVL<ComparableSegment>
         }
         else
         {
-            if(current.getData().compareToPoint(nodeToInsert.getData(), currP) >= 0)
+            System.out.println("tryign to insert in: " + current.getData() + " | node: " + nodeToInsert.getData());
+            if(statusQueueRelation(current.getData(), nodeToInsert.getData(), currP))
             {
                 current.setLeft(insert(current.getLeft(), nodeToInsert, currP));
                 current.balance();
@@ -142,20 +146,6 @@ public class StatusQueue extends AVL<ComparableSegment>
     }
 
 
-    /**
-     * Get the neighborhood of a given segment which is
-     * - the closest left segment to the segment
-     * - the closest right segment to the segment
-     * @param segment the segment to find the neighborhood
-     * @param currentPoint the current point of the tree
-     * @return an array of segments which is {closest left segment, closest right segment}
-     */
-    /*
-    public Segment[] getNeighborhood(Segment segment, Point currentPoint)
-    {
-
-    }
-    */
     /**
      * To test later
      * @param tree
@@ -210,7 +200,7 @@ public class StatusQueue extends AVL<ComparableSegment>
         {
             System.out.println("curr: " + curr.getData());
             father = curr;
-            if(curr.getData().compareToPoint(x, ref) >= 0 )
+            if(statusQueueRelation(curr.getData(), x, ref) )
             {
                 curr = curr.getLeft();
                 goingLeft = true;
@@ -239,6 +229,25 @@ public class StatusQueue extends AVL<ComparableSegment>
             }
         }
         return new Pair<>(leftN, rightN);
+    }
+
+    private static boolean statusQueueRelation(ComparableSegment curr, ComparableSegment other, Point ref)
+    {
+        // True : going left
+        // False : going right
+        int res = curr.compareToPoint(other, ref);
+        if (res != 0)
+            return res > 0;
+        // Check angles
+        double o1 = Math.toDegrees(Math.atan(curr.a/ curr.b));
+        double o2 = Math.toDegrees(Math.atan(other.a / other.b));
+
+        System.out.println("Comparing angles, o1: " + o1 + " | o2: " + o2);
+        System.out.println("this: " + curr.getCartesianAsString() + " | other: " + other.getCartesianAsString());
+        boolean rres = (o1 < o2) && curr.a > other.a;
+        System.out.println(rres);
+        System.out.println();
+        return rres;
     }
 
 

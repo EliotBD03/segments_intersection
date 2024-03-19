@@ -65,25 +65,23 @@ class StatusQueueTest
         testTree1.display();
         testTree1.remove(s1, P);
         assertTrue(checkInorder(testTree1.root, convertList(List.of(s2,s2,s3,s3,s4,s4))));
-        System.out.println("Removed s1 !");
+
         testTree1.display();
         testTree1.remove(s2, P);
         assertTrue(checkInorder(testTree1.root, convertList(List.of(s3,s3,s4,s4))));
-        System.out.println("Removed s2 ! ");
+
         testTree1.display();
         //      Add s1 then s2
         //      Check if they were correctly exchanged
 
-        testTree1.add(s2,P);
-        System.out.println("Insert s2 ! ");
-        testTree1.display();
-        assertTrue(checkInorder(testTree1.root, convertList(List.of(s2,s2,s3,s3,s4,s4))));
-
         testTree1.add(s1,P);
-        System.out.println("Insert s2 ! ");
 
+        assertTrue(checkInorder(testTree1.root, convertList(List.of(s1,s1,s3,s3,s4,s4))));
+        System.out.println("Added s1");
         testTree1.display();
-/*
+        testTree1.add(s2,P);
+        testTree1.display();
+
         assertTrue(checkInorder(testTree1.root, convertList(List.of(s2,s2,s1,s1,s3,s3,s4,s4))));
 
 
@@ -94,73 +92,43 @@ class StatusQueueTest
         testTree1.remove(s1,H);
         assertTrue(checkInorder(testTree1.root, convertList(List.of(s2,s2,s3,s3,s4,s4))));
 
+
         testTree1.remove(s3,H);
         assertTrue(checkInorder(testTree1.root, convertList(List.of(s2,s2,s4,s4))));
+
 
         testTree1.remove(s4,H);
         assertTrue(checkInorder(testTree1.root, convertList(List.of(s2,s2))));
 
+
         testTree1.add(s1,H);
         assertTrue(checkInorder(testTree1.root, convertList(List.of(s2,s2,s1,s1))));
 
-        testTree1.add(s3,H);
-        assertTrue(checkInorder(testTree1.root, convertList(List.of(s2,s2, s3, s3, s1, s1))));
 
+        testTree1.add(s3,H);
+
+        assertTrue(checkInorder(testTree1.root, convertList(List.of(s2,s2, s3, s3, s1, s1))));
+        testTree1.display();
         testTree1.add(s5,H);
         assertTrue(checkInorder(testTree1.root, convertList(List.of(s2,s2, s5, s5, s3, s3, s1, s1))));
 
+
+        System.out.println(testTree1.getNeighbours(s2,H));
+
+/*
          */
+
     }
 
 
 
-    //@Test
+    @Test
     void getNeighborsTest() throws Exception
     {
         //
         add();
-
-        testTree1.remove(s1, P);
-        assertTrue(checkInorder(testTree1.root, convertList(List.of(s2,s2,s3,s3,s4,s4))));
-
-        testTree1.remove(s2, P);
-        assertTrue(checkInorder(testTree1.root, convertList(List.of(s3,s3,s4,s4))));
-
-        //      Add s1 then s2
-        //      Check if they were correctly exchanged
-
-        testTree1.add(s1,P);
-        assertTrue(checkInorder(testTree1.root, convertList(List.of(s1,s1,s3,s3,s4,s4))));
-
-        testTree1.add(s2,P);
-        assertTrue(checkInorder(testTree1.root, convertList(List.of(s2,s2,s1,s1,s3,s3,s4,s4))));
         testTree1.display();
-
-
-        System.out.println(testTree1.getNeighbours(s1, P));
-
-        testTree1.remove(s1,H);
-        assertTrue(checkInorder(testTree1.root, convertList(List.of(s2,s2,s3,s3,s4,s4))));
-
-        testTree1.remove(s3,H);
-        assertTrue(checkInorder(testTree1.root, convertList(List.of(s2,s2,s4,s4))));
-
-        testTree1.remove(s4,H);
-        assertTrue(checkInorder(testTree1.root, convertList(List.of(s2,s2))));
-
-        testTree1.add(s1,H);
-        assertTrue(checkInorder(testTree1.root, convertList(List.of(s2,s2,s1,s1))));
-
-        testTree1.add(s3,H);
-        assertTrue(checkInorder(testTree1.root, convertList(List.of(s2,s2, s3, s3, s1, s1))));
-
-        testTree1.add(s5,H);
-        assertTrue(checkInorder(testTree1.root, convertList(List.of(s2,s2, s5, s5, s3, s3, s1, s1))));
-
-        System.out.println("_____________________________________");
-        testTree1.display();
-
-        System.out.println(testTree1.getNeighbours(s1, H));
+        System.out.println(testTree1.getNeighbours(s4,P));
 
     }
 

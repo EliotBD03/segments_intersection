@@ -50,15 +50,10 @@ public class ComparableSegment extends Segment implements Comparable<ComparableS
     {
         Point p1 = Segment.getPointOnXAxis(ref, this);
         Point p2 = Segment.getPointOnXAxis(ref, otherSegment);
-        System.out.println("This: " + this + " | Other: " + otherSegment);
+        System.out.println("This: " + this + " | Other: " + otherSegment + " using: " + ref);
+        System.out.println("p1: " + p1 + " | p2: " + p2);
 
-
-        int res = Double.compare(p1.x, p2.x);
-        if(res == 0 && !this.equals(otherSegment)){
-            System.out.println("This : " + Math.atan(this.a/ this.b) + " | Other: " + Math.atan(otherSegment.a/ otherSegment.b));
-            System.out.println(Double.compare(Math.atan(this.a/ this.b), Math.atan(otherSegment.a/ otherSegment.b)));
-        }
-        return res == 0 ? (this.equals(otherSegment) ? 0: Double.compare(Math.atan(this.a/ this.b), Math.atan(otherSegment.a/ otherSegment.b))) : res;
+        return Double.compare(p1.x, p2.x);
     }
     
     public boolean compareB(ComparableSegment otherSegment)
