@@ -11,7 +11,7 @@ public class ComparableSegment extends Segment implements Comparable<ComparableS
     /**
      * The currentPoint used as a reference when using {@link #compareTo(ComparableSegment)}
      */
-    public final Point currentPoint;
+    private Point currentPoint;
 
     /**
      * The default constructor for the ComparableSegment Class
@@ -35,12 +35,7 @@ public class ComparableSegment extends Segment implements Comparable<ComparableS
     @Override
     public int compareTo(ComparableSegment otherSegment)
     {
-        Point p1 = Segment.getPointOnXAxis(otherSegment.currentPoint, this);
-        Point p2 = Segment.getPointOnXAxis(otherSegment.currentPoint, otherSegment);
-        //System.out.println("Compare: " + this +  " - and : " + otherSegment + " || Using: " + otherSegment.currentPoint);
-        //System.out.println("P1: " + p1 + "  | P2: " + p2);
-        //System.out.println(Double.compare(p1.x, p2.x) == 0 ? (this.equals(otherSegment) ? 0: -1) : Double.compare(p1.x, p2.x));
-        int res = Double.compare(p1.x, p2.x);
+        int res = compareToPoint(otherSegment, otherSegment.currentPoint);
         return res == 0 ? (this.equals(otherSegment) ? 0: -1) : res;
     }
 
@@ -49,13 +44,26 @@ public class ComparableSegment extends Segment implements Comparable<ComparableS
      * and the otherSegment, based on the reference point provided
      * @param otherSegment  The object to be compared.
      * @param ref           The reference point.
-     * @return              The comparison between the two obtained x values of the points.
+     * @return              The comparison between the two obtained x values of the points, obtained using {@link Double#compare(double, double)}}.
      */
     public int compareToPoint(ComparableSegment otherSegment, Point ref)
     {
         Point p1 = Segment.getPointOnXAxis(ref, this);
         Point p2 = Segment.getPointOnXAxis(ref, otherSegment);
-        return Double.compare(p1.x, p2.x);
+        System.out.println("This: " + this + " | Other: " + otherSegment);
+
+
+        int res = Double.compare(p1.x, p2.x);
+        if(res == 0 && !this.equals(otherSegment)){
+            System.out.println("This : " + Math.atan(this.a/ this.b) + " | Other: " + Math.atan(otherSegment.a/ otherSegment.b));
+            System.out.println(Double.compare(Math.atan(this.a/ this.b), Math.atan(otherSegment.a/ otherSegment.b)));
+        }
+        return res == 0 ? (this.equals(otherSegment) ? 0: Double.compare(Math.atan(this.a/ this.b), Math.atan(otherSegment.a/ otherSegment.b))) : res;
+    }
+    
+    public boolean compareB(ComparableSegment otherSegment)
+    {
+        return this.b <= otherSegment.b;
     }
 
     /**
@@ -74,5 +82,15 @@ public class ComparableSegment extends Segment implements Comparable<ComparableS
     public int hashCode()
     {
         return Objects.hash(currentPoint);
+    }
+
+    public void setCurrentPoint(Point currentPoint)
+    {
+        this.currentPoint = currentPoint;
+    }
+
+    public Point getCurrentPoint()
+    {
+        return currentPoint;
     }
 }

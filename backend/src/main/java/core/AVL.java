@@ -417,6 +417,40 @@ public class AVL<T extends Comparable<T>>
         return current;
     }
 
+
+    /**
+     * Removes the root of the AVL
+     */
+    public void removeRoot()
+    {
+        this.root = removeRoot(this.root);
+    }
+
+    /**
+     * Removes the root node of the given node
+     * @param current   The node to modify
+     * @return          The new node
+     */
+    protected Node<T> removeRoot(Node<T> current)
+    {
+        if (current.isLeaf())
+            current = null;
+        else
+        {
+            if(current.left == null)
+                current = current.right;
+            else if (current.right == null)
+                current = current.left;
+            else {
+                Pair<Node<T>, T> removeMax = removeMax(current.left);
+                current.data = removeMax.getItem2();
+                current.left = removeMax.getItem1();
+                current.balance();
+            }
+        }
+        return current;
+    }
+
     /**
      * Removes the node containing the max value of the given node.
      * Keep in mind, this will also modify the tree structure of curr, so

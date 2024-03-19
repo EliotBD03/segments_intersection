@@ -86,6 +86,11 @@ public class Segment
         return id;
     }
 
+    public String getCartesianAsString()
+    {
+        return "(" + a + "x + " + b + "y = " + c + ")";
+    }
+
     /**
      * Find an intersection between two segments.
      * The mathematical formula used is the Crammer's formula.

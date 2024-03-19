@@ -41,4 +41,16 @@ class AVLTest {
         tree.display();
     }
 
+    @Test
+    void removeMax()
+    {
+        insert();
+        tree.display();
+        tree.removeRoot();
+        tree.removeRoot();
+        tree.removeRoot();
+        tree.removeRoot();
+        tree.display();
+    }
+
 }

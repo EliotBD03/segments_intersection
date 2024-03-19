@@ -38,4 +38,13 @@ public class Pair<T,P>
     {
         return item2;
     }
+
+    @Override
+    public String toString()
+    {
+        return "Pair{" +
+                "item1=" + item1 +
+                ", item2=" + item2 +
+                '}';
+    }
 }

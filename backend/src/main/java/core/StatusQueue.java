@@ -4,7 +4,7 @@ package core;
 /**
  * class which represents a status queue.
  */
-public class    StatusQueue extends AVL<ComparableSegment>
+public class  StatusQueue extends AVL<ComparableSegment>
 {
 
     /**
@@ -26,12 +26,34 @@ public class    StatusQueue extends AVL<ComparableSegment>
      */
     public void remove(Segment segment, Point currPoint) throws Exception
     {
+
         ComparableSegment comparableSegment = new ComparableSegment(segment, currPoint);
         // Remove the leaf segment first
+        System.out.println("removing leaf");
         root = removeLeaf(root, comparableSegment);
         // Remove the inner segment
-        remove(comparableSegment);
-        root.balance();
+        System.out.println("removing segment");
+        root = removeInner(root, comparableSegment, currPoint);
+    }
+
+
+    private Node<ComparableSegment> removeInner(Node<ComparableSegment> currNode, ComparableSegment segment, Point ref)
+    {
+        if(currNode == null)
+        {
+            return null;
+        }
+        if (currNode.getData().equals(segment))
+        {
+            currNode = removeRoot(currNode);
+            return currNode;
+        }
+        if (currNode.getData().compareToPoint(segment, ref) >= 0)
+        {
+            currNode.setLeft(removeInner(currNode.getLeft(), segment, ref));
+        }else
+            currNode.setRight(removeInner(currNode.getRight(), segment, ref));
+        return currNode;
     }
 
 
@@ -45,7 +67,6 @@ public class    StatusQueue extends AVL<ComparableSegment>
     {
         if(currNode == null || currNode.isLeaf())
             throw new Exception("the current AVL does not have the node with the given data : " + segment);
-
         if(currNode.getData().equals(segment))
         {
             // Remove the maximum element which by logic is the leaf we are looking for
@@ -53,7 +74,7 @@ public class    StatusQueue extends AVL<ComparableSegment>
             currNode.balance();
             return currNode;
         }
-        if (currNode.getData().compareToPoint(segment, segment.currentPoint) >= 0)
+        if (currNode.getData().compareToPoint(segment, segment.getCurrentPoint()) >= 0)
         {
             currNode.setLeft(removeLeaf(currNode.getLeft(), segment));
             currNode.balance();
@@ -108,13 +129,14 @@ public class    StatusQueue extends AVL<ComparableSegment>
      * Insert a comparable segment inside T
      * @param data the data to be inserted inside the tree.
      */
-
     protected void insert(ComparableSegment data, Point currentP) {
        super.root = this.insert(super.root, new Node<ComparableSegment>(data), currentP);
     }
+
+
     private static double distance(ComparableSegment segment1, ComparableSegment segment2)
     {
-        return Math.pow(Segment.getPointOnXAxis(segment1.currentPoint, segment1).x - Segment.getPointOnXAxis(segment1.currentPoint, segment2).x,2);
+        return Math.pow(Segment.getPointOnXAxis(segment1.getCurrentPoint(), segment1).x - Segment.getPointOnXAxis(segment1.getCurrentPoint(), segment2).x,2);
     }
     /**
      * Get the neighborhood of a given segment which is
@@ -192,6 +214,60 @@ public class    StatusQueue extends AVL<ComparableSegment>
         res.root = father;
         return res;
     }
+
+    /**
+     * Gets the left and right neighbors of a leaf in the tree
+     * @param k     The segment that is contained in the leaf
+     * @param ref   The current point of the graph
+     * @return      The left neighbor if it exists, null otherwise. Same thing for the right one.
+     */
+    public Pair<ComparableSegment, ComparableSegment> getNeighbours(Segment k, Point ref)
+    {
+
+        // Cast to comparable segment
+        ComparableSegment x = new ComparableSegment(k, ref);
+
+        ComparableSegment leftN = null;
+        ComparableSegment rightN = null;
+
+        boolean goingLeft = true;
+        Node<ComparableSegment> father = root;
+        Node<ComparableSegment> curr = root;
+        while(!curr.getData().equals(x))
+        {
+            System.out.println("curr: " + curr.getData());
+            father = curr;
+            if(curr.getData().compareToPoint(x, ref) >= 0 )
+            {
+                curr = curr.getLeft();
+                goingLeft = true;
+            }else{
+                curr = curr.getRight();
+                goingLeft = false;
+            }
+        }
+        rightN = curr.getRight() == null ? null : curr.getRight().lookForMinimum().getData();
+        if(!goingLeft)
+        {
+            leftN = father.getLeft().lookForMaximum().getData();
+        }else
+        {
+            if(!curr.getLeft().isLeaf())
+            {
+                father = curr;
+                curr = curr.getLeft();
+
+                while (!curr.getData().equals(x))
+                {
+                    father = curr;
+                    curr = curr.getRight();
+                }
+                leftN = father.getLeft().lookForMaximum().getData();
+            }
+        }
+        return new Pair<>(leftN, rightN);
+    }
+
 
 /*
     public static void main(String[] args) throws URISyntaxException, IOException {
