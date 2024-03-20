@@ -9,6 +9,8 @@ import java.util.Objects;
 public class StatusQueue extends AVL<ComparableSegment>
 {
 
+    private Point currStatus;
+
     /**
      * Add a segment inside the tree.
      * @param segment the segment to insert
@@ -16,26 +18,26 @@ public class StatusQueue extends AVL<ComparableSegment>
      */
     public void add(Segment segment, Point currP)
     {
-        ComparableSegment comparableSegment = new ComparableSegment(segment, currP);
-        this.insert(comparableSegment, currP);
+        currStatus = currP;
+        ComparableSegment comparableSegment = new ComparableSegment(segment);
+        this.insert(comparableSegment, currStatus);
     }
 
     /**
      * Removes both nodes containing the desired segment if it exist.
      * @param segment           The segment to remove both nodes from this tree
-     * @param currPoint         The reference point used to navigate the tree
      * @throws Exception        If the present is not present
      */
-    public void remove(Segment segment, Point currPoint) throws Exception
+    public void remove(Segment segment) throws Exception
     {
 
-        ComparableSegment comparableSegment = new ComparableSegment(segment, currPoint);
+        ComparableSegment comparableSegment = new ComparableSegment(segment);
         // Remove the leaf segment first
         System.out.println("removing leaf");
         root = removeLeaf(root, comparableSegment);
         // Remove the inner segment
         System.out.println("removing segment");
-        root = removeInner(root, comparableSegment, currPoint);
+        root = removeInner(root, comparableSegment, currStatus);
     }
 
 
@@ -51,7 +53,7 @@ public class StatusQueue extends AVL<ComparableSegment>
             return currNode;
         }
         //if (currNode.getData().compareToPoint(segment, ref) >= 0)
-        if(statusQueueRelation(currNode.getData(), segment, ref))
+        if(statusQueueRelation(currNode.getData(), segment))
         {
             currNode.setLeft(removeInner(currNode.getLeft(), segment, ref));
         }else
@@ -79,7 +81,7 @@ public class StatusQueue extends AVL<ComparableSegment>
             return currNode;
         }
         //if (currNode.getData().compareToPoint(segment, segment.getCurrentPoint()) >= 0)
-        if(statusQueueRelation(currNode.getData(), segment, segment.getCurrentPoint()))
+        if(statusQueueRelation(currNode.getData(), segment))
         {
             currNode.setLeft(removeLeaf(currNode.getLeft(), segment));
             currNode.balance();
@@ -115,14 +117,14 @@ public class StatusQueue extends AVL<ComparableSegment>
         else
         {
             System.out.println("tryign to insert in: " + current.getData() + " | node: " + nodeToInsert.getData());
-            if(statusQueueRelation(current.getData(), nodeToInsert.getData(), currP))
+            if(statusQueueRelation(current.getData(), nodeToInsert.getData()))
             {
-                current.setLeft(insert(current.getLeft(), nodeToInsert, currP));
+                current.setLeft(insert(current.getLeft(), nodeToInsert, currStatus));
                 current.balance();
             }
             else
             {
-                current.setRight(insert(current.getRight(), nodeToInsert, currP));
+                current.setRight(insert(current.getRight(), nodeToInsert, currStatus));
                 current.balance();
             }
         }
@@ -183,7 +185,7 @@ public class StatusQueue extends AVL<ComparableSegment>
     {
 
         // Cast to comparable segment
-        ComparableSegment x = new ComparableSegment(k, ref);
+        ComparableSegment x = new ComparableSegment(k);
 
         ComparableSegment leftN = null;
         ComparableSegment rightN = null;
@@ -195,7 +197,7 @@ public class StatusQueue extends AVL<ComparableSegment>
         {
             System.out.println("curr: " + curr.getData());
             father = curr;
-            if(statusQueueRelation(curr.getData(), x, ref) )
+            if(statusQueueRelation(curr.getData(), x) )
             {
                 curr = curr.getLeft();
                 goingLeft = true;
@@ -226,15 +228,15 @@ public class StatusQueue extends AVL<ComparableSegment>
         return new Pair<>(leftN, rightN);
     }
 
-    private static boolean statusQueueRelation(ComparableSegment curr, ComparableSegment other, Point ref)
+    private boolean statusQueueRelation(ComparableSegment curr, ComparableSegment other)
     {
         // True : going left
         // False : going right
-        int res = curr.compareToPoint(other, ref);
+        int res = curr.compareToPoint(other, currStatus);
         if (res != 0)
             return res > 0;
         // Check the dist btw UP
-        boolean rres = dist(curr.getUpperPoint(), ref) > dist(other.getUpperPoint(), ref);
+        boolean rres = dist(curr.getUpperPoint(), currStatus) > dist(other.getUpperPoint(), currStatus);
         //System.out.println("this: " + dist(curr.getUpperPoint(), ref) + "| " + dist(other.getUpperPoint(), ref));
         //System.out.println(rres);
         return rres;
@@ -246,21 +248,6 @@ public class StatusQueue extends AVL<ComparableSegment>
 
 
 /*
-    public static void main(String[] args) throws URISyntaxException, IOException {
-        Parser parser = new Parser(Parser.getPathFromResource("/cartes/fichier2.txt"));
-        ArrayList<Segment> segments = parser.getSegmentsFromFile();
-        T t = new T(segments.getFirst().getUpperPoint().y);
-        for(int i = 0; i < segments.size(); i++)
-        {
-            t.add(segments.get(i));
-        }
-        t.display();
-        Segment[] neighborhood = t.getNeighborhood(segments.get(1));
-        System.out.println(segments.get(1));
-        System.out.println(neighborhood[0] + " " + neighborhood[1]);
-
-
-
     //TODO public static Segment[] find_leftmost_rightmost()
 
  */

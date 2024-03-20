@@ -11,31 +11,28 @@ public class ComparableSegment extends Segment implements Comparable<ComparableS
     /**
      * The currentPoint used as a reference when using {@link #compareTo(ComparableSegment)}
      */
-    private Point currentPoint;
 
     /**
      * The default constructor for the ComparableSegment Class
      * @param segment       The segment to cast to a comparable Segment
-     * @param currentPoint  The currentPoint used as a reference when using {@link #compareTo(ComparableSegment)}
      */
-    public ComparableSegment(Segment segment, Point currentPoint)
+    public ComparableSegment(Segment segment)
     {
         super(segment);
-        this.currentPoint = currentPoint;
     }
 
     /**
      * Compares two segments by comparing the x values of the two points obtained with {@link Segment#getPointOnXAxis(Point, Segment)} for this segment
-     * and the otherSegment, based on the {@link #currentPoint }
+     * and the otherSegment
      * @param otherSegment the object to be compared.
      * @return We compare both x values from two points that have the same y value. If they intersect, we return 0
      * if and only if both segments have the same cartesian equation, -1 otherwise.
      * If not we return the result of the comparison mentioned earlier.
-     */
+    */
     @Override
     public int compareTo(ComparableSegment otherSegment)
     {
-        int res = compareToPoint(otherSegment, otherSegment.currentPoint);
+        int res = compareToPoint(otherSegment, new Point(Double.NEGATIVE_INFINITY, Double.NEGATIVE_INFINITY));
         return res == 0 ? (this.equals(otherSegment) ? 0: -1) : res;
     }
 
@@ -55,11 +52,6 @@ public class ComparableSegment extends Segment implements Comparable<ComparableS
 
         return Double.compare(p1.x, p2.x);
     }
-    
-    public boolean compareB(ComparableSegment otherSegment)
-    {
-        return this.b <= otherSegment.b;
-    }
 
     /**
      * Checks if this segment is the same as another
@@ -76,16 +68,7 @@ public class ComparableSegment extends Segment implements Comparable<ComparableS
     @Override
     public int hashCode()
     {
-        return Objects.hash(currentPoint);
+        return Objects.hash(this);
     }
 
-    public void setCurrentPoint(Point currentPoint)
-    {
-        this.currentPoint = currentPoint;
-    }
-
-    public Point getCurrentPoint()
-    {
-        return currentPoint;
-    }
 }

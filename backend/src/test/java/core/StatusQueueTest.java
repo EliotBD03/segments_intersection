@@ -63,11 +63,11 @@ class StatusQueueTest
         // Sweep line is at point P
         //      Remove s1 then s2
         testTree1.display();
-        testTree1.remove(s1, A);
+        testTree1.remove(s1);
         assertTrue(checkInorder(testTree1.root, convertList(List.of(s2,s2,s3,s3,s4,s4))));
 
         testTree1.display();
-        testTree1.remove(s2, A);
+        testTree1.remove(s2);
         assertTrue(checkInorder(testTree1.root, convertList(List.of(s3,s3,s4,s4))));
 
         testTree1.display();
@@ -89,15 +89,15 @@ class StatusQueueTest
 
         // Same with on point H, but with s3, s4 and s1
         // s4 will end and s5 will be added
-        testTree1.remove(s1,P);
+        testTree1.remove(s1);
         assertTrue(checkInorder(testTree1.root, convertList(List.of(s2,s2,s3,s3,s4,s4))));
 
 
-        testTree1.remove(s3,P);
+        testTree1.remove(s3);
         assertTrue(checkInorder(testTree1.root, convertList(List.of(s2,s2,s4,s4))));
 
 
-        testTree1.remove(s4,P);
+        testTree1.remove(s4);
         assertTrue(checkInorder(testTree1.root, convertList(List.of(s2,s2))));
 
 
@@ -137,7 +137,7 @@ class StatusQueueTest
         List<ComparableSegment> res = new ArrayList<>();
         for(Segment s : segments)
         {
-            res.add(new ComparableSegment(s, new Point(0,0)));
+            res.add(new ComparableSegment(s));
         }
         return res;
     }
