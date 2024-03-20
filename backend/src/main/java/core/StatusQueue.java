@@ -140,11 +140,6 @@ public class StatusQueue extends AVL<ComparableSegment>
     }
 
 
-    private static double distance(ComparableSegment segment1, ComparableSegment segment2)
-    {
-        return Math.pow(Segment.getPointOnXAxis(segment1.getCurrentPoint(), segment1).x - Segment.getPointOnXAxis(segment1.getCurrentPoint(), segment2).x,2);
-    }
-
 
     /**
      * To test later
@@ -238,16 +233,15 @@ public class StatusQueue extends AVL<ComparableSegment>
         int res = curr.compareToPoint(other, ref);
         if (res != 0)
             return res > 0;
-        // Check angles
-        double o1 = Math.toDegrees(Math.atan(curr.a/ curr.b));
-        double o2 = Math.toDegrees(Math.atan(other.a / other.b));
-
-        System.out.println("Comparing angles, o1: " + o1 + " | o2: " + o2);
-        System.out.println("this: " + curr.getCartesianAsString() + " | other: " + other.getCartesianAsString());
-        boolean rres = (o1 < o2) && curr.a > other.a;
-        System.out.println(rres);
-        System.out.println();
+        // Check the dist btw UP
+        boolean rres = dist(curr.getUpperPoint(), ref) > dist(other.getUpperPoint(), ref);
+        //System.out.println("this: " + dist(curr.getUpperPoint(), ref) + "| " + dist(other.getUpperPoint(), ref));
+        //System.out.println(rres);
         return rres;
+    }
+    private static double dist(Point up, Point curr)
+    {
+        return Math.abs(up.x - curr.x);
     }
 
 

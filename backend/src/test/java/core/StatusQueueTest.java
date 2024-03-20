@@ -63,11 +63,11 @@ class StatusQueueTest
         // Sweep line is at point P
         //      Remove s1 then s2
         testTree1.display();
-        testTree1.remove(s1, P);
+        testTree1.remove(s1, A);
         assertTrue(checkInorder(testTree1.root, convertList(List.of(s2,s2,s3,s3,s4,s4))));
 
         testTree1.display();
-        testTree1.remove(s2, P);
+        testTree1.remove(s2, A);
         assertTrue(checkInorder(testTree1.root, convertList(List.of(s3,s3,s4,s4))));
 
         testTree1.display();
@@ -89,15 +89,15 @@ class StatusQueueTest
 
         // Same with on point H, but with s3, s4 and s1
         // s4 will end and s5 will be added
-        testTree1.remove(s1,H);
+        testTree1.remove(s1,P);
         assertTrue(checkInorder(testTree1.root, convertList(List.of(s2,s2,s3,s3,s4,s4))));
 
 
-        testTree1.remove(s3,H);
+        testTree1.remove(s3,P);
         assertTrue(checkInorder(testTree1.root, convertList(List.of(s2,s2,s4,s4))));
 
 
-        testTree1.remove(s4,H);
+        testTree1.remove(s4,P);
         assertTrue(checkInorder(testTree1.root, convertList(List.of(s2,s2))));
 
 
@@ -112,8 +112,8 @@ class StatusQueueTest
         testTree1.add(s5,H);
         assertTrue(checkInorder(testTree1.root, convertList(List.of(s2,s2, s5, s5, s3, s3, s1, s1))));
 
-
-        System.out.println(testTree1.getNeighbours(s2,H));
+        testTree1.display();
+        System.out.println(testTree1.getNeighbours(s1,H));
 
 /*
          */
