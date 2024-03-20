@@ -16,9 +16,9 @@ class StatusQueueTest
     static StatusQueue testTree1;
 
 
-    @BeforeAll
+    @BeforeEach
     @DisplayName("\uD83C\uDF32 StatusQueue test starting")
-    static void add()
+    void add()
     {
         testTree1 =  new StatusQueue();
 
@@ -62,25 +62,19 @@ class StatusQueueTest
     {
         // Sweep line is at point P
         //      Remove s1 then s2
-        testTree1.display();
         testTree1.remove(s1);
         assertTrue(checkInorder(testTree1.root, convertList(List.of(s2,s2,s3,s3,s4,s4))));
 
-        testTree1.display();
         testTree1.remove(s2);
         assertTrue(checkInorder(testTree1.root, convertList(List.of(s3,s3,s4,s4))));
 
-        testTree1.display();
         //      Add s1 then s2
         //      Check if they were correctly exchanged
 
         testTree1.add(s1,P);
 
         assertTrue(checkInorder(testTree1.root, convertList(List.of(s1,s1,s3,s3,s4,s4))));
-        System.out.println("Added s1");
-        testTree1.display();
         testTree1.add(s2,P);
-        testTree1.display();
 
         assertTrue(checkInorder(testTree1.root, convertList(List.of(s2,s2,s1,s1,s3,s3,s4,s4))));
 
@@ -108,12 +102,9 @@ class StatusQueueTest
         testTree1.add(s3,H);
 
         assertTrue(checkInorder(testTree1.root, convertList(List.of(s2,s2, s3, s3, s1, s1))));
-        testTree1.display();
         testTree1.add(s5,H);
         assertTrue(checkInorder(testTree1.root, convertList(List.of(s2,s2, s5, s5, s3, s3, s1, s1))));
 
-        testTree1.display();
-        System.out.println(testTree1.getNeighbours(s1,H));
 
 /*
          */
@@ -123,13 +114,24 @@ class StatusQueueTest
 
 
     @Test
-    void getNeighborsTest() throws Exception
+    void getNeighborsTest()
     {
-        //
-        add();
         testTree1.display();
-        System.out.println(testTree1.getNeighbours(s4,P));
 
+        //degenerated case -> rightmost
+        Pair<ComparableSegment, ComparableSegment> tested = testTree1.getNeighbours(s4,P);
+        assertEquals("s3", tested.getItem1().id);
+        assertNull(tested.getItem2());
+
+        //middle case
+        tested = testTree1.getNeighbours(s3, P);
+        assertEquals("s2", tested.getItem1().id);
+        assertEquals("s4", tested.getItem2().id);
+
+        //degenerated case -> leftmost
+        tested = testTree1.getNeighbours(s1, P);
+        assertNull(tested.getItem1());
+        assertEquals("s2", tested.getItem2().id);
     }
 
     private static List<ComparableSegment> convertList(List<Segment> segments)

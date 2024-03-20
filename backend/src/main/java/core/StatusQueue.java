@@ -33,10 +33,8 @@ public class StatusQueue extends AVL<ComparableSegment>
 
         ComparableSegment comparableSegment = new ComparableSegment(segment);
         // Remove the leaf segment first
-        System.out.println("removing leaf");
         root = removeLeaf(root, comparableSegment);
         // Remove the inner segment
-        System.out.println("removing segment");
         root = removeInner(root, comparableSegment, currStatus);
     }
 
@@ -70,7 +68,6 @@ public class StatusQueue extends AVL<ComparableSegment>
      */
     private Node<ComparableSegment> removeLeaf(Node<ComparableSegment> currNode, ComparableSegment segment) throws Exception
     {
-        System.out.println("curr:: " + currNode.getData());
         if(currNode == null || currNode.isLeaf())
             throw new Exception("the current AVL does not have the node with the given data : " + segment);
         if(currNode.getData().equals(segment))
@@ -116,7 +113,6 @@ public class StatusQueue extends AVL<ComparableSegment>
         }
         else
         {
-            System.out.println("tryign to insert in: " + current.getData() + " | node: " + nodeToInsert.getData());
             if(statusQueueRelation(current.getData(), nodeToInsert.getData()))
             {
                 current.setLeft(insert(current.getLeft(), nodeToInsert, currStatus));
@@ -195,7 +191,6 @@ public class StatusQueue extends AVL<ComparableSegment>
         Node<ComparableSegment> curr = root;
         while(!curr.getData().equals(x))
         {
-            System.out.println("curr: " + curr.getData());
             father = curr;
             if(statusQueueRelation(curr.getData(), x) )
             {
@@ -237,8 +232,6 @@ public class StatusQueue extends AVL<ComparableSegment>
             return res > 0;
         // Check the dist btw UP
         boolean rres = dist(curr.getUpperPoint(), currStatus) > dist(other.getUpperPoint(), currStatus);
-        //System.out.println("this: " + dist(curr.getUpperPoint(), ref) + "| " + dist(other.getUpperPoint(), ref));
-        //System.out.println(rres);
         return rres;
     }
     private static double dist(Point up, Point curr)
