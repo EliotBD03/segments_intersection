@@ -174,7 +174,6 @@ public class StatusQueue extends AVL<ComparableSegment>
     /**
      * Gets the left and right neighbors of a leaf in the tree
      * @param k     The segment that is contained in the leaf
-     * @param ref   The current point of the graph
      * @return      The left neighbor if it exists, null otherwise. Same thing for the right one.
      */
     public Pair<ComparableSegment, ComparableSegment> getNeighbours(Segment k)

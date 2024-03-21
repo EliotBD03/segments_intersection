@@ -11,6 +11,8 @@ public class Point implements Comparable<Point>
     public final double x, y;
     private ArrayList<Segment> startOf;
 
+    private ArrayList<Segment> intersections;
+
     /**
      * Constructor of the Point
      * @param x the x coordinate
@@ -78,5 +80,19 @@ public class Point implements Comparable<Point>
     @Override
     public String toString() {
         return "("+ x + "," + y + ")";
+    }
+
+    /**
+     * Add segments to the intersections set
+     * @param segments the segments that intersects each other on the point
+     */
+    public void addIntersection(ArrayList<Segment> segments)
+    {
+        this.intersections.addAll(segments);
+    }
+
+    public ArrayList<Segment> getIntersections()
+    {
+        return intersections;
     }
 }

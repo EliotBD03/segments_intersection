@@ -70,4 +70,14 @@ public class PointQueue extends AVL<Point>
         lookForNewHead();
         return pointToRemove;
     }
+
+    /**
+     * See if the queue is empty or not by looking at
+     * the root
+     * @return true if that's the case, false otherwise
+     */
+    public boolean isEmpty()
+    {
+        return root == null;
+    }
 }
