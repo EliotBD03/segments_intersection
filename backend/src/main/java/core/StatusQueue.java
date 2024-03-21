@@ -177,7 +177,7 @@ public class StatusQueue extends AVL<ComparableSegment>
      * @param ref   The current point of the graph
      * @return      The left neighbor if it exists, null otherwise. Same thing for the right one.
      */
-    public Pair<ComparableSegment, ComparableSegment> getNeighbours(Segment k, Point ref)
+    public Pair<ComparableSegment, ComparableSegment> getNeighbours(Segment k)
     {
 
         // Cast to comparable segment

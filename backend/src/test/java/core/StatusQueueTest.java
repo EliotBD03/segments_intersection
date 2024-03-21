@@ -119,17 +119,17 @@ class StatusQueueTest
         testTree1.display();
 
         //degenerated case -> rightmost
-        Pair<ComparableSegment, ComparableSegment> tested = testTree1.getNeighbours(s4,P);
+        Pair<ComparableSegment, ComparableSegment> tested = testTree1.getNeighbours(s4);
         assertEquals("s3", tested.getItem1().id);
         assertNull(tested.getItem2());
 
         //middle case
-        tested = testTree1.getNeighbours(s3, P);
+        tested = testTree1.getNeighbours(s3);
         assertEquals("s2", tested.getItem1().id);
         assertEquals("s4", tested.getItem2().id);
 
         //degenerated case -> leftmost
-        tested = testTree1.getNeighbours(s1, P);
+        tested = testTree1.getNeighbours(s1);
         assertNull(tested.getItem1());
         assertEquals("s2", tested.getItem2().id);
     }
