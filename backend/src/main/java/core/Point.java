@@ -86,7 +86,7 @@ public class Point implements Comparable<Point>
      * Add segments to the intersections set
      * @param segments the segments that intersects each other on the point
      */
-    public void addIntersection(ArrayList<Segment> segments)
+    public void addIntersection(ArrayList<ComparableSegment> segments)
     {
         this.intersections.addAll(segments);
     }

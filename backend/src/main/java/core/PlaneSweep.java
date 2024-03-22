@@ -45,7 +45,10 @@ public class PlaneSweep
         ArrayList<ComparableSegment> upperInner = union(lower, upper);
         ArrayList<ComparableSegment> upperLowerInner = union(lowerInner, upper);
         if(upperLowerInner.size() > 1)
-           //TODO intersection =
+        {
+            intersection = p;
+            intersection.addIntersection(upperLowerInner);
+        }
         for(ComparableSegment segment : lowerInner)
             statusQueue.remove(segment);
         for(ComparableSegment segment : upperInner)
@@ -58,9 +61,15 @@ public class PlaneSweep
         }
         else
         {
-            /// TODO
+           Pair<ComparableSegment, ComparableSegment> segmentPair = statusQueue.findLeftmostRightmost(p);
+           ComparableSegment leftSegment = statusQueue.getNeighbours(segmentPair.getItem1()).getItem1();
+           ComparableSegment rightSegment = statusQueue.getNeighbours(segmentPair.getItem2()).getItem2();
+           if(leftSegment != null)
+               findNewEvent(leftSegment, segmentPair.getItem1(), p);
+           if(rightSegment != null)
+               findNewEvent(rightSegment, segmentPair.getItem2(), p);
         }
-        return null;
+        return intersection;
     }
 
     public static ArrayList<ComparableSegment> union(ArrayList<ComparableSegment> l1, ArrayList<ComparableSegment> l2)
