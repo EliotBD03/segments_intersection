@@ -144,7 +144,7 @@ public class Segment
     public boolean equals(Object o)
     {
         if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (o == null || (getClass() != o.getClass() && getClass() != o.getClass().getSuperclass())) return false;
         Segment segment = (Segment) o;
         return Double.compare(a, segment.a) == 0 && Double.compare(b, segment.b) == 0 && Double.compare(c, segment.c) == 0;
     }

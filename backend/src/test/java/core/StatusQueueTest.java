@@ -105,10 +105,6 @@ class StatusQueueTest
         testTree1.add(s5,H);
         assertTrue(checkInorder(testTree1.root, convertList(List.of(s2,s2, s5, s5, s3, s3, s1, s1))));
 
-
-/*
-         */
-
     }
 
 
@@ -133,6 +129,48 @@ class StatusQueueTest
         assertNull(tested.getItem1());
         assertEquals("s2", tested.getItem2().id);
     }
+
+    @Test
+    void getClosestRootTest() throws Exception
+    {
+        assertTrue(checkInorder(testTree1.getClosestRoot(A), convertList(List.of(s1, s1, s2))));
+        assertTrue(checkInorder(testTree1.getClosestRoot(B), convertList(List.of(s4, s4))));
+        assertTrue(checkInorder(testTree1.getClosestRoot(P), convertList(List.of(s1, s1, s2, s2, s3))));
+
+        orderSwapped();
+
+        assertTrue(checkInorder(testTree1.getClosestRoot(P), convertList(List.of(s2, s2, s5, s5, s3))));
+        assertTrue(checkInorder(testTree1.getClosestRoot(H), convertList(List.of(s2, s2, s5, s5, s3, s3, s1, s1))));
+        assertTrue(checkInorder(testTree1.getClosestRoot(B), convertList(List.of(s1, s1))));
+    }
+    @Test
+    void getNeighboursPointTest()
+    {
+        testTree1.display();
+        assertEquals(new Pair<>(s2, s3), testTree1.getNeighbours(C));
+    }
+
+    @Test
+    void findSegments() throws Exception
+    {
+        ArrayList<ComparableSegment> L = new ArrayList<>();
+        ArrayList<ComparableSegment> C = new ArrayList<>();
+
+        orderSwapped();
+        testTree1.display();
+        testTree1.findSegments(B, L, C);
+        //System.out.println("L: " + L);
+        //System.out.println("C: " + C);
+    }
+
+    @Test
+    void findLeftmostRightmostTest() throws Exception
+    {
+        orderSwapped();
+        testTree1.display();
+        System.out.println(testTree1.findLeftmostRightmost(H));
+    }
+
 
     private static List<ComparableSegment> convertList(List<Segment> segments)
     {

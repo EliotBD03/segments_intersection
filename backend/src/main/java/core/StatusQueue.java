@@ -1,6 +1,7 @@
 package core;
 
 
+import java.util.ArrayList;
 import java.util.Objects;
 
 /**
@@ -10,6 +11,7 @@ public class StatusQueue extends AVL<ComparableSegment>
 {
 
     private Point currStatus;
+    private AVL<ComparableSegment>.Node<ComparableSegment> tmp;
 
     /**
      * Add a segment inside the tree.
@@ -138,38 +140,149 @@ public class StatusQueue extends AVL<ComparableSegment>
     }
 
 
+    /**
+     * Gets the closest root containing a segment, that either
+     * holds the searched point or that the point is located between both his right
+     * and left children.
+     * @param p The searched point
+     * @return  The desired root
+     */
+    protected Node<ComparableSegment> getClosestRoot(Point p)
+    {
+        if(this.root == null)
+            return null;
+        Node<ComparableSegment> tmp = this.root;
+        Point p2 = Segment.getPointOnXAxis(p ,tmp.getData());
+        // Go as much left as possible
+        while(p2.x > p.x && !tmp.isLeaf())
+        {
+            tmp = tmp.getLeft();
+            p2 = Segment.getPointOnXAxis(p, tmp.getData());
+        }
+        // Go as much right as possible
+        while(p2.x < p.x && (tmp.getRight() != null))
+        {
+            tmp = tmp.getRight();
+            p2 = Segment.getPointOnXAxis(new Point(3, 3), tmp.getData());
+        }
+        return tmp;
+    }
 
     /**
-     * To test later
-     * @param tree
-     * @param p
-     * @return
+     * Gets the neighboring segments of a {@link Point}.
+     * This method only makes sens if the point is not part of any segment of the tree.
+     * And k must be either a point that is yet to be explored on the sweep line or the current point
+     * @param k The point to search respecting the defined restriction
+     * @return  The neighboring segments
      */
-    public static StatusQueue getClosestRoot(StatusQueue tree, Point p)
+    public Pair<ComparableSegment, ComparableSegment> getNeighbours(Point k) throws IllegalArgumentException
     {
-        if(tree == null)
-            return null;
-        Node<ComparableSegment> father = tree.root;
-        Node<ComparableSegment> tmp = tree.root.getRight();
-        Point p2 = Segment.getPointOnXAxis(p ,tmp.getData());
-        while(p2.x < p.x && !tmp.isLeaf())
-        {
-            father = tmp;
-            tmp = tmp.getRight();
-            p2 = Segment.getPointOnXAxis(p, tmp.getData());
-        }
-        tmp = tmp.getLeft();
-        p2 = Segment.getPointOnXAxis(p, tmp.getData());
-        while(p2.x < p.x && !tmp.isLeaf())
-        {
-            father = tmp;
-            tmp = tmp.getRight();
-            p2 = Segment.getPointOnXAxis(p, tmp.getData());
-        }
-        StatusQueue res = new StatusQueue();
-        res.root = father;
-        return res;
+        Node<ComparableSegment> father = getClosestRoot(k);
+        // Return the left and right leaves
+        System.out.println("k" + k);
+        System.out.println("curr " + currStatus);
+        if(root == null)
+            return new Pair<>(null, null);
+        return new Pair<>(  father.getLeft() != null ? father.getLeft().lookForMaximum().getData(): null,
+                            father.getRight() != null ? father.getRight().lookForMinimum().getData(): null);
+
     }
+
+    /**
+     * Finds all the segments containing the point k, and adds them inside the given list L and C
+     * @param k The point to search
+     * @param L The list of segments containing k as a lower point
+     * @param C The list of segments containing k inside
+     */
+    public void findSegments(Point k, ArrayList<ComparableSegment> L, ArrayList<ComparableSegment> C)
+    {
+        findSegments(root, k, L, C);
+    }
+
+    /**
+     * The recursive method used to find the segments as explained in {@link StatusQueue#findSegments(Point, ArrayList, ArrayList)}
+     * @param current   The current node
+     * @param k         The point to search
+     * @param L         The list of segments containing k as a lower point
+     * @param C         The list of segments containing k inside
+     */
+    private void findSegments(Node<ComparableSegment> current, Point k, ArrayList<ComparableSegment> L, ArrayList<ComparableSegment> C)
+    {
+        if(current == null)
+            return;
+        // Only works if k, is the current point OR if a future point on the same y axis but in the future !
+        // Return the left and right leaves
+        ComparableSegment s = current.getData();
+        Point p = ComparableSegment.getPointOnXAxis(k, s);
+
+        if (current.isLeaf())
+        {
+            if (k.equals(s.getLowerPoint()))
+                L.add(s);
+            else if (!k.equals(s.getUpperPoint()))
+                C.add(s);
+        }else
+        {
+            if (p.x > k.x)
+                findSegments(current.getLeft(), k, L, C);
+            else if (p.x < k.x)
+                findSegments(current.getRight(), k, L, C);
+            else
+            {
+                if(s.getUpperPoint().x > k.x)
+                    findSegments(current.getLeft(), k, L, C);
+                else
+                {
+                    findSegments(current.getLeft(), k, L, C);
+                    findSegments(current.getRight(), k, L, C);
+                }
+            }
+        }
+    }
+
+
+    /**
+     * Finds a pair of segments with the first segment being the leftmost and the second
+     * the rightmost segment in this statusQueue that both contains k (if they exist)
+     * @param k
+     * @return  The
+     */
+    public Pair<ComparableSegment, ComparableSegment> findLeftmostRightmost(Point k)
+    {
+        // Return the left and right leaves
+        Node<ComparableSegment> father = getClosestRoot(k);
+
+        ComparableSegment sL = null;
+        ComparableSegment sR = null;
+        Point p;
+
+        if (father != null)
+        {
+            tmp = father.getLeft();
+            while (!tmp.isLeaf())
+            {
+                p = ComparableSegment.getPointOnXAxis(k, tmp.getData());
+                if(p.x >= k.x)
+                    tmp = tmp.getLeft();
+                else
+                    tmp = tmp.getRight();
+            }
+            sL = tmp.getData();
+            tmp = father.getRight();
+            while (!tmp.isLeaf())
+            {
+                p = ComparableSegment.getPointOnXAxis(k, tmp.getData());
+                if(p.x >= k.x)
+                    tmp = tmp.getLeft();
+                else
+                    tmp = tmp.getRight();
+            }
+            sR = tmp.getData();
+        }
+        return new Pair<>(sL, sR);
+    }
+
+
 
     /**
      * Gets the left and right neighbors of a leaf in the tree
@@ -188,10 +301,11 @@ public class StatusQueue extends AVL<ComparableSegment>
         boolean goingLeft = true;
         Node<ComparableSegment> father = root;
         Node<ComparableSegment> curr = root;
+        // Find the inner node with its father by moving in the tree
         while(!curr.getData().equals(x))
         {
             father = curr;
-            if(statusQueueRelation(curr.getData(), x) )
+            if(statusQueueRelation(curr.getData(), x))
             {
                 curr = curr.getLeft();
                 goingLeft = true;
@@ -200,12 +314,17 @@ public class StatusQueue extends AVL<ComparableSegment>
                 goingLeft = false;
             }
         }
+        // Thanks to the property of the graph
+        // The right node is always the minimum in the right child of the inner node containing x
         rightN = curr.getRight() == null ? null : curr.getRight().lookForMinimum().getData();
+        // If the last movement we did was going right, then we can easily find the left node
+        // it will simply the maximum of the left child of the father of the inner node
         if(!goingLeft)
         {
             leftN = father.getLeft().lookForMaximum().getData();
         }else
         {
+            // If not, we have to locate the father of the leaf containing x
             if(!curr.getLeft().isLeaf())
             {
                 father = curr;
@@ -216,12 +335,22 @@ public class StatusQueue extends AVL<ComparableSegment>
                     father = curr;
                     curr = curr.getRight();
                 }
+                // After it was found, we can return the maximum of the left child
+                // of the father of the leaf
                 leftN = father.getLeft().lookForMaximum().getData();
             }
         }
         return new Pair<>(leftN, rightN);
     }
 
+
+    /**
+     * Is used to navigate inside the tree
+     * @param curr      The current node of the tree
+     * @param other     The other node to locate
+     * @return True if the other node is located to the left of the curr node,
+     * False if it's located to the right.
+     */
     private boolean statusQueueRelation(ComparableSegment curr, ComparableSegment other)
     {
         // True : going left
@@ -229,10 +358,13 @@ public class StatusQueue extends AVL<ComparableSegment>
         int res = curr.compareToPoint(other, currStatus);
         if (res != 0)
             return res > 0;
-        // Check the dist btw UP
-        boolean rres = dist(curr.getUpperPoint(), currStatus) > dist(other.getUpperPoint(), currStatus);
-        return rres;
+        // Check the dist btw the upper points
+        return dist(curr.getUpperPoint(), currStatus) > dist(other.getUpperPoint(), currStatus);
     }
+
+
+
+
     private static double dist(Point up, Point curr)
     {
         return Math.abs(up.x - curr.x);

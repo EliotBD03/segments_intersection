@@ -1,6 +1,8 @@
 package core;
 
 
+import java.util.Objects;
+
 /**
  * Simple class that act as a pair of two objects to store
  * @param <T>   The type of the first item
@@ -46,5 +48,21 @@ public class Pair<T,P>
                 "item1=" + item1 +
                 ", item2=" + item2 +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o)
+    {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Pair<?, ?> pair = (Pair<?, ?>) o;
+        System.out.println(Objects.equals(item1, pair.item1));
+        return Objects.equals(item1, pair.item1) && Objects.equals(item2, pair.item2);
+    }
+
+    @Override
+    public int hashCode()
+    {
+        return Objects.hash(item1, item2);
     }
 }
