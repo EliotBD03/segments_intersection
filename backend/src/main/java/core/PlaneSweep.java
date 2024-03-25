@@ -134,8 +134,9 @@ public class PlaneSweep
     private void findNewEvent(ComparableSegment sl, ComparableSegment sr, Point p)
     {
         Point pp = Segment.findIntersection(sl, sr);
+        System.out.println("fOUND: " + pp);
         if(pp != null)
-            if(pp.compareTo(p) <= 0)
+            if(pp.y < p.y || (pp.y == p.y && pp.x > p.x))
                 pointQueue.enqueue(pp);
     }
 }
