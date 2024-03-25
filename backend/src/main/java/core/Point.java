@@ -23,6 +23,7 @@ public class Point implements Comparable<Point>
         this.x = x;
         this.y = y;
         this.startOf = new ArrayList<>();
+        this.intersections = new ArrayList<>();
     }
 
     /**

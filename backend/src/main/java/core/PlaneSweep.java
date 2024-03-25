@@ -15,22 +15,26 @@ public class PlaneSweep
         this.segments = segments;
         this.statusQueue = new StatusQueue();
         this.pointQueue = PointQueue.initQ(segments);
+        System.out.println("point queue at initialization");
+        pointQueue.display();
+    }
+
+    public ArrayList<Point> getIntersections() throws Exception
+    {
         this.intersections = new ArrayList<>();
+        int index = 0; //TODO
         while(!pointQueue.isEmpty())
         {
+            System.out.println("iteration " + (index++)); //TODO remove this if problem solved
             Point p = pointQueue.dequeue();
             Point intersection = handleEventPoint(p);
             if(intersection != null)
                 intersections.add(intersection);
         }
-    }
-
-    public ArrayList<Point> getIntersections()
-    {
         return intersections;
     }
 
-    public Point handleEventPoint(Point p) throws Exception
+    private Point handleEventPoint(Point p) throws Exception
     {
         Point intersection = null;
         ArrayList<ComparableSegment> upper = p.getStartOf()
@@ -38,9 +42,17 @@ public class PlaneSweep
                 .map(ComparableSegment::new)
                 .collect(Collectors.toCollection(ArrayList::new));
 
+        System.out.println("status queue before");
+        statusQueue.display();
         ArrayList<ComparableSegment> lower = new ArrayList<>();
         ArrayList<ComparableSegment> inner = new ArrayList<>();
         statusQueue.findSegments(p,lower, inner);
+        System.out.println("lower");
+        for(Segment segment : lower)
+            System.out.println(segment);
+        System.out.println("upper");
+        for(Segment segment : upper)
+            System.out.println(segment);
         ArrayList<ComparableSegment> lowerInner = union(lower, inner);
         ArrayList<ComparableSegment> upperInner = union(lower, upper);
         ArrayList<ComparableSegment> upperLowerInner = union(lowerInner, upper);
@@ -69,6 +81,8 @@ public class PlaneSweep
            if(rightSegment != null)
                findNewEvent(rightSegment, segmentPair.getItem2(), p);
         }
+        System.out.println("status queue after");
+        statusQueue.display();
         return intersection;
     }
 
@@ -81,16 +95,13 @@ public class PlaneSweep
         {
             if(i >= l1.size())
             {
-
-                i = l2.size();
-                result.addAll(l2.subList(i, i - 1));
-
+                result.addAll(l2.subList(j, l2.size()));
+                j = l2.size();
             }
             else if(j >= l2.size())
             {
-                j = l2.size();
-                result.addAll(l1.subList(j, l1.size() - 1));
-
+                result.addAll(l1.subList(i, l1.size()));
+                i = l2.size();
             }
             else
             {
@@ -106,7 +117,7 @@ public class PlaneSweep
         return result;
     }
 
-    public void findNewEvent(ComparableSegment sl, ComparableSegment sr, Point p)
+    private void findNewEvent(ComparableSegment sl, ComparableSegment sr, Point p)
     {
         Point pp = Segment.findIntersection(sl, sr);
         if(pp != null)

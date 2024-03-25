@@ -33,8 +33,10 @@ public class PointQueue extends AVL<Point>
      * @param segments an arraylist of segments
      * @return Q object with the corresponding endpoints inside.
      */
-    public static PointQueue initQ(ArrayList<Segment> segments)
+    public static PointQueue initQ(ArrayList<Segment> segments) throws Exception
     {
+        if(segments.isEmpty())
+            throw new Exception("no segment provided");
         PointQueue q = new PointQueue();
         for(Segment segment : segments)
         {
@@ -42,6 +44,7 @@ public class PointQueue extends AVL<Point>
             q.insert(segment.getUpperPoint());
             q.insert(segment.getLowerPoint());
         }
+        q.lookForNewHead();
         return q;
     }
 

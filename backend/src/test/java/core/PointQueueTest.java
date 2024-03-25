@@ -16,7 +16,7 @@ class PointQueueTest
     static PointQueue qTest;
 
     @BeforeAll
-    static void initQ()
+    static void initQ() throws Exception
     {
         qTest = PointQueue.initQ(new ArrayList<>(
                 Arrays.asList(s1,s2,s3,s4,s5)

@@ -208,6 +208,7 @@ public class StatusQueue extends AVL<ComparableSegment>
      */
     private void findSegments(Node<ComparableSegment> current, Point k, ArrayList<ComparableSegment> L, ArrayList<ComparableSegment> C)
     {
+        System.out.println(k);
         if(current == null)
             return;
         // Only works if k, is the current point OR if a future point on the same y axis but in the future !
@@ -370,9 +371,4 @@ public class StatusQueue extends AVL<ComparableSegment>
         return Math.abs(up.x - curr.x);
     }
 
-
-/*
-    //TODO public static Segment[] find_leftmost_rightmost()
-
- */
 }
