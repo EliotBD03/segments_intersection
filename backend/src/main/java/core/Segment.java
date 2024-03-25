@@ -105,34 +105,42 @@ public class Segment
         {
             double px = (s2.c * s1.b - s1.c * s2.b) / denominator;
             double py = (s2.a * s1.c - s1.a * s2.c) / denominator;
-            return new Point(px, py);
+            // We also need to check if the point is in the boundaries of both segments
+            Point inter = new Point(px, py);
+            return hasPoint(s1, inter) && hasPoint(s2, inter) ? inter: null;
         }
         return null;
+    }
+
+    public static boolean hasPoint(Segment segment, Point p)
+    {
+        return getPointOnXAxis(p, segment).equals(p) ;
     }
 
     /**
      * Find a point which belongs to the segment with the same
      * y-coordinates as p.
      * @param p the point with the y-coordinate targeted.
-     * @param segment a non-horizontal segment.
+     * @param segment a segment.
      * @return a point from the segment if it's not horizontal. Otherwise, the closest
      * point from p.
      */
     public static Point getPointOnXAxis(Point p, Segment segment)
     {
+        Point pRes;
         if(segment.a == 0)
-        {
-           if(p.x >= segment.upperPoint.x && p.x <= segment.lowerPoint.x)
-                return p;
-            if(segment.upperPoint.x > p.x)
-                return segment.upperPoint;
-            return segment.lowerPoint;
-        }
+            pRes = p;
         else
         {
             double x = (-segment.c - (segment.b * p.y))/ segment.a;
-            return new Point(x, p.y);
+            pRes = new Point(x, p.y);
         }
+        // Get closest Point
+        if(pRes.x >= segment.upperPoint.x && pRes.x <= segment.lowerPoint.x)
+            return pRes;
+        if(segment.upperPoint.x > pRes.x)
+            return segment.upperPoint;
+        return segment.lowerPoint;
     }
 
     /**

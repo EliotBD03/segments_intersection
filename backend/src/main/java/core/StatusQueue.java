@@ -220,7 +220,8 @@ public class StatusQueue extends AVL<ComparableSegment>
         {
             if (k.equals(s.getLowerPoint()))
                 L.add(s);
-            else if (!k.equals(s.getUpperPoint()) && ComparableSegment.getPointOnXAxis(k, s).equals(k))
+            // We still need to check if the segment has that lower point or not
+            else if (!k.equals(s.getUpperPoint()) && Segment.hasPoint(s,k))
                 C.add(s);
         }else
         {

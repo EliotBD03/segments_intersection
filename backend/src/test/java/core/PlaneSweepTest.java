@@ -1,6 +1,7 @@
 package core;
 
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import parser.Parser;
 
@@ -12,6 +13,7 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+@DisplayName("PlaneSweepTest \uD83D\uDCC8")
 class PlaneSweepTest
 {
     private static PlaneSweep planeSweep;
