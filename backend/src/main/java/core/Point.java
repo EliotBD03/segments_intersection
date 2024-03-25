@@ -56,7 +56,9 @@ public class Point implements Comparable<Point>
     {
         if(y == otherPoint.y && x == otherPoint.x)
         {
-            startOf.addAll(otherPoint.startOf);
+            for(Segment segment : otherPoint.getStartOf())
+                if(! startOf.contains(segment))
+                    startOf.add(segment);
             return 0;
         }
         return y > otherPoint.y || (y == otherPoint.y && x < otherPoint.x) ? -1 : 1;
