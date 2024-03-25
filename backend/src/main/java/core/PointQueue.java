@@ -25,7 +25,7 @@ public class PointQueue extends AVL<Point>
      */
     private void lookForNewHead()
     {
-        head = root.lookForMinimum().getData();
+        head = root == null ? null : root.lookForMinimum().getData();
     }
 
     /**
@@ -55,9 +55,8 @@ public class PointQueue extends AVL<Point>
      */
     public void enqueue(Point point)
     {
-        if(head.compareTo(point) > 0)
-            head = point;
         insert(point);
+        lookForNewHead();
     }
 
     /**

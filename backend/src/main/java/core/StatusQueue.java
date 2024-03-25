@@ -36,7 +36,11 @@ public class StatusQueue extends AVL<ComparableSegment>
 
         ComparableSegment comparableSegment = new ComparableSegment(segment);
         // Remove the leaf segment first
+        System.out.println("before removing leaf");
+        System.out.println(root);
         root = removeLeaf(root, comparableSegment);
+        System.out.println("after removed leaf");
+        System.out.println(root);
         // Remove the inner segment
         root = removeInner(root, comparableSegment, currStatus);
     }
@@ -76,18 +80,16 @@ public class StatusQueue extends AVL<ComparableSegment>
         {
             // Remove the maximum element which by logic is the leaf we are looking for
             currNode.setLeft(removeMax(currNode.getLeft()).getItem1());
-            currNode.balance();
-            return currNode;
+            //currNode.balance();
         }
-        //if (currNode.getData().compareToPoint(segment, segment.getCurrentPoint()) >= 0)
-        if(statusQueueRelation(currNode.getData(), segment))
+        else if(statusQueueRelation(currNode.getData(), segment))
         {
             currNode.setLeft(removeLeaf(currNode.getLeft(), segment));
-            currNode.balance();
+            //currNode.balance();
         }else
         {
             currNode.setRight(removeLeaf(currNode.getRight(), segment));
-            currNode.balance();
+            //currNode.balance();
         }
         return currNode;
     }
@@ -214,6 +216,7 @@ public class StatusQueue extends AVL<ComparableSegment>
         // Only works if k, is the current point OR if a future point on the same y axis but in the future !
         // Return the left and right leaves
         ComparableSegment s = current.getData();
+        System.out.println(current.getData());
         Point p = ComparableSegment.getPointOnXAxis(k, s);
 
         if (current.isLeaf())

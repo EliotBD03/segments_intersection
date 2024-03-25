@@ -1,6 +1,7 @@
 package core;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.stream.Collectors;
 
 public class PlaneSweep
@@ -64,8 +65,12 @@ public class PlaneSweep
         ArrayList<ComparableSegment> lowerInner = union(lower, inner);
         ArrayList<ComparableSegment> upperInner = union(upper, inner);
         ArrayList<ComparableSegment> upperLowerInner = union(lowerInner, upper);
+        System.out.println("upperlowerinner");
+        for(Segment segment : upperLowerInner)
+            System.out.println(segment);
         if(upperLowerInner.size() > 1)
         {
+            System.out.println("intersection added : " + p);
             intersection = p;
             intersection.addIntersection(upperLowerInner);
         }
@@ -119,10 +124,13 @@ public class PlaneSweep
             }
             else
             {
-                if (l1.get(i).getUpperPoint().compareTo(l2.get(j).getUpperPoint()) <= 0) {
+                if (l1.get(i).getUpperPoint().compareTo(l2.get(j).getUpperPoint()) <= 0)
+                {
                     result.add(l1.get(i));
                     i++;
-                } else {
+                }
+                else
+                {
                     result.add(l2.get(i));
                     j++;
                 }

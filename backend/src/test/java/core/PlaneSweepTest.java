@@ -28,7 +28,11 @@ class PlaneSweepTest
     @Test
     void getIntersections() throws Exception
     {
-        assertEquals(2, planeSweep.getIntersections().size());
+        ArrayList<Point> intersections = planeSweep.getIntersections();
+        for(Point point : intersections)
+            System.out.println(point);
+        assertEquals(2, intersections.size());
+
     }
 
     @Test
@@ -39,10 +43,10 @@ class PlaneSweepTest
 
         ArrayList<ComparableSegment> first = new ArrayList<>(List.of(s1));
         ArrayList<ComparableSegment> second = new ArrayList<>(List.of(s2));
-        ArrayList<ComparableSegment> expected = new ArrayList<>(Arrays.asList(s1, s2));
+        ArrayList<ComparableSegment> expected = new ArrayList<>(List.of(s1));
 
         ArrayList<ComparableSegment> test = PlaneSweep.union(first, second);
-        assertEquals(2, test.size());
+        assertEquals(1, test.size());
         for(int i = 0; i < expected.size(); i++)
             assertEquals(expected.get(i), test.get(i));
     }

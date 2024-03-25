@@ -1,5 +1,6 @@
 package core;
 
+import java.awt.geom.Arc2D;
 import java.util.ArrayList;
 import java.util.Objects;
 
@@ -54,14 +55,14 @@ public class Point implements Comparable<Point>
     @Override
     public int compareTo(Point otherPoint)
     {
-        if(y == otherPoint.y && x == otherPoint.x)
+        if(Double.compare(y, otherPoint.y) == 0 && Double.compare(x, otherPoint.x) == 0)
         {
-            for(Segment segment : otherPoint.getStartOf())
-                if(! startOf.contains(segment))
-                    startOf.add(segment);
+            for(Segment segment : getStartOf())
+                if(! otherPoint.getStartOf().contains(segment))
+                    otherPoint.getStartOf().add(segment);
             return 0;
         }
-        return y > otherPoint.y || (y == otherPoint.y && x < otherPoint.x) ? -1 : 1;
+        return Double.compare(y, otherPoint.y) > 0 || (Double.compare(y, otherPoint.y) == 0 && Double.compare(x, otherPoint.x) < 0) ? -1 : 1;
     }
 
     @Override
