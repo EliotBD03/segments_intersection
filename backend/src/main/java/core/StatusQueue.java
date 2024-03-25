@@ -220,7 +220,7 @@ public class StatusQueue extends AVL<ComparableSegment>
         {
             if (k.equals(s.getLowerPoint()))
                 L.add(s);
-            else if (!k.equals(s.getUpperPoint()))
+            else if (!k.equals(s.getUpperPoint()) && ComparableSegment.getPointOnXAxis(k, s).equals(k))
                 C.add(s);
         }else
         {
@@ -270,7 +270,7 @@ public class StatusQueue extends AVL<ComparableSegment>
             }
             sL = tmp.getData();
             tmp = father.getRight();
-            while (!tmp.isLeaf())
+            while (tmp != null && !tmp.isLeaf())
             {
                 p = ComparableSegment.getPointOnXAxis(k, tmp.getData());
                 if(p.x >= k.x)
@@ -278,7 +278,8 @@ public class StatusQueue extends AVL<ComparableSegment>
                 else
                     tmp = tmp.getRight();
             }
-            sR = tmp.getData();
+            if (tmp != null)
+                sR = tmp.getData();
         }
         return new Pair<>(sL, sR);
     }
@@ -294,6 +295,8 @@ public class StatusQueue extends AVL<ComparableSegment>
     {
 
         // Cast to comparable segment
+        if(k == null)
+            return new Pair<>(null, null);
         ComparableSegment x = new ComparableSegment(k);
 
         ComparableSegment leftN = null;
