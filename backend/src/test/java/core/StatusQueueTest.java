@@ -3,8 +3,6 @@ package core;
 import org.junit.jupiter.api.*;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.LinkedList;
 import java.util.List;
 
 import static core.AVLTestTools.*;
@@ -62,10 +60,10 @@ class StatusQueueTest
     {
         // Sweep line is at point P
         //      Remove s1 then s2
-        testTree1.remove(s1);
+        testTree1.removeSegment(s1);
         assertTrue(checkInorder(testTree1.root, convertList(List.of(s2,s2,s3,s3,s4,s4))));
 
-        testTree1.remove(s2);
+        testTree1.removeSegment(s2);
         assertTrue(checkInorder(testTree1.root, convertList(List.of(s3,s3,s4,s4))));
 
         //      Add s1 then s2
@@ -83,15 +81,15 @@ class StatusQueueTest
 
         // Same with on point H, but with s3, s4 and s1
         // s4 will end and s5 will be added
-        testTree1.remove(s1);
+        testTree1.removeSegment(s1);
         assertTrue(checkInorder(testTree1.root, convertList(List.of(s2,s2,s3,s3,s4,s4))));
 
 
-        testTree1.remove(s3);
+        testTree1.removeSegment(s3);
         assertTrue(checkInorder(testTree1.root, convertList(List.of(s2,s2,s4,s4))));
 
 
-        testTree1.remove(s4);
+        testTree1.removeSegment(s4);
         assertTrue(checkInorder(testTree1.root, convertList(List.of(s2,s2))));
 
 

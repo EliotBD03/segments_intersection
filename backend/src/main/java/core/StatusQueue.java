@@ -2,7 +2,6 @@ package core;
 
 
 import java.util.ArrayList;
-import java.util.Objects;
 
 /**
  * class which represents a status queue.
@@ -25,12 +24,14 @@ public class StatusQueue extends AVL<ComparableSegment>
         this.insert(comparableSegment, currStatus);
     }
 
+
+
     /**
      * Removes both nodes containing the desired segment if it exist.
      * @param segment           The segment to remove both nodes from this tree
      * @throws Exception        If the present is not present
      */
-    public void remove(Segment segment) throws Exception
+    public void removeSegment(Segment segment) throws Exception
     {
 
         ComparableSegment comparableSegment = new ComparableSegment(segment);
@@ -39,7 +40,6 @@ public class StatusQueue extends AVL<ComparableSegment>
         // Remove the inner segment
         root = removeInner(root, comparableSegment, currStatus);
     }
-
 
     private Node<ComparableSegment> removeInner(Node<ComparableSegment> currNode, ComparableSegment segment, Point ref)
     {

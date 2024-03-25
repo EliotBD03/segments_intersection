@@ -14,6 +14,7 @@ public class AVL<T extends Comparable<T>>
         root = null;
     }
 
+
     protected class Node<T extends Comparable<T>> implements Comparable<Node<T>>
     {
         private T data;

@@ -45,9 +45,17 @@ class PointQueueTest
 
     @Test
     @Order(2)
-    void dequeue()
+    void dequeue() throws Exception
     {
         // Check that the min node was really removed
+        Point p = qTest.dequeue();
+
+        p = qTest.dequeue();
+        p = qTest.dequeue();
+        // Head is (0,0)
+        p = qTest.dequeue();
+        p = qTest.dequeue();
+        p = qTest.dequeue();
 
         //assertEquals(qTest.dequeue(), qTest.);
     }

@@ -30,6 +30,8 @@ public class PlaneSweep
             Point intersection = handleEventPoint(p);
             if(intersection != null)
                 intersections.add(intersection);
+            pointQueue.display();
+
         }
         return intersections;
     }
@@ -37,21 +39,19 @@ public class PlaneSweep
     private Point handleEventPoint(Point p) throws Exception
     {
         System.out.println("___________________________________________");
-        System.out.println("Curr Q");
-        pointQueue.display();
+
         Point intersection = null;
         ArrayList<ComparableSegment> upper = p.getStartOf()
                 .stream()
                 .map(ComparableSegment::new)
                 .collect(Collectors.toCollection(ArrayList::new));
-
+        System.out.println("Point: ");
+        System.out.println(p);
         System.out.println("status queue before");
         statusQueue.display();
         ArrayList<ComparableSegment> lower = new ArrayList<>();
         ArrayList<ComparableSegment> inner = new ArrayList<>();
         statusQueue.findSegments(p,lower, inner);
-        System.out.println("currPoint");
-        System.out.println(p);
         System.out.println("lower");
         for(Segment segment : lower)
             System.out.println(segment);
@@ -62,7 +62,7 @@ public class PlaneSweep
         for(Segment segment : upper)
             System.out.println(segment);
         ArrayList<ComparableSegment> lowerInner = union(lower, inner);
-        ArrayList<ComparableSegment> upperInner = union(lower, upper);
+        ArrayList<ComparableSegment> upperInner = union(upper, inner);
         ArrayList<ComparableSegment> upperLowerInner = union(lowerInner, upper);
         if(upperLowerInner.size() > 1)
         {
@@ -70,7 +70,7 @@ public class PlaneSweep
             intersection.addIntersection(upperLowerInner);
         }
         for(ComparableSegment segment : lowerInner)
-            statusQueue.remove(segment);
+            statusQueue.removeSegment(segment);
         for(ComparableSegment segment : upperInner)
             statusQueue.add(segment, p);
         if(upperInner.isEmpty())
@@ -101,6 +101,10 @@ public class PlaneSweep
         ArrayList<ComparableSegment> result = new ArrayList<>();
         int j = 0;
         int i = 0;
+        if (l1.isEmpty())
+            return l2;
+        if (l2.isEmpty())
+            return l1;
         while(i < l1.size() || j < l2.size())
         {
             if(i >= l1.size())
@@ -132,6 +136,6 @@ public class PlaneSweep
         Point pp = Segment.findIntersection(sl, sr);
         if(pp != null)
             if(pp.compareTo(p) <= 0)
-                pointQueue.enqueue(p);
+                pointQueue.enqueue(pp);
     }
 }
