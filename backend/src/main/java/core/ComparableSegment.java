@@ -47,6 +47,8 @@ public class ComparableSegment extends Segment implements Comparable<ComparableS
     {
         Point p1 = Segment.getPointOnXAxis(ref, this);
         Point p2 = Segment.getPointOnXAxis(ref, otherSegment);
+        if (p1 == null || p2 == null)
+            return 1;
         return Double.compare(p1.x, p2.x);
     }
 

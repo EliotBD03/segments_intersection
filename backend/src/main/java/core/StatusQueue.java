@@ -163,7 +163,7 @@ public class StatusQueue extends AVL<ComparableSegment>
         while(p2.x < p.x && (tmp.getRight() != null))
         {
             tmp = tmp.getRight();
-            p2 = Segment.getPointOnXAxis(new Point(3, 3), tmp.getData());
+            p2 = Segment.getPointOnXAxis(p, tmp.getData());
         }
         return tmp;
     }

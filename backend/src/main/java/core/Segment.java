@@ -107,40 +107,45 @@ public class Segment
             double py = (s2.a * s1.c - s1.a * s2.c) / denominator;
             // We also need to check if the point is in the boundaries of both segments
             Point inter = new Point(px, py);
-            return hasPoint(s1, inter) && hasPoint(s2, inter) ? inter: null;
+            return hasPoint(s2, inter) && hasPoint(s1, inter) ? inter: null;
         }
         return null;
     }
 
     public static boolean hasPoint(Segment segment, Point p)
     {
-        return getPointOnXAxis(p, segment).equals(p) ;
+        Point p2 = getPointOnXAxis(p, segment);
+        // Round 5 digits behind
+        return p2 != null && Double.compare(p.x, Math.round(p2.x * 1.E5)/1.E5) == 0;
     }
 
     /**
      * Find a point which belongs to the segment with the same
      * y-coordinates as p.
      * @param p the point with the y-coordinate targeted.
-     * @param segment a segment.
+     * @param segment a non-horizontal segment.
      * @return a point from the segment if it's not horizontal. Otherwise, the closest
      * point from p.
      */
     public static Point getPointOnXAxis(Point p, Segment segment)
     {
-        Point pRes;
+        // Check if the segment actually contains this point
+        if (p.y > segment.upperPoint.y || p.y < segment.lowerPoint.y)
+            return null;
+
         if(segment.a == 0)
-            pRes = p;
+        {
+            if(p.x >= segment.upperPoint.x && p.x <= segment.lowerPoint.x)
+                return p;
+            if(segment.upperPoint.x > p.x)
+                return segment.upperPoint;
+            return segment.lowerPoint;
+        }
         else
         {
             double x = (-segment.c - (segment.b * p.y))/ segment.a;
-            pRes = new Point(x, p.y);
+            return new Point(x, p.y);
         }
-        // Get closest Point
-        if(pRes.x >= segment.upperPoint.x && pRes.x <= segment.lowerPoint.x)
-            return pRes;
-        if(segment.upperPoint.x > pRes.x)
-            return segment.upperPoint;
-        return segment.lowerPoint;
     }
 
     /**

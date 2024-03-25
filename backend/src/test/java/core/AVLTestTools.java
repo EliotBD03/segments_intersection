@@ -82,7 +82,7 @@ public class AVLTestTools<T extends Comparable<T>> extends AVL<T>
     }
     private static <T extends Comparable<T>> boolean checkQueue(T current, Queue<T> queue)
     {
-        return !queue.isEmpty() && queue.remove().compareTo(current) == 0;
+        return !queue.isEmpty() && queue.remove().equals(current);
     }
 
 
