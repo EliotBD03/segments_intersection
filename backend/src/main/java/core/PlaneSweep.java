@@ -36,6 +36,9 @@ public class PlaneSweep
 
     private Point handleEventPoint(Point p) throws Exception
     {
+        System.out.println("___________________________________________");
+        System.out.println("Curr Q");
+        pointQueue.display();
         Point intersection = null;
         ArrayList<ComparableSegment> upper = p.getStartOf()
                 .stream()
@@ -47,8 +50,13 @@ public class PlaneSweep
         ArrayList<ComparableSegment> lower = new ArrayList<>();
         ArrayList<ComparableSegment> inner = new ArrayList<>();
         statusQueue.findSegments(p,lower, inner);
+        System.out.println("currPoint");
+        System.out.println(p);
         System.out.println("lower");
         for(Segment segment : lower)
+            System.out.println(segment);
+        System.out.println("inner");
+        for(Segment segment: inner)
             System.out.println(segment);
         System.out.println("upper");
         for(Segment segment : upper)
@@ -74,7 +82,9 @@ public class PlaneSweep
         else
         {
            Pair<ComparableSegment, ComparableSegment> segmentPair = statusQueue.findLeftmostRightmost(p);
+
            ComparableSegment leftSegment = statusQueue.getNeighbours(segmentPair.getItem1()).getItem1();
+
            ComparableSegment rightSegment = statusQueue.getNeighbours(segmentPair.getItem2()).getItem2();
            if(leftSegment != null)
                findNewEvent(leftSegment, segmentPair.getItem1(), p);
