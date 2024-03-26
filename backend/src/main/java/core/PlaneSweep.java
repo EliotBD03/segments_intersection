@@ -74,10 +74,15 @@ public class PlaneSweep
             intersection = p;
             intersection.addIntersection(upperLowerInner);
         }
+        System.out.println("---Removed lowerInner");
         for(ComparableSegment segment : lowerInner)
             statusQueue.removeSegment(segment);
+        statusQueue.display();
+        System.out.println("---Added UpperInner");
+        System.out.println(upperInner);
         for(ComparableSegment segment : upperInner)
             statusQueue.add(segment, p);
+        statusQueue.display();
         if(upperInner.isEmpty())
         {
             Pair<ComparableSegment, ComparableSegment> neighbours = statusQueue.getNeighbours(p);
@@ -131,7 +136,7 @@ public class PlaneSweep
                 }
                 else
                 {
-                    result.add(l2.get(i));
+                    result.add(l2.get(j));
                     j++;
                 }
             }

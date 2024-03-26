@@ -43,10 +43,10 @@ class PlaneSweepTest
 
         ArrayList<ComparableSegment> first = new ArrayList<>(List.of(s1));
         ArrayList<ComparableSegment> second = new ArrayList<>(List.of(s2));
-        ArrayList<ComparableSegment> expected = new ArrayList<>(List.of(s1));
+        ArrayList<ComparableSegment> expected = new ArrayList<>(List.of(s1,s2));
 
         ArrayList<ComparableSegment> test = PlaneSweep.union(first, second);
-        assertEquals(1, test.size());
+        assertEquals(2, test.size());
         for(int i = 0; i < expected.size(); i++)
             assertEquals(expected.get(i), test.get(i));
     }
