@@ -44,7 +44,6 @@ public class PointQueue extends AVL<Point>
             q.insert(segment.getUpperPoint());
             q.insert(segment.getLowerPoint());
         }
-        q.lookForNewHead();
         return q;
     }
 
@@ -56,7 +55,6 @@ public class PointQueue extends AVL<Point>
     public void enqueue(Point point)
     {
         insert(point);
-        lookForNewHead();
     }
 
     /**
@@ -67,10 +65,9 @@ public class PointQueue extends AVL<Point>
      */
     public Point dequeue() throws Exception
     {
-        Point pointToRemove = head;
-        remove(pointToRemove);
-        lookForNewHead();
-        return pointToRemove;
+        Pair<Node<Point>, Point> res = removeMin(root);
+        root = res.getItem1();
+        return res.getItem2();
     }
 
     /**

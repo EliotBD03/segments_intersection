@@ -21,8 +21,10 @@ public class Point implements Comparable<Point>
      */
     public Point(double x, double y)
     {
-        this.x = x;
-        this.y = y;
+        // Why are we doing this ? Well, in some cases java considers -0 different from 0 when
+        // performing a double.compareTo (I am going insane)
+        this.x = x == -0 ? 0: x;
+        this.y = y == -0 ? 0: y;
         this.startOf = new ArrayList<>();
         this.intersections = new ArrayList<>();
     }
@@ -33,12 +35,8 @@ public class Point implements Comparable<Point>
      */
     public void addSegment(Segment newSegment)
     {
-        if (newSegment.getUpperPoint().compareTo(this) == 0)
+        if (newSegment.getUpperPoint().equals(this)  && !startOf.contains(newSegment))
             startOf.add(newSegment);
-        else
-            throw new IllegalArgumentException("the upper point of the segment does not contain the actual point.\n" +
-                    "upper point of segment : " + newSegment.getUpperPoint() + "\n" +
-                    "current point : " + this);
     }
 
     public ArrayList<Segment> getStartOf()
@@ -55,11 +53,11 @@ public class Point implements Comparable<Point>
     @Override
     public int compareTo(Point otherPoint)
     {
-        if(Double.compare(y, otherPoint.y) == 0 && Double.compare(x, otherPoint.x) == 0)
+        if(this.equals(otherPoint))
         {
-            for(Segment segment : getStartOf())
-                if(! otherPoint.getStartOf().contains(segment))
-                    otherPoint.getStartOf().add(segment);
+            for(Segment segment : this.getStartOf())
+                otherPoint.addSegment(segment);
+
             return 0;
         }
         return Double.compare(y, otherPoint.y) > 0 || (Double.compare(y, otherPoint.y) == 0 && Double.compare(x, otherPoint.x) < 0) ? -1 : 1;
@@ -71,19 +69,24 @@ public class Point implements Comparable<Point>
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Point point = (Point) o;
-
-        return Double.compare(x, point.x) == 0 && Double.compare(y, point.y) == 0;
+        return  lessPreciseEqual(x, point.x) && lessPreciseEqual(y, point.y);
     }
+
+    public static boolean lessPreciseEqual(double v1, double v2)
+    {
+        return Double.compare(v1, Math.round(v2 * 1.E5)/1.E5) == 0;
+    }
+
 
     @Override
     public int hashCode()
     {
-        return Objects.hash(x, y, startOf);
+        return Objects.hash(x, y);
     }
 
     @Override
     public String toString() {
-        return "("+ x + "," + y + ")";
+        return "("+ x + "," + y + ") : " + startOf;
     }
 
     /**

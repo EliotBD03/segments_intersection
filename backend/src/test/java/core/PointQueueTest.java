@@ -1,9 +1,7 @@
 package core;
 
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Order;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
+
 import java.util.*;
 
 import static core.AVLTestTools.*;
@@ -15,25 +13,26 @@ class PointQueueTest
 {
     static PointQueue qTest;
 
-    @BeforeAll
-    static void initQ() throws Exception
+    @BeforeEach
+    void initQ() throws Exception
     {
         qTest = PointQueue.initQ(new ArrayList<>(
                 Arrays.asList(s1,s2,s3,s4,s5)
         ));
         //qTest.display();
         // Check for correct order
-        qTest.display();
+        //qTest.display();
         assertTrue(checkInorder(qTest.root, List.of(E, C, G, A, H, B, D, F, I)));
     }
 
 
     @Test
-    @Order(1)
+    @Order(2)
     void UpperSegments()
     {
         // Check if segments got the correct upper segments
 
+        qTest.display();
         assertEquals(qTest.getRootData().getStartOf(), Collections.singletonList(s1));
         assertEquals(qTest.root.getLeft().getData().getStartOf(), Collections.singletonList(s2));
         assertEquals(qTest.root.getRight().getData().getStartOf(), List.of());
@@ -44,20 +43,32 @@ class PointQueueTest
     }
 
     @Test
-    @Order(2)
+    @Order(1)
     void dequeue() throws Exception
     {
+
         // Check that the min node was really removed
-        Point p = qTest.dequeue();
+        qTest.dequeue();
+        qTest.display();
+        qTest.dequeue();
+        qTest.display();
+        System.out.println("Enqueue");
 
-        p = qTest.dequeue();
-        p = qTest.dequeue();
-        // Head is (0,0)
-        p = qTest.dequeue();
-        p = qTest.dequeue();
-        p = qTest.dequeue();
+        qTest.enqueue(H);
 
+        qTest.enqueue(H);
+        qTest.dequeue();
+        qTest.enqueue(new Point(H.x, -0));
+
+
+
+
+
+
+
+        qTest.display();
         //assertEquals(qTest.dequeue(), qTest.);
+
     }
 
     @Test

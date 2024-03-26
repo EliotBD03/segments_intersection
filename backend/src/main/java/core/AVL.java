@@ -345,9 +345,12 @@ public class AVL<T extends Comparable<T>>
      */
     private Node<T> insert(Node<T> current, Node<T> nodeToInsert)
     {
-        if(current == null || current.compareTo(nodeToInsert) == 0)
+        if(current == null)
             return nodeToInsert;
-        else if(nodeToInsert.compareTo(current) < 0)
+        int compareTo = nodeToInsert.compareTo(current);
+        if(compareTo == 0)
+            return current;
+        else if(compareTo < 0)
         {
             current.setLeft(insert(current.getLeft(), nodeToInsert));
             current.balance();
@@ -482,6 +485,38 @@ public class AVL<T extends Comparable<T>>
             curr.balance();
         return new Pair<>(curr, max);
     }
+
+    /**
+     * Removes the node containing the min value of the given node.
+     * Keep in mind, this will also modify the tree structure of curr, so
+     * it is recommended to assign the returned value in item1.
+     * @param curr  The node to remove the min
+     * @return      A pair containing curr without its min and the min value
+     */
+    protected Pair<Node<T>, T> removeMin(Node<T> curr)
+    {
+        // Tree is empty
+        if(curr == null)
+            return null;
+
+        T max = curr.data;
+        // The current node is min
+        if(curr.left == null)
+        {
+            // we replace it with his right node
+            curr = curr.right;
+        }else
+        {
+            // Else remove the max from the right child
+            Pair<Node<T>, T> rec = removeMin(curr.left);
+            curr.left = rec.getItem1();
+            max = rec.getItem2();
+        }
+        if(curr != null)
+            curr.balance();
+        return new Pair<>(curr, max);
+    }
+
 
     /**
      * wrapper for the private remove function
