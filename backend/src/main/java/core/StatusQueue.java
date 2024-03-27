@@ -231,11 +231,7 @@ public class StatusQueue extends AVL<ComparableSegment>
         {
             System.out.println("My p:" + p);
             System.out.println("k: " + k);
-            if (p.x > k.x)
-                findSegments(current.getLeft(), k, L, C);
-            else if (p.x < k.x)
-                findSegments(current.getRight(), k, L, C);
-            else
+            if (CDouble.almostEqual(p.x,k.x))
             {
                 if(s.getUpperPoint().x > k.x)
                     findSegments(current.getLeft(), k, L, C);
@@ -245,6 +241,11 @@ public class StatusQueue extends AVL<ComparableSegment>
                     findSegments(current.getRight(), k, L, C);
                 }
             }
+            else if (p.x > k.x)
+                findSegments(current.getLeft(), k, L, C);
+            else if (p.x < k.x)
+                findSegments(current.getRight(), k, L, C);
+
         }
     }
 
@@ -301,7 +302,7 @@ public class StatusQueue extends AVL<ComparableSegment>
     {
         //System.out.println("get Nei for :"+ k );
         // Cast to comparable segment
-        if(k == null)
+        if(k == null || root == null)
             return new Pair<>(null, null);
         ComparableSegment x = new ComparableSegment(k);
 
@@ -311,12 +312,13 @@ public class StatusQueue extends AVL<ComparableSegment>
         boolean goingLeft = true;
         Node<ComparableSegment> father = root;
         Node<ComparableSegment> curr = root;
+        System.out.println("From: " + k);
         // Find the inner node with its father by moving in the tree
         while(!curr.getData().equals(x))
         {
 
-            //System.out.println("root is");
-            //System.out.println(curr);
+            System.out.println("root is");
+            System.out.println(curr.getData());
             father = curr;
             if(statusQueueRelation(curr.getData(), x))
             {
@@ -368,8 +370,8 @@ public class StatusQueue extends AVL<ComparableSegment>
     {
         // True : going left
         // False : going right
-        //System.out.println("Compare btw: this: " + curr + " | and : " + other);
-        //System.out.println("With: " + currStatus);
+        System.out.println("Compare btw: this: " + curr + " | and : " + other);
+        System.out.println("With: " + currStatus);
         int res = curr.compareToPoint(other, currStatus);
         if (res != 0)
             return res > 0;
@@ -394,8 +396,8 @@ public class StatusQueue extends AVL<ComparableSegment>
         {
             o2 = (o2 + 180) % 360;
         }
-        //System.out.println("o1: " + o1 + " | o2:" +o2);
-        //System.out.println(o1 >= o2);
+        System.out.println("o1: " + o1 + " | o2:" +o2);
+        System.out.println(o1 >= o2);
 
         return o1 >= o2 && p.equals(currStatus);
     }

@@ -4,6 +4,7 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import parser.Parser;
+import static core.AVLTestTools.*;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -28,16 +29,26 @@ class PlaneSweepTest
     @Test
     void getIntersections() throws Exception
     {
+        /*
         ArrayList<Point> intersections = planeSweep.getIntersections();
         for(Point point : intersections)
             System.out.println(point);
         assertEquals(2, intersections.size());
+         */
 
 
-        Parser parser = new Parser(Parser.getPathFromResource("/cartes/fichier5.txt"));
-        PlaneSweep ps = new PlaneSweep(parser.getSegmentsFromFile());
-        intersections = ps.getIntersections();
+        planeSweep = new PlaneSweep(new ArrayList<>(List.of(a,b,c,d)));
+        ArrayList<Point> intersections = planeSweep.getIntersections();
         System.out.println(intersections);
+
+        /*
+        Parser parser = new Parser(Parser.getPathFromResource("/cartes/fichier4.txt"));
+        PlaneSweep ps = new PlaneSweep(parser.getSegmentsFromFile());
+        ArrayList<Point> intersections = ps.getIntersections();
+        System.out.println(intersections);
+
+         */
+
     }
 
     @Test

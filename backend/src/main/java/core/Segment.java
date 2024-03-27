@@ -1,7 +1,7 @@
 package core;
 
-import java.util.ArrayList;
 import java.util.Objects;
+import static core.CDouble.*;
 
 /**
  * A segment representation with two specific endpoints:
@@ -117,7 +117,7 @@ public class Segment
         Point p2 = getPointOnXAxis(p, segment);
         // Round 5 digits behind
 
-        return p2 != null &&  CDouble.almostEqual(p.x, p2.x);
+        return p2 != null &&  almostEqual(p.x, p2.x);
     }
 
     /**
@@ -141,9 +141,9 @@ public class Segment
     public static Point getClosestPointOnXAxis(Point p, Segment segment)
     {
         // Check if the segment actually contains this point
-        if(segment.a == 0)
+        if(almostEqual(segment.a, 0))
         {
-            if(p.x >= segment.upperPoint.x && p.x <= segment.lowerPoint.x)
+            if(almostGreaterEqual(p.x, segment.upperPoint.x) && almostLessEqual(p.x, segment.lowerPoint.x))
                 return p;
             if(segment.upperPoint.x > p.x)
                 return segment.upperPoint;
@@ -170,7 +170,7 @@ public class Segment
         if (o == null || (getClass() != o.getClass() && getClass() != o.getClass().getSuperclass())) return false;
         Segment segment = (Segment) o;
 
-        return CDouble.almostEqual(a, segment.a) && CDouble.almostEqual(b, segment.b) && CDouble.almostEqual(c, segment.c) ;
+        return almostEqual(a, segment.a) && almostEqual(b, segment.b) && almostEqual(c, segment.c) ;
     }
 
     // Obliged to override hashcode if we override equals.

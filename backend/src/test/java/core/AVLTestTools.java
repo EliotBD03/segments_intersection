@@ -25,16 +25,20 @@ public class AVLTestTools<T extends Comparable<T>> extends AVL<T>
     protected static final Segment s4 = new Segment(G,H,"s4");
     protected static final Segment s5 = new Segment(H,I,"s5");
 
-    protected static final Point A1 = new Point(40,200);
-    protected static final Point B1 = new Point(40,160);
-    protected static final Point C1 = new Point(78.55,182);
-    protected static final Point D1 = new Point(31,182);
-    protected static final Point E1 = new Point(65,200);
-    protected static final Point F1 = new Point(173,56);
-    protected static final Point G1 = new Point(63,99);
-    protected static final Point H1 = new Point(75, 175);
-    protected static final Point I1 = new Point(50,200);
-    protected static final Point P1 = new Point(75,200);
+    // Tricky graph
+    protected static final Point B1 = new Point(1.14,3.55);
+    protected static final Point C1 = new Point(4.425,-0.966);
+    protected static final Point D1 = new Point(5.58,3.71);
+    protected static final Point E1 = new Point(3,-1);
+    protected static final Point F1 = new Point(0,1);
+    protected static final Point G1 = new Point(6.579,1);
+    protected static final Point P1 = new Point(3, 1);
+
+    protected static final Segment a = new Segment(F1,G1,"a");
+    protected static final Segment b = new Segment(E1, P1,"b");
+    protected static final Segment c = new Segment(P1, D1,"c");
+    protected static final Segment d = new Segment(B1, C1,"d");
+
 
 
 
