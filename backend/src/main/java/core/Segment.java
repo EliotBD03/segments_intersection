@@ -116,7 +116,8 @@ public class Segment
     {
         Point p2 = getPointOnXAxis(p, segment);
         // Round 5 digits behind
-        return p2 != null && Double.compare(p.x, Math.round(p2.x * 1.E5)/1.E5) == 0;
+
+        return p2 != null &&  CDouble.almostEqual(p.x, p2.x);
     }
 
     /**
@@ -133,6 +134,13 @@ public class Segment
         if (p.y > segment.upperPoint.y || p.y < segment.lowerPoint.y)
             return null;
 
+        return getClosestPointOnXAxis(p, segment);
+    }
+
+
+    public static Point getClosestPointOnXAxis(Point p, Segment segment)
+    {
+        // Check if the segment actually contains this point
         if(segment.a == 0)
         {
             if(p.x >= segment.upperPoint.x && p.x <= segment.lowerPoint.x)
@@ -148,6 +156,8 @@ public class Segment
         }
     }
 
+
+
     /**
      * Checks if the segment has the same cartesian equation than this one
      * @param o The other object to check
@@ -159,7 +169,8 @@ public class Segment
         if (this == o) return true;
         if (o == null || (getClass() != o.getClass() && getClass() != o.getClass().getSuperclass())) return false;
         Segment segment = (Segment) o;
-        return Double.compare(a, segment.a) == 0 && Double.compare(b, segment.b) == 0 && Double.compare(c, segment.c) == 0;
+
+        return CDouble.almostEqual(a, segment.a) && CDouble.almostEqual(b, segment.b) && CDouble.almostEqual(c, segment.c) ;
     }
 
     // Obliged to override hashcode if we override equals.

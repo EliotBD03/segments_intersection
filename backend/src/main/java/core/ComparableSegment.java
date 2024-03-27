@@ -45,10 +45,15 @@ public class ComparableSegment extends Segment implements Comparable<ComparableS
      */
     public int compareToPoint(ComparableSegment otherSegment, Point ref)
     {
-        Point p1 = Segment.getPointOnXAxis(ref, this);
-        Point p2 = Segment.getPointOnXAxis(ref, otherSegment);
-        if (p1 == null || p2 == null)
-            return 1;
+        Point p1 = Segment.getClosestPointOnXAxis(ref, this);
+        Point p2 = Segment.getClosestPointOnXAxis(ref, otherSegment);
+        //System.out.println("\t\t p1: " +p1 + " | p2:" + p2);
+        if (p1 == null || p2 == null){
+            // Points are not comparable
+            return 0;
+
+        }
+
         return Double.compare(p1.x, p2.x);
     }
 

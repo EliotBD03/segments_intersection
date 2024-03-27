@@ -149,7 +149,7 @@ public class PlaneSweep
         Point pp = Segment.findIntersection(sl, sr);
         System.out.println("fOUND: " + pp);
         if(pp != null)
-            if(pp.y < p.y || (pp.y == p.y && pp.x > p.x))
+            if(pp.y < p.y || (CDouble.almostEqual(pp.y, p.y) && pp.x > p.x))
                 pointQueue.enqueue(pp);
     }
 }

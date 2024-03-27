@@ -60,7 +60,7 @@ public class Point implements Comparable<Point>
 
             return 0;
         }
-        return Double.compare(y, otherPoint.y) > 0 || (Double.compare(y, otherPoint.y) == 0 && Double.compare(x, otherPoint.x) < 0) ? -1 : 1;
+        return Double.compare(y, otherPoint.y) > 0 || (CDouble.almostEqual(y, otherPoint.y) && Double.compare(x, otherPoint.x) < 0) ? -1 : 1;
     }
 
     @Override
@@ -69,13 +69,9 @@ public class Point implements Comparable<Point>
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Point point = (Point) o;
-        return  lessPreciseEqual(x, point.x) && lessPreciseEqual(y, point.y);
+        return  CDouble.almostEqual(x, point.x) && CDouble.almostEqual(y, point.y);
     }
 
-    public static boolean lessPreciseEqual(double v1, double v2)
-    {
-        return Double.compare(v1, Math.round(v2 * 1.E5)/1.E5) == 0;
-    }
 
 
     @Override

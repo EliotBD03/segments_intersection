@@ -149,21 +149,27 @@ public class StatusQueue extends AVL<ComparableSegment>
     {
         if(this.root == null)
             return null;
+        Node<ComparableSegment> father = this.root;
         Node<ComparableSegment> tmp = this.root;
-        Point p2 = Segment.getPointOnXAxis(p ,tmp.getData());
+
+        Point p2 = Segment.getClosestPointOnXAxis(p ,tmp.getData());
+        if(p2 == null)
+            return root;
         // Go as much left as possible
         while(p2.x > p.x && !tmp.isLeaf())
         {
+            father = tmp;
             tmp = tmp.getLeft();
-            p2 = Segment.getPointOnXAxis(p, tmp.getData());
+            p2 = Segment.getClosestPointOnXAxis(p, tmp.getData());
         }
         // Go as much right as possible
         while(p2.x < p.x && (tmp.getRight() != null))
         {
+            father = tmp;
             tmp = tmp.getRight();
-            p2 = Segment.getPointOnXAxis(p, tmp.getData());
+            p2 = Segment.getClosestPointOnXAxis(p, tmp.getData());
         }
-        return tmp;
+        return tmp.isLeaf() ? father: tmp;
     }
 
     /**
@@ -177,8 +183,8 @@ public class StatusQueue extends AVL<ComparableSegment>
     {
         Node<ComparableSegment> father = getClosestRoot(k);
         // Return the left and right leaves
-        System.out.println("k" + k);
-        System.out.println("curr " + currStatus);
+        //System.out.println("k" + k);
+        //System.out.println("curr " + currStatus);
         if(root == null)
             return new Pair<>(null, null);
         return new Pair<>(  father.getLeft() != null ? father.getLeft().lookForMaximum().getData(): null,
@@ -211,9 +217,9 @@ public class StatusQueue extends AVL<ComparableSegment>
         // Only works if k, is the current point OR if a future point on the same y axis but in the future !
         // Return the left and right leaves
         ComparableSegment s = current.getData();
-        System.out.println(current.getData());
-        Point p = ComparableSegment.getPointOnXAxis(k, s);
-
+        //System.out.println(current.getData());
+        Point p = ComparableSegment.getClosestPointOnXAxis(k, s);
+        System.out.println("current is : " + current.getData());
         if (current.isLeaf())
         {
             if (k.equals(s.getLowerPoint()))
@@ -223,6 +229,8 @@ public class StatusQueue extends AVL<ComparableSegment>
                 C.add(s);
         }else
         {
+            System.out.println("My p:" + p);
+            System.out.println("k: " + k);
             if (p.x > k.x)
                 findSegments(current.getLeft(), k, L, C);
             else if (p.x < k.x)
@@ -255,13 +263,12 @@ public class StatusQueue extends AVL<ComparableSegment>
         ComparableSegment sL = null;
         ComparableSegment sR = null;
         Point p;
-
         if (father != null)
         {
             tmp = father.getLeft();
             while (!tmp.isLeaf())
             {
-                p = ComparableSegment.getPointOnXAxis(k, tmp.getData());
+                p = ComparableSegment.getClosestPointOnXAxis(k, tmp.getData());
                 if(p.x >= k.x)
                     tmp = tmp.getLeft();
                 else
@@ -271,7 +278,7 @@ public class StatusQueue extends AVL<ComparableSegment>
             tmp = father;
             while (tmp != null && !tmp.isLeaf())
             {
-                p = ComparableSegment.getPointOnXAxis(k, tmp.getData());
+                p = ComparableSegment.getClosestPointOnXAxis(k, tmp.getData());
                 if(p.x >= k.x)
                     tmp = tmp.getLeft();
                 else
@@ -292,7 +299,7 @@ public class StatusQueue extends AVL<ComparableSegment>
      */
     public Pair<ComparableSegment, ComparableSegment> getNeighbours(Segment k)
     {
-
+        //System.out.println("get Nei for :"+ k );
         // Cast to comparable segment
         if(k == null)
             return new Pair<>(null, null);
@@ -307,6 +314,9 @@ public class StatusQueue extends AVL<ComparableSegment>
         // Find the inner node with its father by moving in the tree
         while(!curr.getData().equals(x))
         {
+
+            //System.out.println("root is");
+            //System.out.println(curr);
             father = curr;
             if(statusQueueRelation(curr.getData(), x))
             {
@@ -358,11 +368,36 @@ public class StatusQueue extends AVL<ComparableSegment>
     {
         // True : going left
         // False : going right
+        //System.out.println("Compare btw: this: " + curr + " | and : " + other);
+        //System.out.println("With: " + currStatus);
         int res = curr.compareToPoint(other, currStatus);
         if (res != 0)
             return res > 0;
-        // Check the dist btw the upper points
-        return dist(curr.getUpperPoint(), currStatus) > dist(other.getUpperPoint(), currStatus);
+        Point p = Segment.getPointOnXAxis(currStatus, other);
+
+        double o1 = Math.toDegrees(Math.atan(-curr.a/curr.b));
+        double o2 = Math.toDegrees(Math.atan(-other.a/other.b));
+
+        if (o1 <= 0)
+        {
+            o1 += 360;
+        }
+        if (o2 <= 0)
+        {
+            o2 += 360;
+        }
+        if(o1 > 180)
+        {
+            o1 = (o1 + 180) % 360;
+        }
+        if(o2 > 180)
+        {
+            o2 = (o2 + 180) % 360;
+        }
+        //System.out.println("o1: " + o1 + " | o2:" +o2);
+        //System.out.println(o1 >= o2);
+
+        return o1 >= o2 && p.equals(currStatus);
     }
 
 

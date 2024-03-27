@@ -73,7 +73,7 @@ class StatusQueueTest
 
         assertTrue(checkInorder(testTree1.root, convertList(List.of(s1,s1,s3,s3,s4,s4))));
         testTree1.add(s2,P);
-
+        testTree1.display();
         assertTrue(checkInorder(testTree1.root, convertList(List.of(s2,s2,s1,s1,s3,s3,s4,s4))));
 
 
