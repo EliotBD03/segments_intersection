@@ -125,7 +125,7 @@ public class PlaneSweep
             else if(j >= l2.size())
             {
                 result.addAll(l1.subList(i, l1.size()));
-                i = l2.size();
+                i = l1.size();
             }
             else
             {

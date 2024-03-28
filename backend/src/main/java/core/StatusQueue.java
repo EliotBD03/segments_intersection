@@ -2,6 +2,7 @@ package core;
 
 
 import java.util.ArrayList;
+import static core.CDouble.*;
 
 /**
  * class which represents a status queue.
@@ -233,13 +234,9 @@ public class StatusQueue extends AVL<ComparableSegment>
             System.out.println("k: " + k);
             if (CDouble.almostEqual(p.x,k.x))
             {
-                if(s.getUpperPoint().x > k.x)
-                    findSegments(current.getLeft(), k, L, C);
-                else
-                {
-                    findSegments(current.getLeft(), k, L, C);
-                    findSegments(current.getRight(), k, L, C);
-                }
+                // Check neighbors
+                findSegments(current.getLeft(), k, L, C);
+                findSegments(current.getRight(), k, L, C);
             }
             else if (p.x > k.x)
                 findSegments(current.getLeft(), k, L, C);
