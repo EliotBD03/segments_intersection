@@ -101,7 +101,7 @@ public class Segment
     public static Point findIntersection(Segment s1, Segment s2) //TODO used later
     {
         double denominator = s1.a * s2.b - s2.a * s1.b;
-        if(denominator != 0)
+        if(!almostEqual(denominator,0))
         {
             double px = (s2.c * s1.b - s1.c * s2.b) / denominator;
             double py = (s2.a * s1.c - s1.a * s2.c) / denominator;
@@ -115,7 +115,6 @@ public class Segment
     public static boolean hasPoint(Segment segment, Point p)
     {
         Point p2 = getPointOnXAxis(p, segment);
-        // Round 5 digits behind
 
         return p2 != null &&  almostEqual(p.x, p2.x);
     }
@@ -132,7 +131,7 @@ public class Segment
     {
         // Check if the segment actually contains this point
         //
-        if (greater(p.y, segment.upperPoint.y) || lesser(p.y, segment.lowerPoint.y))
+        if (greaterThan(p.y, segment.upperPoint.y) || lessThan(p.y, segment.lowerPoint.y))
             return null;
 
         return getClosestPointOnXAxis(p, segment);
@@ -141,13 +140,12 @@ public class Segment
 
     public static Point getClosestPointOnXAxis(Point p, Segment segment)
     {
-        // Check if the segment actually contains this point
         if(almostEqual(segment.a, 0))
         {
             if(almostGreaterEqual(p.x, segment.upperPoint.x) && almostLessEqual(p.x, segment.lowerPoint.x))
                 return p;
 
-            if(greater(segment.upperPoint.x, p.x))
+            if(greaterThan(segment.upperPoint.x, p.x))
                 return segment.upperPoint;
             return segment.lowerPoint;
         }

@@ -1,6 +1,5 @@
 package core;
 
-import java.awt.geom.Arc2D;
 import java.util.ArrayList;
 import java.util.Objects;
 import static core.CDouble.*;
@@ -61,7 +60,7 @@ public class Point implements Comparable<Point>
 
             return 0;
         }
-        return greater(y, otherPoint.y) || (CDouble.almostEqual(y, otherPoint.y) && lesser(x, otherPoint.x)) ? -1 : 1;
+        return greaterThan(y, otherPoint.y) || (CDouble.almostEqual(y, otherPoint.y) && lessThan(x, otherPoint.x)) ? -1 : 1;
     }
 
     @Override

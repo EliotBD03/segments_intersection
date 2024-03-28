@@ -9,7 +9,7 @@ public class CDouble
     /**
      * The threshold value to fight against floating point errors
      */
-    public static final double epsilon = 0.0001d;
+    public static final double epsilon = 0.00001d;
 
     /**
      * A threshold comparison method using {@link CDouble#epsilon}
@@ -33,7 +33,7 @@ public class CDouble
     {
         if (almostEqual(d1, d2))
             return 0;
-        Double comp = d1 - d2;
+        double comp = d1 - d2;
         if (comp > 0)
             return 1;
         else
@@ -67,7 +67,7 @@ public class CDouble
      * @param d2    The other value to compare
      * @return true if d1 is bigger than d2
      */
-    public static boolean greater(double d1, double d2)
+    public static boolean greaterThan(double d1, double d2)
     {
         return ! almostLessEqual(d1, d2);
     }
@@ -77,7 +77,7 @@ public class CDouble
      * @param d2    The other value to compare
      * @return true if d1 is smaller than d2
      */
-    public static boolean lesser(double d1, double d2)
+    public static boolean lessThan(double d1, double d2)
     {
         return ! almostGreaterEqual(d1, d2);
     }

@@ -157,14 +157,14 @@ public class StatusQueue extends AVL<ComparableSegment>
         if(p2 == null)
             return root;
         // Go as much left as possible
-        while(greater(p2.x, p.x) && !tmp.isLeaf())
+        while(greaterThan(p2.x, p.x) && !tmp.isLeaf())
         {
             father = tmp;
             tmp = tmp.getLeft();
             p2 = Segment.getClosestPointOnXAxis(p, tmp.getData());
         }
         // Go as much right as possible
-        while(lesser(p2.x, p.x) && (tmp.getRight() != null))
+        while(lessThan(p2.x, p.x) && (tmp.getRight() != null))
         {
             father = tmp;
             tmp = tmp.getRight();
@@ -238,9 +238,9 @@ public class StatusQueue extends AVL<ComparableSegment>
                 findSegments(current.getLeft(), k, L, C);
                 findSegments(current.getRight(), k, L, C);
             }
-            else if (p.x > k.x)
+            else if (greaterThan(p.x, k.x))
                 findSegments(current.getLeft(), k, L, C);
-            else if (p.x < k.x)
+            else
                 findSegments(current.getRight(), k, L, C);
 
         }
@@ -377,6 +377,9 @@ public class StatusQueue extends AVL<ComparableSegment>
         double o1 = Math.toDegrees(Math.atan(-curr.a/curr.b));
         double o2 = Math.toDegrees(Math.atan(-other.a/other.b));
 
+        if(almostEqual(o1, o2))
+            throw new IllegalArgumentException("daddy i can only fit one >w<");
+
         if (almostLessEqual(o1,0))
         {
             o1 += 360;
@@ -385,23 +388,23 @@ public class StatusQueue extends AVL<ComparableSegment>
         {
             o2 += 360;
         }
-        if(greater(o1,180))
+        if(greaterThan(o1,180))
         {
-            o1 = (o1 + 180) % 360;
+            o1 = (o1 - 180);
         }
-        if(greater(o2, 180))
+        if(greaterThan(o2, 180))
         {
-            o2 = (o2 + 180) % 360;
+            o2 = (o2 - 180);
         }
-        System.out.println("o1: " + o1 + " | o2:" +o2);
 
-        if(greater(p.x, currStatus.x))
+        if(greaterThan(p.x, currStatus.x))
         {
             // Get opposite angle
             o1 = 180 - o1;
             o2 = 180 - o2;
         }
-        return greater(o1,o2);
+        System.out.println("o1: " + o1 + " | o2:" +o2);
+        return greaterThan(o1,o2);
     }
 
 }
