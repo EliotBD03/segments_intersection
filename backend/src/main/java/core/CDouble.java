@@ -41,7 +41,7 @@ public class CDouble
     }
 
     /**
-     * Check to see if a value is greater or equal than another
+     * Checks to see if a value is greater or equal than another
      * @param d1    One of the value to compare
      * @param d2    The other value to compare
      * @return true if d1 is bigger or "equal" than d2
@@ -51,7 +51,7 @@ public class CDouble
         return compare(d1, d2) >= 0;
     }
     /**
-     * Check to see if a value is less or equal than another
+     * Checks to see if a value is smaller or equal than another
      * @param d1    One of the value to compare
      * @param d2    The other value to compare
      * @return true if d1 is smaller or "equal" than d2
@@ -59,5 +59,26 @@ public class CDouble
     public static boolean almostLessEqual(double d1, double d2)
     {
         return compare(d1, d2) <= 0;
+    }
+
+    /**
+     * Checks to see if a value is greater than another
+     * @param d1    One of the value to compare
+     * @param d2    The other value to compare
+     * @return true if d1 is bigger than d2
+     */
+    public static boolean greater(double d1, double d2)
+    {
+        return ! almostLessEqual(d1, d2);
+    }
+    /**
+     * Checks to see if a value is smaller than another
+     * @param d1    One of the value to compare
+     * @param d2    The other value to compare
+     * @return true if d1 is smaller than d2
+     */
+    public static boolean lesser(double d1, double d2)
+    {
+        return ! almostGreaterEqual(d1, d2);
     }
 }

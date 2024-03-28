@@ -3,6 +3,7 @@ package core;
 import java.awt.geom.Arc2D;
 import java.util.ArrayList;
 import java.util.Objects;
+import static core.CDouble.*;
 
 /**
  * Class to represent a point as a couple defined on R^2
@@ -60,7 +61,7 @@ public class Point implements Comparable<Point>
 
             return 0;
         }
-        return Double.compare(y, otherPoint.y) > 0 || (CDouble.almostEqual(y, otherPoint.y) && Double.compare(x, otherPoint.x) < 0) ? -1 : 1;
+        return greater(y, otherPoint.y) || (CDouble.almostEqual(y, otherPoint.y) && lesser(x, otherPoint.x)) ? -1 : 1;
     }
 
     @Override

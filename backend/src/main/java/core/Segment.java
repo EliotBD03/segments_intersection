@@ -131,7 +131,8 @@ public class Segment
     public static Point getPointOnXAxis(Point p, Segment segment)
     {
         // Check if the segment actually contains this point
-        if (p.y > segment.upperPoint.y || p.y < segment.lowerPoint.y)
+        //
+        if (greater(p.y, segment.upperPoint.y) || lesser(p.y, segment.lowerPoint.y))
             return null;
 
         return getClosestPointOnXAxis(p, segment);
@@ -145,7 +146,8 @@ public class Segment
         {
             if(almostGreaterEqual(p.x, segment.upperPoint.x) && almostLessEqual(p.x, segment.lowerPoint.x))
                 return p;
-            if(segment.upperPoint.x > p.x)
+
+            if(greater(segment.upperPoint.x, p.x))
                 return segment.upperPoint;
             return segment.lowerPoint;
         }

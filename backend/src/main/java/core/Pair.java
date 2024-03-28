@@ -56,7 +56,6 @@ public class Pair<T,P>
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Pair<?, ?> pair = (Pair<?, ?>) o;
-        System.out.println(Objects.equals(item1, pair.item1));
         return Objects.equals(item1, pair.item1) && Objects.equals(item2, pair.item2);
     }
 

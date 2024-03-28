@@ -157,14 +157,14 @@ public class StatusQueue extends AVL<ComparableSegment>
         if(p2 == null)
             return root;
         // Go as much left as possible
-        while(p2.x > p.x && !tmp.isLeaf())
+        while(greater(p2.x, p.x) && !tmp.isLeaf())
         {
             father = tmp;
             tmp = tmp.getLeft();
             p2 = Segment.getClosestPointOnXAxis(p, tmp.getData());
         }
         // Go as much right as possible
-        while(p2.x < p.x && (tmp.getRight() != null))
+        while(lesser(p2.x, p.x) && (tmp.getRight() != null))
         {
             father = tmp;
             tmp = tmp.getRight();
@@ -377,39 +377,31 @@ public class StatusQueue extends AVL<ComparableSegment>
         double o1 = Math.toDegrees(Math.atan(-curr.a/curr.b));
         double o2 = Math.toDegrees(Math.atan(-other.a/other.b));
 
-        if (o1 <= 0)
+        if (almostLessEqual(o1,0))
         {
             o1 += 360;
         }
-        if (o2 <= 0)
+        if (almostLessEqual(o2,0))
         {
             o2 += 360;
         }
-        if(o1 > 180)
+        if(greater(o1,180))
         {
             o1 = (o1 + 180) % 360;
         }
-        if(o2 > 180)
+        if(greater(o2, 180))
         {
             o2 = (o2 + 180) % 360;
         }
         System.out.println("o1: " + o1 + " | o2:" +o2);
 
-        if(! almostLessEqual(p.x, currStatus.x))
+        if(greater(p.x, currStatus.x))
         {
             // Get opposite angle
             o1 = 180 - o1;
             o2 = 180 - o2;
         }
-        return o1 > o2;
-    }
-
-
-
-
-    private static double dist(Point up, Point curr)
-    {
-        return Math.abs(up.x - curr.x);
+        return greater(o1,o2);
     }
 
 }

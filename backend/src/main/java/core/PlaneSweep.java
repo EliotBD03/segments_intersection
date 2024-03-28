@@ -3,6 +3,7 @@ package core;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.stream.Collectors;
+import static core.CDouble.*;
 
 public class PlaneSweep
 {
@@ -154,7 +155,7 @@ public class PlaneSweep
         Point pp = Segment.findIntersection(sl, sr);
         System.out.println("fOUND: " + pp);
         if(pp != null)
-            if(pp.y < p.y || (CDouble.almostEqual(pp.y, p.y) && pp.x > p.x))
+            if(lesser(pp.y, p.y) || (almostEqual(pp.y, p.y) && pp.x > p.x))
                 pointQueue.enqueue(pp);
     }
 }
