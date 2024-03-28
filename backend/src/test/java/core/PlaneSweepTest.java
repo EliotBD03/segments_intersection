@@ -35,11 +35,16 @@ class PlaneSweepTest
             System.out.println(point);
         assertEquals(2, intersections.size());
          */
+        ArrayList<Segment> segments2 = new Parser(Parser.getPathFromResource("/test_tree/example_segments2.txt")).getSegmentsFromFile();
+        PlaneSweep ps = new PlaneSweep(segments2);
 
+        System.out.println(ps.getIntersections());
 
+        /*
         planeSweep = new PlaneSweep(new ArrayList<>(List.of(a,b,c,d)));
         ArrayList<Point> intersections = planeSweep.getIntersections();
         System.out.println(intersections);
+         */
 
         /*
         Parser parser = new Parser(Parser.getPathFromResource("/cartes/fichier4.txt"));
