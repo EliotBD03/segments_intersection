@@ -394,9 +394,14 @@ public class StatusQueue extends AVL<ComparableSegment>
             o2 = (o2 + 180) % 360;
         }
         System.out.println("o1: " + o1 + " | o2:" +o2);
-        System.out.println(o1 >= o2);
 
-        return o1 >= o2 && p.equals(currStatus);
+        if(! almostLessEqual(p.x, currStatus.x))
+        {
+            // Get opposite angle
+            o1 = 180 - o1;
+            o2 = 180 - o2;
+        }
+        return o1 > o2;
     }
 
 

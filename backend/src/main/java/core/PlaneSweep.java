@@ -81,7 +81,12 @@ public class PlaneSweep
         System.out.println("---Added UpperInner");
         System.out.println(upperInner);
         for(ComparableSegment segment : upperInner)
+        {
+            System.out.println("\tAdding: " + segment);
             statusQueue.add(segment, p);
+            statusQueue.display();
+
+        }
         statusQueue.display();
         if(upperInner.isEmpty())
         {
