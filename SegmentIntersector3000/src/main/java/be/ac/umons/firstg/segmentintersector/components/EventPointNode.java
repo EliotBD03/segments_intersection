@@ -8,13 +8,13 @@ import javafx.scene.shape.Circle;
 /**
  * EventPoint component that helps to represent an event point to the graph
  */
-public class EventPointC extends Pane
+public class EventPointNode extends Pane
 {
     // In pixels
     private final Point location;
     private final Circle circle;
 
-    public EventPointC(Point location)
+    public EventPointNode(Point location)
     {
         circle = new Circle();
         circle.setFill(Color.BLACK);

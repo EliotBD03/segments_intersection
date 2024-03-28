@@ -10,23 +10,23 @@ import javafx.scene.shape.Line;
 /**
  * A component representing a segment by simply drawing 2 points and a line between them
  */
-public class Segment extends Group {
+public class SegmentNode extends Group {
     private SegmentTMP segment;
     private final Line line;
-    private final EventPointC endPoint1;
-    private final EventPointC endPoint2;
+    private final EventPointNode endPoint1;
+    private final EventPointNode endPoint2;
 
     /**
      * Creates a segment component
      * @param segment       The segment to represent
      */
-    public Segment(SegmentTMP segment)
+    public SegmentNode(SegmentTMP segment)
     {
         this.segment = segment;
         // Draw segment
         IShapeGen<Point> getEventPoint = x ->
         {
-            EventPointC circle = new EventPointC(x);
+            EventPointNode circle = new EventPointNode(x);
             circle.setLayoutX(x.getX());
             circle.setLayoutY(x.getY());
             return circle;
@@ -38,9 +38,9 @@ public class Segment extends Group {
         line.setStroke(Color.BLACK);
         this.getChildren().add(line);
         // Add the 2 end points
-        endPoint1 = (EventPointC) getEventPoint.createNode(segment.getPoint1());
+        endPoint1 = (EventPointNode) getEventPoint.createNode(segment.getPoint1());
         this.getChildren().add(endPoint1);
-        endPoint2 = (EventPointC) getEventPoint.createNode(segment.getPoint2());
+        endPoint2 = (EventPointNode) getEventPoint.createNode(segment.getPoint2());
         this.getChildren().add(endPoint2);
     }
 

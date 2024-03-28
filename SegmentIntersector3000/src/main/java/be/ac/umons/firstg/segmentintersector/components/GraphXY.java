@@ -44,13 +44,13 @@ public class GraphXY extends AnchorPane
     private double scalePixelX, scalePixelY;
 
     // Stores all segments contained inside the graph
-    private HashMap<SegmentTMP, Segment> segmentsShown;
+    private HashMap<SegmentTMP, SegmentNode> segmentsShown;
 
     // Sweep Line settings
     private Line sweepLine;
     private double sweepLinePosition;
-    private Stack<Segment> toSetInactive;
-    private Stack<Segment> toSetActive;
+    private Stack<SegmentNode> toSetInactive;
+    private Stack<SegmentNode> toSetActive;
 
 
 
@@ -186,7 +186,7 @@ public class GraphXY extends AnchorPane
         Point point2 = translatePoint(scalePoint(segment.getPoint2()));
 
         SegmentTMP segmentTMP = new SegmentTMP(point1,point2);
-        Segment segmentNode = new Segment(segmentTMP);
+        SegmentNode segmentNode = new SegmentNode(segmentTMP);
         // Add segment so we can easily reference it
         segmentsShown.put(segment, segmentNode);
         this.getChildren().add(segmentNode);
@@ -198,7 +198,7 @@ public class GraphXY extends AnchorPane
      */
     public void removeSegmentFrom(SegmentTMP segment)
     {
-        Segment segmentShown = segmentsShown.get(segment);
+        SegmentNode segmentShown = segmentsShown.get(segment);
         // Removes segment from the pane
         if (segmentShown != null)
             getChildren().remove(segmentShown);
@@ -493,7 +493,7 @@ public class GraphXY extends AnchorPane
         // Move SweepLine
 
         setSweepLinePosition(P.getY());
-        Segment currSegment = null;
+        SegmentNode currSegment = null;
 
         // Set segments that were active last iteration to active
         while (! toSetActive.isEmpty())

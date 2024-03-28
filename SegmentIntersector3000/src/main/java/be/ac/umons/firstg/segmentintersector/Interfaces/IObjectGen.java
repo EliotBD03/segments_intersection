@@ -12,4 +12,3 @@ public interface IObjectGen<T, K> {
      */
     T createObject(K data);
 }
-// TODO: Add a paramater to the lambda create shape expression to allow the use of data from binary trees
