@@ -11,6 +11,7 @@ import javafx.scene.control.cell.MapValueFactory;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
+import javafx.util.Pair;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -33,40 +34,12 @@ public class SegmentsTable extends HBox
      */
     public SegmentsTable()
     {
-        // Create tableView
-        tableView = new TableView<>();
-        HBox.setHgrow(tableView, Priority.ALWAYS);
-        //this.setBackground(new Background(new BackgroundFill(Color.BLUEVIOLET, CornerRadii.EMPTY, Insets.EMPTY)));
-        // Create the three columns
-        TableColumn<Map, String> nameColumn = new TableColumn<>("Name");
-        TableColumn<Map, String> upperPointColumn = new TableColumn<>("Upper");
-        TableColumn<Map, String> lowerPointColumn = new TableColumn<>("Lower");
-        TableColumn<Map, String> removeColumn = new TableColumn<>("");
-
-        // Set cell value Factory
-        nameColumn.setCellValueFactory(new MapValueFactory<>("name"));
-        upperPointColumn.setCellValueFactory(new MapValueFactory<>("upper"));
-        lowerPointColumn.setCellValueFactory(new MapValueFactory<>("lower"));
-        removeColumn.setCellValueFactory(new MapValueFactory<>("remove"));
-
-        //removeColumn.setPrefWidth(40);
-
-        tableView.getColumns().addAll(nameColumn,upperPointColumn,lowerPointColumn,removeColumn);
-        for (TableColumn column: tableView.getColumns())
-        {
-            column.setEditable(false);
-            column.setReorderable(false);
-            column.setResizable(false);
-            column.setSortable(false);
-        }
-        Label placeHolderText1 = new Label("This map is empty");
-        Label placeHolderText2 = new Label("Import a file and/or add segments");
-        VBox placeHolder = new VBox(10, placeHolderText1, placeHolderText2);
-        placeHolder.setAlignment(Pos.CENTER);
-        tableView.setPlaceholder(placeHolder);
-        // So the columns can take all the space available
-        tableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY_ALL_COLUMNS);
-
+        tableView = TableGenerator.createTable(true,
+                    new Pair<>("Name", "name"),
+                    new Pair<>("Upper", "upper"),
+                    new Pair<>("Lower", "lower"),
+                    new Pair<>("","remove"));
+        TableGenerator.addPlaceHolderText(tableView, "This map is empty", "Import a file and/or add segments");
         getChildren().add(tableView);
     }
 

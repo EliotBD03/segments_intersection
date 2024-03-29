@@ -5,8 +5,10 @@ import be.ac.umons.firstg.segmentintersector.Interfaces.IObjectGen;
 import be.ac.umons.firstg.segmentintersector.Temp.Point;
 import be.ac.umons.firstg.segmentintersector.Temp.SegmentTMP;
 import be.ac.umons.firstg.segmentintersector.components.GraphXY;
+import be.ac.umons.firstg.segmentintersector.components.IntersectionsTable;
 import be.ac.umons.firstg.segmentintersector.components.SegmentsTable;
 import be.ac.umons.firstg.segmentintersector.customUtil.CustomConverter;
+import be.ac.umons.firstg.segmentintersector.customUtil.Icon;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.event.EventHandler;
@@ -18,6 +20,7 @@ import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
 import javafx.scene.text.*;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
@@ -111,7 +114,7 @@ public class MainPage extends HBox
         {
             Tab tab = new Tab();
             if(data.getValue() != null)
-                tab.setGraphic(getIcon(data.getValue(), tabSize/1000f + 0.01f));
+                tab.setGraphic(Icon.getIcon(this.getClass(),data.getValue(), tabSize/1000f + 0.01f));
             // Create the content of the tab
             // Title
             HBox titleBox = new HBox();
@@ -144,17 +147,19 @@ public class MainPage extends HBox
 
         // Create Graph Tab
 
-        Tab graphTab = tabGen.createObject(new Pair<>("Graph Settings", "icons/GraphSettingsIcon.png"));
+        Tab graphTab = tabGen.createObject(new Pair<>("Graph Settings", "GraphSettingsIcon.png"));
         setGraphSettings(graphTab);
 
-        Tab mapTab = tabGen.createObject(new Pair<>("Map Settings","icons/MapSettingsIcon.png"));
+        Tab mapTab = tabGen.createObject(new Pair<>("Map Settings","MapSettingsIcon.png"));
         setMapSettings(mapTab);
 
+        Tab sweepLineTab = tabGen.createObject(new Pair<>("Sweep Line Algo. Info","SweepLineInfoIcon.png"));
+        setSweepInfo(sweepLineTab);
 
         tabPane.getTabs().addAll(graphTab,
                                  mapTab,
-                                 tabGen.createObject(new Pair<>("Gay Settings","icons/importantIcon.jpg")),
-                                 tabGen.createObject(new Pair<>("???? Settings","icons/SpecialIcon.jpg")));
+                                 sweepLineTab,
+                                 tabGen.createObject(new Pair<>("???? Settings","SpecialIcon.jpg")));
         tabPane.setTabMaxHeight(tabSize);
         tabPane.setTabMinHeight(tabSize);
         tabPane.setTabMaxWidth(tabSize);
@@ -167,16 +172,12 @@ public class MainPage extends HBox
         //  Stops user from closing tabs
         tabPane.setTabClosingPolicy(TabPane.TabClosingPolicy.UNAVAILABLE);
 
+        //TODO: REMOVE THAT
+        tabPane.getSelectionModel().select(2);
 
     }
 
-    private ImageView getIcon(String fromResourcePath, float size)
-    {
-        ImageView imageView = new ImageView(String.valueOf(getClass().getResource(fromResourcePath)));
-        imageView.setScaleX(size);
-        imageView.setScaleY(size);
-        return imageView;
-    }
+
 
     /**
      * Toggles on and off the left tab to show the settings depending on the argument and the state of the tabView
@@ -229,7 +230,7 @@ public class MainPage extends HBox
         // If no tab is open and is closing -> nothing happens
     }
 
-
+    //______________________________Formatters
     /**
      * Create a double formatter for the given textField and assigns the desired property
      * @param tf        The textField
@@ -298,6 +299,7 @@ public class MainPage extends HBox
     private HBox encapsNode(Node... nodes)
     {
         HBox box = new HBox();
+        //box.setBackground(new Background(new BackgroundFill(Color.ROYALBLUE, CornerRadii.EMPTY, Insets.EMPTY)));
         box.setSpacing(10);
         if(nodes.length == 0)
             return box;
@@ -318,8 +320,8 @@ public class MainPage extends HBox
     }
 
 
-    //______________________________Tabs
 
+    //______________________________Tabs
     /**
      * Fills the graphTab with all the necessary input for the user
      * @param graphTab  The tab to fill
@@ -472,6 +474,46 @@ public class MainPage extends HBox
         //currentMapContent.setBackground(new Background(new BackgroundFill(Color.ROYALBLUE, CornerRadii.EMPTY, Insets.EMPTY)));
 
         outer.getChildren().addAll(loadFileContent, currentMapContent);
+    }
+
+    private void setSweepInfo(Tab sweepLineTab)
+    {
+        VBox outer = (VBox) sweepLineTab.getContent();
+        outer.setSpacing(20);
+        // Add current iteration info
+        VBox textInfoBox = new VBox();
+        textInfoBox.setSpacing(20);
+        textInfoBox.setPadding(new Insets(20, 10, 0, 0));
+        int currIt = 127;
+        textInfoBox.getChildren().add(encapsNode(new Text("Iteration: "), new Text("" + currIt)));
+
+        Text currPointText = new Text("Current Event-Point:");
+        HBox currPointBox = new HBox(currPointText);
+        //currPointBox.setBackground(new Background(new BackgroundFill(Color.BLUEVIOLET, CornerRadii.EMPTY, Insets.EMPTY)));
+        Text xText = new Text("x: 45.030");
+        Text yText = new Text("y: 81.010");
+        VBox pointBox = new VBox(xText,yText);
+
+        VBox.setVgrow(currPointText, Priority.ALWAYS);
+        HBox.setHgrow(currPointText, Priority.ALWAYS);
+
+        textInfoBox.getChildren().add(encapsNode(currPointBox, pointBox));
+        outer.getChildren().add(textInfoBox);
+
+        //      Segments table
+        IntersectionsTable intersectionsTable = new IntersectionsTable();
+        /*
+        intersectionsTable.addIntersection(new Point(3,1),
+                                            new ArrayList<>(List.of(new SegmentTMP("s1"),
+                                                                    new SegmentTMP("s2"))));
+                                                                    
+         */
+        VBox.setVgrow(intersectionsTable, Priority.ALWAYS);
+        outer.getChildren().add(intersectionsTable);
+
+
+
+
     }
 
     //______________Input Handlers__________________

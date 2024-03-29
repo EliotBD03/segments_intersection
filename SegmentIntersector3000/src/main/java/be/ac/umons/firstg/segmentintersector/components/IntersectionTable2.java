@@ -11,7 +11,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class IntersectionTable extends TableView
+public class IntersectionTable2 extends TableView
 {
     @FXML
     private TableView<Map<String,Object>> table;
@@ -31,7 +31,7 @@ public class IntersectionTable extends TableView
     /**
      * The constructor for the table component that will use the IntersectionTable.fxml file
      */
-    public IntersectionTable()
+    public IntersectionTable2()
     {
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("IntersectionTable.fxml"));
         fxmlLoader.setRoot(this);
