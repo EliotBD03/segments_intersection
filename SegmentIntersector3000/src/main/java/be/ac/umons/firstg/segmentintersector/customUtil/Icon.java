@@ -11,6 +11,7 @@ public class Icon
         ImageView imageView = new ImageView(String.valueOf(callingClass.getResource("icons/" + iconName)));
         imageView.setScaleX(size);
         imageView.setScaleY(size);
+
         return imageView;
     }
 }

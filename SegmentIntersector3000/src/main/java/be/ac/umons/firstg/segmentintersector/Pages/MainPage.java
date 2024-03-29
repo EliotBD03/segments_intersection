@@ -11,16 +11,13 @@ import be.ac.umons.firstg.segmentintersector.customUtil.CustomConverter;
 import be.ac.umons.firstg.segmentintersector.customUtil.Icon;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
-import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.geometry.Side;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.*;
-import javafx.scene.paint.Color;
 import javafx.scene.text.*;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
@@ -92,7 +89,8 @@ public class MainPage extends HBox
         getChildren().addAll(leftPane,tabPane);
 
         // Create leftPane Children
-        timelinePane = new HBox(new Button("hiii"));
+        timelinePane = new HBox();
+        createTimeline(timelinePane);
         graphPane = new ScrollPane();
         graphPane.setFitToWidth(true);
         graphPane.setFitToHeight(true);
@@ -105,6 +103,17 @@ public class MainPage extends HBox
         // Creating the TabPane
         createTabs();
 
+    }
+
+    private void createTimeline(HBox timelinePane)
+    {
+        timelinePane.setAlignment(Pos.CENTER);
+        timelinePane.setPadding(new Insets(10, 10, 10, 10));
+        timelinePane.setSpacing(20);
+        Button playButton = createButton(50,"PlaybackButtonIcon.png");
+        Button restartButton = createButton(50,"RestartButtonIcon.png");
+
+        timelinePane.getChildren().addAll(playButton, restartButton);
     }
 
     private void createTabs()
@@ -318,6 +327,20 @@ public class MainPage extends HBox
         }
         return box;
     }
+    private Button createButton(int buttonSize, String iconName)
+    {
+        Button button = new Button();
+        button.setPrefSize(buttonSize,buttonSize);
+        button.setMinSize(buttonSize,buttonSize);
+        button.setMaxSize(buttonSize,buttonSize);
+
+        ImageView buttonIcon = Icon.getIcon(this.getClass(), iconName, 1);
+        buttonIcon.fitWidthProperty().bind(button.widthProperty());
+        buttonIcon.fitHeightProperty().bind(button.heightProperty());
+        button.setGraphic(buttonIcon);
+
+        return button;
+    }
 
 
 
@@ -502,15 +525,19 @@ public class MainPage extends HBox
 
         //      Segments table
         IntersectionsTable intersectionsTable = new IntersectionsTable();
-        /*
-        intersectionsTable.addIntersection(new Point(3,1),
-                                            new ArrayList<>(List.of(new SegmentTMP("s1"),
-                                                                    new SegmentTMP("s2"))));
-                                                                    
-         */
         VBox.setVgrow(intersectionsTable, Priority.ALWAYS);
         outer.getChildren().add(intersectionsTable);
+        //      Tree Buttons
+        Button statusTreeButton = createButton(50,"BTreeIcon.png");
+        Button pointQueueButton = createButton(50,"BTreeIcon.png");
+        HBox treeButtonsBox = new HBox();
+        treeButtonsBox.setSpacing(20);
 
+        treeButtonsBox.setAlignment(Pos.CENTER);
+        treeButtonsBox.getChildren().addAll(statusTreeButton, pointQueueButton);
+
+
+        outer.getChildren().add(treeButtonsBox);
 
 
 

@@ -41,7 +41,7 @@ public class TableGenerator
             TableColumn<Map, String> column = new TableColumn<>(pair.getKey());
             column.setEditable(false);
             column.setReorderable(false);
-            column.setResizable(false);
+            //column.setResizable(false);
             column.setSortable(false);
             column.setCellValueFactory(new MapValueFactory<>(pair.getValue()));
             tableView.getColumns().add(column);
@@ -50,6 +50,7 @@ public class TableGenerator
         if(hasButton)
         {
             TableColumn<Map, ?> column = tableView.getColumns().get(pairs.length-1);
+            column.setResizable(false);
             column.setPrefWidth(25);
         }
 
