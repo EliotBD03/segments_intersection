@@ -18,6 +18,7 @@ import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
 import javafx.scene.text.*;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
@@ -477,7 +478,7 @@ public class MainPage extends HBox
 
 
         //      Segments table
-        segmentsTable = new SegmentsTable();
+        segmentsTable = new SegmentsTable(graph);
         segmentsTable.setRemoveSegmentEvent(segment -> removeSegment(segment));
         currentMapContent.getChildren().add(segmentsTable);
 
@@ -524,12 +525,14 @@ public class MainPage extends HBox
         outer.getChildren().add(textInfoBox);
 
         //      Segments table
-        IntersectionsTable intersectionsTable = new IntersectionsTable();
+        IntersectionsTable intersectionsTable = new IntersectionsTable(graph);
         VBox.setVgrow(intersectionsTable, Priority.ALWAYS);
         outer.getChildren().add(intersectionsTable);
         //      Tree Buttons
         Button statusTreeButton = createButton(50,"BTreeIcon.png");
+        statusTreeButton.setBackground(new Background(new BackgroundFill(Color.ORANGE, CornerRadii.EMPTY, Insets.EMPTY)));
         Button pointQueueButton = createButton(50,"BTreeIcon.png");
+        pointQueueButton.setBackground(new Background(new BackgroundFill(Color.GREENYELLOW, CornerRadii.EMPTY, Insets.EMPTY)));
         HBox treeButtonsBox = new HBox();
         treeButtonsBox.setSpacing(20);
 

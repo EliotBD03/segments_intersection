@@ -1,20 +1,26 @@
 package be.ac.umons.firstg.segmentintersector.components;
 
+import be.ac.umons.firstg.segmentintersector.Interfaces.GraphShape;
 import be.ac.umons.firstg.segmentintersector.Interfaces.IShapeGen;
 import be.ac.umons.firstg.segmentintersector.Temp.Point;
 import be.ac.umons.firstg.segmentintersector.Temp.SegmentTMP;
 import javafx.scene.Group;
 import javafx.scene.paint.Color;
+import javafx.scene.paint.Paint;
 import javafx.scene.shape.Line;
 
 /**
  * A component representing a segment by simply drawing 2 points and a line between them
  */
-public class SegmentNode extends Group {
+public class SegmentNode extends Group implements GraphShape
+{
     private SegmentTMP segment;
     private final Line line;
     private final EventPointNode endPoint1;
     private final EventPointNode endPoint2;
+
+    private Paint previousLineColor;
+    private double previousLineWidth;
 
     /**
      * Creates a segment component
@@ -44,41 +50,66 @@ public class SegmentNode extends Group {
         this.getChildren().add(endPoint2);
     }
 
+    @Override
+    public void setActive()
+    {
+        line.setStroke(Color.BLACK);
+        endPoint2.setActive();
+        endPoint1.setActive();
+    }
 
-    public void setVisitedSegment()
+
+    @Override
+    public void setVisited()
     {
         line.setStroke(Color.RED);
         line.setStrokeWidth(3);
-        endPoint1.isActive();
-        endPoint2.isActive();
+        endPoint1.setActive();
+        endPoint2.setActive();
     }
 
-    public void setInactiveSegment()
+    @Override
+    public void setInactive()
     {
         line.setStroke(Color.GRAY);
         line.setStrokeWidth(1);
-        endPoint1.isInactive();
-        endPoint2.isInactive();
+        endPoint1.setInactive();
+        endPoint2.setInactive();
     }
-    public void setActiveSegment()
+
+    @Override
+    public void selectShape()
     {
-        line.setStroke(Color.BLACK);
-        endPoint2.isActive();
-        endPoint1.isActive();
+        previousLineColor = line.getStroke();
+        previousLineWidth = line.getStrokeWidth();
+        endPoint1.selectShape();
+        endPoint2.selectShape();
+        line.setStrokeWidth(3);
+        line.setStroke(Color.ORANGE);
+    }
+
+    @Override
+    public void deselectShape()
+    {
+        endPoint1.deselectShape();
+        endPoint2.deselectShape();
+        line.setStroke(previousLineColor);
+        line.setStrokeWidth(previousLineWidth);
     }
 
     public void setVisitedPoint(Point point)
     {
         if(segment.getPoint1().equals(point))
         {
-            endPoint1.isVisited();
+            endPoint1.setVisited();
         }
         else if (segment.getPoint2().equals(point))
         {
-            endPoint2.isVisited();
+            endPoint2.setVisited();
         }
 
     }
+
 
     /**
      * Change the segment position
@@ -102,5 +133,7 @@ public class SegmentNode extends Group {
         endPoint2.setLayoutY(segment.getPoint2().getY());
 
     }
+
+
 
 }

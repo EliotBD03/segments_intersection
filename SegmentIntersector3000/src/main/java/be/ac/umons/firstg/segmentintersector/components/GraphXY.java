@@ -499,13 +499,13 @@ public class GraphXY extends AnchorPane
         while (! toSetActive.isEmpty())
         {
             currSegment = toSetActive.pop();
-            currSegment.setActiveSegment();
+            currSegment.setActive();
         }
         // Set segments that became inactive since last iteration to inactive
         while (! toSetInactive.isEmpty())
         {
             currSegment = toSetInactive.pop();
-            currSegment.setInactiveSegment();
+            currSegment.setInactive();
         }
         // Visits all segments impacted by P (i.e. contained into U, L and C)
         if(L != null)
@@ -513,7 +513,7 @@ public class GraphXY extends AnchorPane
             for(SegmentTMP segmentTMP: L)
             {
                 currSegment = segmentsShown.get(segmentTMP);
-                currSegment.setVisitedSegment();
+                currSegment.setVisited();
                 System.out.println(segmentsShown.get(segmentTMP));
                 // Segments contained in L, are going to be on top of the sweep line
                 // So they become inactive
@@ -527,7 +527,7 @@ public class GraphXY extends AnchorPane
             for(SegmentTMP segmentTMP: C)
             {
                 currSegment = segmentsShown.get(segmentTMP);
-                currSegment.setVisitedSegment();
+                currSegment.setVisited();
                 currSegment.toFront();
             }
         }
@@ -535,7 +535,7 @@ public class GraphXY extends AnchorPane
             for(SegmentTMP segmentTMP : U)
             {
                 currSegment = segmentsShown.get(segmentTMP);
-                currSegment.setVisitedSegment();
+                currSegment.setVisited();
                 // Segments contained in U, are going to be touching the sweep line from now on
                 toSetActive.add(currSegment);
                 // We highlight the point P
@@ -545,5 +545,31 @@ public class GraphXY extends AnchorPane
         if(currSegment != null)
             currSegment.setVisitedPoint(translatePoint(scalePoint(P)));
     }
+
+    /**
+     * Select the segment on the graph. Nothing happens if it isn't found on the graph.
+     * @param segment   The segment to highlight
+     */
+    public void selectSegment(SegmentTMP segment)
+    {
+        SegmentNode segmentNode = segmentsShown.get(segment);
+        if(segmentNode == null)
+            return;
+        segmentNode.toFront();
+        segmentNode.selectShape();
+    }
+
+    /**
+     * Deselect the segment on the graph. Nothing happens if it isn't found on the graph.
+     * @param segment   The segment to deselect
+     */
+    public void deselectSegment(SegmentTMP segment)
+    {
+        SegmentNode segmentNode = segmentsShown.get(segment);
+        if(segmentNode == null)
+            return;
+        segmentNode.deselectShape();
+    }
+
 
 }

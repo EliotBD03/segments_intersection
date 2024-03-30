@@ -22,12 +22,18 @@ public class IntersectionsTable extends HBox
 {
     private TableView<Map> tableView;
 
+    private GraphXY graph;
+
     private int current;
 
     private ILambdaEvent<Pair<Point, List<SegmentTMP>>> highlightSegmentsEvent;
 
 
-    public IntersectionsTable()
+    /**
+     * Default constructor for the IntersectionTable
+     * @param graphXY   The graph linked to the table
+     */
+    public IntersectionsTable(GraphXY graphXY)
     {
         // Create tableView
         tableView = TableGenerator.createTable(true,
@@ -37,8 +43,16 @@ public class IntersectionsTable extends HBox
         TableGenerator.addPlaceHolderText(tableView, "No intersections found yet",
                                                     "Try the next iteration");
         getChildren().add(tableView);
+
+        this.graph = graphXY;
+
     }
 
+    /**
+     * Add an intersection in the table
+     * @param intersection  The point of the intersection to add
+     * @param segments      The segment that are intersecting at that point
+     */
     public void addIntersection(Point intersection, List<SegmentTMP> segments)
     {
         int curr = current;
@@ -74,4 +88,7 @@ public class IntersectionsTable extends HBox
         tableView.getItems().add(item);
 
     }
+
+
+
 }

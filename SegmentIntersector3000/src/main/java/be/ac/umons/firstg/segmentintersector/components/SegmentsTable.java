@@ -25,14 +25,15 @@ public class SegmentsTable extends HBox
 {
     private TableView<Map> tableView;
 
-    private int current;
+    private SegmentTMP currentSelection;
 
     private ILambdaEvent<SegmentTMP> removeSegmentEvent;
+
 
     /**
      * Creates a SegmentsTable
      */
-    public SegmentsTable()
+    public SegmentsTable(GraphXY graph)
     {
         tableView = TableGenerator.createTable(true,
                     new Pair<>("Name", "name"),
@@ -41,6 +42,29 @@ public class SegmentsTable extends HBox
                     new Pair<>("","remove"));
         TableGenerator.addPlaceHolderText(tableView, "This map is empty", "Import a file and/or add segments");
         getChildren().add(tableView);
+
+
+        tableView.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
+            if (oldSelection != null)
+            {
+                graph.deselectSegment((SegmentTMP) oldSelection.get("segment"));
+            }
+            if (newSelection != null)
+            {
+                SegmentTMP newSel = (SegmentTMP) newSelection.get("segment");
+                graph.selectSegment(newSel);
+                currentSelection = newSel;
+            }
+        });
+        tableView.focusedProperty().addListener((obs, oldState, newState) -> {
+            if(!newState){
+                graph.deselectSegment(currentSelection);
+                tableView.getSelectionModel().clearSelection();
+                currentSelection = null;
+            }
+        });
+
+
     }
 
 
@@ -50,7 +74,6 @@ public class SegmentsTable extends HBox
      */
     public void addSegment(SegmentTMP segment)
     {
-        int curr = current;
         Map<String, Object> item = new HashMap<>();
         // We also store the segment inside the map for later use
         item.put("segment",segment);
@@ -85,7 +108,6 @@ public class SegmentsTable extends HBox
 
         });
         tableView.getItems().add(item);
-        current++;
     }
 
     /**
