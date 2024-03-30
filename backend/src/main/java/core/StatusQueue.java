@@ -256,34 +256,30 @@ public class StatusQueue extends AVL<ComparableSegment>
     public Pair<ComparableSegment, ComparableSegment> findLeftmostRightmost(Point k)
     {
         // Return the left and right leaves
-        Node<ComparableSegment> father = getClosestRoot(k);
-
+        Node<ComparableSegment> root = getClosestRoot(k);
+        Node<ComparableSegment> father = root;
+        Node<ComparableSegment> tmp = father;
         ComparableSegment sL = null;
         ComparableSegment sR = null;
         Point p;
+        //System.out.println("Looking for: " + k);
+
         if (father != null)
         {
-            tmp = father.getLeft();
-            while (!tmp.isLeaf())
+            while (!tmp.isLeaf() && Segment.getClosestPointOnXAxis(currStatus, tmp.getData()).equals(k))
             {
-                p = ComparableSegment.getClosestPointOnXAxis(k, tmp.getData());
-                if(p.x >= k.x)
-                    tmp = tmp.getLeft();
-                else
-                    tmp = tmp.getRight();
+                father = tmp;
+                tmp = tmp.getLeft();
             }
-            sL = tmp.getData();
-            tmp = father;
-            while (tmp != null && !tmp.isLeaf())
+            sL = father.getLeft().lookForMaximum().getData();
+            father = root;
+            tmp = root;
+            while (tmp != null && Segment.getClosestPointOnXAxis(currStatus, tmp.getData()).equals(k))
             {
-                p = ComparableSegment.getClosestPointOnXAxis(k, tmp.getData());
-                if(p.x >= k.x)
-                    tmp = tmp.getLeft();
-                else
-                    tmp = tmp.getRight();
+                father = tmp;
+                tmp = tmp.getRight();
             }
-            if (tmp != null)
-                sR = tmp.getData();
+            sR = father.getLeft().lookForMaximum().getData();
         }
         return new Pair<>(sL, sR);
     }
@@ -309,6 +305,7 @@ public class StatusQueue extends AVL<ComparableSegment>
         boolean goingLeft = true;
         Node<ComparableSegment> father = root;
         Node<ComparableSegment> curr = root;
+        Node<ComparableSegment> lastLeft = null;
         System.out.println("From: " + k);
         // Find the inner node with its father by moving in the tree
         while(!curr.getData().equals(x))
@@ -319,9 +316,10 @@ public class StatusQueue extends AVL<ComparableSegment>
             father = curr;
             if(statusQueueRelation(curr.getData(), x))
             {
-                curr = curr.getLeft();
                 goingLeft = true;
+                curr = curr.getLeft();
             }else{
+                lastLeft = curr;
                 curr = curr.getRight();
                 goingLeft = false;
             }
@@ -331,9 +329,9 @@ public class StatusQueue extends AVL<ComparableSegment>
         rightN = curr.getRight() == null ? null : curr.getRight().lookForMinimum().getData();
         // If the last movement we did was going right, then we can easily find the left node
         // it will simply the maximum of the left child of the father of the inner node
-        if(!goingLeft)
+        if(lastLeft != null)
         {
-            leftN = father.getLeft().lookForMaximum().getData();
+            leftN = lastLeft.getLeft().lookForMaximum().getData();
         }else
         {
             // If not, we have to locate the father of the leaf containing x

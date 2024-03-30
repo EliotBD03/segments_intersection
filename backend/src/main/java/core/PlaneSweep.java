@@ -31,7 +31,7 @@ public class PlaneSweep
             Point intersection = handleEventPoint(p);
             if(intersection != null)
                 intersections.add(intersection);
-            pointQueue.display();
+            //pointQueue.display();
 
         }
         return intersections;
@@ -90,17 +90,23 @@ public class PlaneSweep
         statusQueue.display();
         if(upperInner.isEmpty())
         {
+            System.out.println("what am i doing rihgt now");
             Pair<ComparableSegment, ComparableSegment> neighbours = statusQueue.getNeighbours(p);
+            System.out.println("neighbours: " + neighbours);
             if(neighbours.getItem1() != null && neighbours.getItem2() != null)
                 findNewEvent(neighbours.getItem1(), neighbours.getItem2(), p);
         }
         else
         {
            Pair<ComparableSegment, ComparableSegment> segmentPair = statusQueue.findLeftmostRightmost(p);
-
+            System.out.println("Segment Pair: ");
+           System.out.println(segmentPair);
            ComparableSegment leftSegment = statusQueue.getNeighbours(segmentPair.getItem1()).getItem1();
-
            ComparableSegment rightSegment = statusQueue.getNeighbours(segmentPair.getItem2()).getItem2();
+           System.out.println("Left & Right Segment: ");
+           System.out.println(leftSegment);
+           System.out.println(rightSegment);
+           System.out.println("");
            if(leftSegment != null)
                findNewEvent(leftSegment, segmentPair.getItem1(), p);
            if(rightSegment != null)

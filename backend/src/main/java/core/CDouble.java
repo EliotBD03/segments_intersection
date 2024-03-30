@@ -9,7 +9,7 @@ public class CDouble
     /**
      * The threshold value to fight against floating point errors
      */
-    public static final double epsilon = 0.00001d;
+    public static final double epsilon = 0.0001d;
 
     /**
      * A threshold comparison method using {@link CDouble#epsilon}
