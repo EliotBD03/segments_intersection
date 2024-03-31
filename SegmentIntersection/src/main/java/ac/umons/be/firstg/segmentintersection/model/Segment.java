@@ -10,7 +10,7 @@ import static ac.umons.be.firstg.segmentintersection.controller.utils.CDouble.*;
  */
 public class Segment
 {
-    private Point lowerPoint, upperPoint;
+    private final Point lowerPoint, upperPoint;
     public final double a,b,c;
 
     public final String id;
@@ -93,8 +93,7 @@ public class Segment
     @Override
     public String toString()
     {
-        //return "{" + id + ":" + lowerPoint +"--"+ upperPoint + "}";
-        return id;
+        return "{ " + id + " | " + getUpperPoint() + " : " + getLowerPoint() +"}";
     }
 
     public String getCartesianAsString()
@@ -167,8 +166,6 @@ public class Segment
         }
     }
 
-
-
     /**
      * Checks if the segment has the same cartesian equation than this one
      * @param o The other object to check
@@ -178,17 +175,23 @@ public class Segment
     public boolean equals(Object o)
     {
         if (this == o) return true;
-        if (o == null || (getClass() != o.getClass() && getClass() != o.getClass().getSuperclass())) return false;
-        Segment segment = (Segment) o;
+        if(o instanceof Segment)
+        {
+            Segment segment = (Segment) o;
+            return Double.compare(a, segment.a) == 0 && Double.compare(b, segment.b) == 0 && Double.compare(c, segment.c) == 0 && Objects.equals(lowerPoint, segment.lowerPoint) && Objects.equals(upperPoint, segment.upperPoint) && Objects.equals(id, segment.id);
 
-        return almostEqual(a, segment.a) && almostEqual(b, segment.b) && almostEqual(c, segment.c) ;
+        }
+        return false;
     }
+
+
+
 
     // Obliged to override hashcode if we override equals.
     @Override
     public int hashCode()
     {
-        return Objects.hash(a, b, c);
+        return Objects.hash(upperPoint, lowerPoint);
     }
 
     /**

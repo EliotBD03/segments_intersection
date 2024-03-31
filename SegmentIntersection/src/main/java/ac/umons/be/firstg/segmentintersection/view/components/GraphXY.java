@@ -1,6 +1,7 @@
 package ac.umons.be.firstg.segmentintersection.view.components;
 
 
+import ac.umons.be.firstg.segmentintersection.model.ComparableSegment;
 import ac.umons.be.firstg.segmentintersection.model.Point;
 import ac.umons.be.firstg.segmentintersection.model.Segment;
 import ac.umons.be.firstg.segmentintersection.view.interfaces.IShapeGen;
@@ -485,7 +486,7 @@ public class GraphXY extends AnchorPane
      * @param L         Contains all segments that have P as their lower point
      * @param C         Contains all segments that have P as an inner point
      */
-    public void moveSweepLine(Point P, List<Segment> U, List<Segment> L, List<Segment> C)
+    public void moveSweepLine(Point P, List<ComparableSegment> U, List<ComparableSegment> L, List<ComparableSegment> C)
     {
         if(sweepLine == null)
             initializeSweep();
@@ -527,6 +528,7 @@ public class GraphXY extends AnchorPane
             for(Segment segmentTMP: C)
             {
                 currSegment = segmentsShown.get(segmentTMP);
+                toSetActive.add(currSegment);
                 currSegment.setVisited();
                 currSegment.toFront();
             }
@@ -544,6 +546,8 @@ public class GraphXY extends AnchorPane
         }
         if(currSegment != null)
             currSegment.setVisitedPoint(translatePoint(scalePoint(P)));
+        System.out.println("next to set empty: ");
+        System.out.println(toSetActive);
     }
 
     /**

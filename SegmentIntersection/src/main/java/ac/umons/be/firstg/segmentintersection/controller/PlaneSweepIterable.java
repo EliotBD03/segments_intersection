@@ -50,13 +50,19 @@ public class PlaneSweepIterable implements Iterable<PlaneSweep>
                 try
                 {
                     planeSweep.next(pointQueue);
-                    return planeSweep;
-                }
-                catch (Exception e)
+                } catch (Exception e)
                 {
                     throw new RuntimeException(e);
                 }
+
+                return planeSweep;
+
             }
         };
+    }
+
+    public PlaneSweep getPlaneSweep()
+    {
+        return planeSweep;
     }
 }

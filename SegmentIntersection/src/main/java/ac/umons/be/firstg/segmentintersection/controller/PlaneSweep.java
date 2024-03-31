@@ -13,8 +13,8 @@ public class PlaneSweep
 
     private   ArrayList<ComparableSegment> lower;
     private   ArrayList<ComparableSegment> inner;
-
     private   ArrayList<ComparableSegment> upper;
+    private   Point currentPoint;
 
     private Point intersection;
 
@@ -27,7 +27,8 @@ public class PlaneSweep
 
     public void next(PointQueue pointQueue) throws Exception
     {
-        this.intersection = handleEventPoint(pointQueue.dequeue(), pointQueue);
+        currentPoint = pointQueue.dequeue();
+        this.intersection = handleEventPoint(currentPoint, pointQueue);
     }
 
     private Point handleEventPoint(Point p, PointQueue pointQueue) throws Exception
@@ -181,5 +182,10 @@ public class PlaneSweep
     public Point getIntersection()
     {
         return intersection;
+    }
+
+    public Point getCurrentPoint()
+    {
+        return currentPoint;
     }
 }

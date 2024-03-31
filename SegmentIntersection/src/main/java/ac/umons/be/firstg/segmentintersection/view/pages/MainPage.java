@@ -1,5 +1,6 @@
 package ac.umons.be.firstg.segmentintersection.view.pages;
 
+import ac.umons.be.firstg.segmentintersection.controller.PlaneSweepIterable;
 import ac.umons.be.firstg.segmentintersection.model.Point;
 import ac.umons.be.firstg.segmentintersection.model.Segment;
 import ac.umons.be.firstg.segmentintersection.view.components.GraphXY;
@@ -28,7 +29,6 @@ import javafx.util.converter.DoubleStringConverter;
 import javafx.util.converter.IntegerStringConverter;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -46,7 +46,7 @@ public class MainPage extends HBox
     private final TabPane tabPane;
 
 
-    // The currently shown tab
+    private IntersectionsTable intersectionsTable;
     private SegmentsTable segmentsTable;
     private GraphXY graph;
     private boolean tabClosed;
@@ -61,6 +61,10 @@ public class MainPage extends HBox
     private ObjectProperty<Double> yScaleInputs = new SimpleObjectProperty<>(10d);
     private ObjectProperty<Integer> xNbLabelsInputs = new SimpleObjectProperty<>(10);
     private ObjectProperty<Integer> yNbLabelsInputs = new SimpleObjectProperty<>(10);
+
+    // Sweep Line
+    private PlaneSweepIterable planeSweeps;
+    private boolean planeSweepStarted;
 
 
     // Map Settings
@@ -113,6 +117,7 @@ public class MainPage extends HBox
         timelinePane.setPadding(new Insets(10, 10, 10, 10));
         timelinePane.setSpacing(20);
         Button playButton = createButton(50,"PlaybackButtonIcon.png");
+        playButton.setOnAction(e -> nextSL());
         Button restartButton = createButton(50,"RestartButtonIcon.png");
 
         timelinePane.getChildren().addAll(playButton, restartButton);
@@ -183,8 +188,6 @@ public class MainPage extends HBox
         //  Stops user from closing tabs
         tabPane.setTabClosingPolicy(TabPane.TabClosingPolicy.UNAVAILABLE);
 
-        //TODO: REMOVE THAT
-        tabPane.getSelectionModel().select(2);
 
     }
 
@@ -282,7 +285,7 @@ public class MainPage extends HBox
             if (!Objects.equals(oldValue, newValue) && event != null)
                 event.callMethod(textFormat.getValueConverter().fromString(newValue));
 
-            System.out.println("textfield changed from " + oldValue + " to " + newValue);
+            //System.out.println("textfield changed from " + oldValue + " to " + newValue);
         });
         textFormat.valueProperty().bindBidirectional(property);
         tf.setTextFormatter(textFormat);
@@ -407,7 +410,7 @@ public class MainPage extends HBox
             try
             {
                 loadGraph();
-            } catch (IOException ex)
+            } catch (Exception ex)
             {
                 throw new RuntimeException(ex);
             }
@@ -443,7 +446,7 @@ public class MainPage extends HBox
             try
             {
                 showFiles();
-            } catch (IOException ex)
+            } catch (Exception ex)
             {
                 throw new RuntimeException(ex);
             }
@@ -544,7 +547,7 @@ public class MainPage extends HBox
         outer.getChildren().add(textInfoBox);
 
         //      Segments table
-        IntersectionsTable intersectionsTable = new IntersectionsTable(graph);
+        intersectionsTable = new IntersectionsTable(graph);
         VBox.setVgrow(intersectionsTable, Priority.ALWAYS);
         outer.getChildren().add(intersectionsTable);
         //      Tree Buttons
@@ -566,11 +569,11 @@ public class MainPage extends HBox
     }
 
     //______________Input Handlers__________________
-    private void showFiles() throws IOException
+    private void showFiles() throws Exception
     {
         FileChooser fileChooser = new FileChooser();
         File selection = fileChooser.showOpenDialog(primaryStage);
-        if(file == null || !file.equals(selection))
+        if((file != null && !file.equals(selection)) || selection != null)
         {
             file = selection;
             fileNameLabel.setText(file.getName());
@@ -590,7 +593,7 @@ public class MainPage extends HBox
         fileNameLabel.setText("No file selected");
     }
 
-    private void loadGraph() throws IOException
+    private void loadGraph() throws Exception
     {
         // If the graph scales was changed, we need to redraw the entire graph
         if(hasChanged){
@@ -606,10 +609,11 @@ public class MainPage extends HBox
 
     }
 
+
     /**
      * Loads the segments contained in the selected file if it was changed since last call
      */
-    private void loadMap() throws IOException
+    private void loadMap() throws Exception
     {
         if(fileHasChanged && file!= null)
         {
@@ -617,9 +621,10 @@ public class MainPage extends HBox
             resetMap();
             fileHasChanged = false;
             Parser parser = new Parser(file.getPath());
-            ArrayList<Segment> segmentTMPList = parser.getSegmentsFromFile();
-            segmentsTable.addAll(segmentTMPList);
-            graph.addSegments(segmentTMPList);
+            ArrayList<Segment> segmentsList = parser.getSegmentsFromFile();
+            segmentsTable.addAll(segmentsList);
+            graph.addSegments(segmentsList);
+            createSweepLine(segmentsList);
         }
     }
 
@@ -677,4 +682,44 @@ public class MainPage extends HBox
         graph.removeSegmentFrom(segment);
     }
 
+    //______________Sweep Line Algo__________________
+
+
+    private void createSweepLine(ArrayList<Segment> segments) throws Exception
+    {
+        planeSweeps = new PlaneSweepIterable(segments);
+    }
+
+    private void nextSL()
+    {
+        if(planeSweeps == null)
+            return;
+
+        // Start plane sweep
+        if(!planeSweepStarted)
+        {
+            planeSweepStarted = true;
+            // Init Sweep
+            graph.initializeSweep();
+
+            return;
+        }
+        else
+        {
+            if(planeSweeps.iterator().hasNext())
+            {
+                // Next Sweep iteration using U L and C
+                Point inter = planeSweeps.iterator().next().getIntersection();
+                if(inter != null)
+                    intersectionsTable.addIntersection(inter, inter.getIntersections());
+                graph.moveSweepLine(planeSweeps.getPlaneSweep().getCurrentPoint(), planeSweeps.getPlaneSweep().getUpper(), planeSweeps.getPlaneSweep().getLower(), planeSweeps.getPlaneSweep().getInner());
+            }
+            else
+            {
+                graph.moveSweepLine(planeSweeps.getPlaneSweep().getCurrentPoint(), null, planeSweeps.getPlaneSweep().getLower(), null);
+            }
+        }
+
+
+    }
 }

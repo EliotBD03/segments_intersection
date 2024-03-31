@@ -73,7 +73,7 @@ public class ComparableSegment extends Segment implements Comparable<ComparableS
     @Override
     public int hashCode()
     {
-        return Objects.hash(this);
+        return super.hashCode();
     }
 
 }
