@@ -1,15 +1,9 @@
 package core;
 
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import parser.Parser;
-import static core.AVLTestTools.*;
 
-import java.io.IOException;
-import java.net.URISyntaxException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -17,51 +11,6 @@ import static org.junit.jupiter.api.Assertions.*;
 @DisplayName("PlaneSweepTest \uD83D\uDCC8")
 class PlaneSweepTest
 {
-    private static PlaneSweep planeSweep;
-
-    @BeforeAll
-    static void initPlaneSweep() throws Exception
-    {
-        ArrayList<Segment> segments = new Parser(Parser.getPathFromResource("/test_tree/example_segments.txt")).getSegmentsFromFile();
-        planeSweep = new PlaneSweep(segments);
-    }
-
-    @Test
-    void getIntersections() throws Exception
-    {
-        /*
-        ArrayList<Point> intersections = planeSweep.getIntersections();
-        for(Point point : intersections)
-            System.out.println(point);
-        assertEquals(2, intersections.size());
-         */
-        /*
-        ArrayList<Segment> segments2 = new Parser(Parser.getPathFromResource("/test_tree/example_segments5.txt")).getSegmentsFromFile();
-        PlaneSweep ps = new PlaneSweep(segments2);
-
-        System.out.println(ps.getIntersections());
-         */
-
-
-        Parser parser = new Parser(Parser.getPathFromResource("/cartes/fichier5.txt"));
-        PlaneSweep ps2 = new PlaneSweep(parser.getSegmentsFromFile());
-        ArrayList<Point> intersections = ps2.getIntersections();
-        System.out.println(intersections);
-
-
-
-
-
-
-
-
-
-
-
-
-
-    }
-
     @Test
     void union()
     {

@@ -32,6 +32,7 @@ public class PointQueue extends AVL<Point>
      * Q generator which is initialed with a set of endpoints from segments.
      * @param segments an arraylist of segments
      * @return Q object with the corresponding endpoints inside.
+     * @throws Exception if no segment provided
      */
     public static PointQueue initQ(ArrayList<Segment> segments) throws Exception
     {

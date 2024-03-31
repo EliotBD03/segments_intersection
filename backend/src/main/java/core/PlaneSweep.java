@@ -6,43 +6,33 @@ import static core.CDouble.*;
 
 public class PlaneSweep
 {
-    private PointQueue pointQueue;
-    private ArrayList<Point> intersections;
     private StatusQueue statusQueue;
-    private ArrayList<Segment> segments;
 
-    public PlaneSweep(ArrayList<Segment> segments) throws Exception
+    private   ArrayList<ComparableSegment> lower;
+    private   ArrayList<ComparableSegment> inner;
+
+    private   ArrayList<ComparableSegment> upper;
+
+    private Point intersection;
+
+
+    public PlaneSweep()
     {
-        this.segments = segments;
         this.statusQueue = new StatusQueue();
-        this.pointQueue = PointQueue.initQ(segments);
         System.out.println("point queue at initialization");
-        pointQueue.display();
     }
 
-    public ArrayList<Point> getIntersections() throws Exception
+    public void next(PointQueue pointQueue) throws Exception
     {
-        this.intersections = new ArrayList<>();
-        int index = 0; //TODO
-        while(!pointQueue.isEmpty())
-        {
-            System.out.println("iteration " + (index++)); //TODO remove this if problem solved
-            Point p = pointQueue.dequeue();
-            Point intersection = handleEventPoint(p);
-            if(intersection != null)
-                intersections.add(intersection);
-            //pointQueue.display();
-
-        }
-        return intersections;
+        this.intersection = handleEventPoint(pointQueue.dequeue(), pointQueue);
     }
 
-    private Point handleEventPoint(Point p) throws Exception
+    private Point handleEventPoint(Point p, PointQueue pointQueue) throws Exception
     {
         System.out.println("___________________________________________");
 
         Point intersection = null;
-        ArrayList<ComparableSegment> upper = p.getStartOf()
+        upper = p.getStartOf()
                 .stream()
                 .map(ComparableSegment::new)
                 .collect(Collectors.toCollection(ArrayList::new));
@@ -50,8 +40,8 @@ public class PlaneSweep
         System.out.println(p);
         System.out.println("status queue before");
         statusQueue.display();
-        ArrayList<ComparableSegment> lower = new ArrayList<>();
-        ArrayList<ComparableSegment> inner = new ArrayList<>();
+        lower = new ArrayList<>();
+        inner = new ArrayList<>();
         statusQueue.findSegments(p,lower, inner);
         System.out.println("lower");
         for(Segment segment : lower)
@@ -94,7 +84,7 @@ public class PlaneSweep
             Pair<ComparableSegment, ComparableSegment> neighbours = statusQueue.getNeighbours(p);
             System.out.println("neighbours: " + neighbours);
             if(neighbours.getItem1() != null && neighbours.getItem2() != null)
-                findNewEvent(neighbours.getItem1(), neighbours.getItem2(), p);
+                findNewEvent(neighbours.getItem1(), neighbours.getItem2(), p, pointQueue);
         }
         else
         {
@@ -108,9 +98,9 @@ public class PlaneSweep
            System.out.println(rightSegment);
            System.out.println("");
            if(leftSegment != null)
-               findNewEvent(leftSegment, segmentPair.getItem1(), p);
+               findNewEvent(leftSegment, segmentPair.getItem1(), p, pointQueue);
            if(rightSegment != null)
-               findNewEvent(rightSegment, segmentPair.getItem2(), p);
+               findNewEvent(rightSegment, segmentPair.getItem2(), p, pointQueue);
         }
         System.out.println("status queue after");
         statusQueue.display();
@@ -155,7 +145,7 @@ public class PlaneSweep
         return result;
     }
 
-    private void findNewEvent(ComparableSegment sl, ComparableSegment sr, Point p)
+    private void findNewEvent(ComparableSegment sl, ComparableSegment sr, Point p, PointQueue pointQueue)
     {
         Point pp = Segment.findIntersection(sl, sr);
         System.out.println("fOUND: " + pp);
@@ -163,5 +153,30 @@ public class PlaneSweep
             if(lessThan(pp.y, p.y) || (almostEqual(pp.y, p.y) && greaterThan(pp.x, p.x)))
                 pointQueue.enqueue(pp);
 
+    }
+
+    public StatusQueue getStatusQueue()
+    {
+        return statusQueue;
+    }
+
+    public ArrayList<ComparableSegment> getInner()
+    {
+        return inner;
+    }
+
+    public ArrayList<ComparableSegment> getLower()
+    {
+        return lower;
+    }
+
+    public ArrayList<ComparableSegment> getUpper()
+    {
+        return upper;
+    }
+
+    public Point getIntersection()
+    {
+        return intersection;
     }
 }
