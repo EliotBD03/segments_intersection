@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="da85b0f3-a192-44a7-98db-5081dda788bc" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/../backend/src/main/java/core/ComparableSegment.java" beforeDir="false" afterPath="$PROJECT_DIR$/../backend/src/main/java/core/ComparableSegment.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../backend/src/main/java/core/Segment.java" beforeDir="false" afterPath="$PROJECT_DIR$/../backend/src/main/java/core/Segment.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../backend/src/main/java/core/T.java" beforeDir="false" afterPath="$PROJECT_DIR$/../backend/src/main/java/core/T.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../backend/src/test/java/core/TTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/../backend/src/test/java/core/TTest.java" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="ExternalProjectsData">
+    <projectState path="$PROJECT_DIR$">
+      <ProjectState />
+    </projectState>
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Interface" />
+        <option value="Class" />
+        <option value="FxmlFile" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
+  </component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 8
+}</component>
+  <component name="ProjectId" id="2blYui14NfxLu5bOiRo0NnrRHuT" />
+  <component name="ProjectLevelVcsManager">
+    <ConfirmationsSetting value="1" id="Add" />
+  </component>
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "Application.Test.executor": "Run",
+    "Gradle./home/foucart/Bureau/Git/segments_intersection/SegmentIntersector3000 [Test.main()].executor": "Run",
+    "Gradle./home/foucart/Bureau/Git/segments_intersection/SegmentIntersector3000/build.gradle.executor": "Run",
+    "Gradle.Build SegmentIntersector3000.executor": "Run",
+    "Gradle.SegmentIntersector3000 [:Test.main()].executor": "Run",
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "git-widget-placeholder": "backend",
+    "kotlin-language-version-configured": "true",
+    "last_opened_file_path": "/home/foucart/Bureau/Git/segments_intersection/SegmentIntersector3000/src/main/resources/be/ac/umons/firstg/segmentintersector",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "settings.editor.selected.configurable": "preferences.JavaFX",
+    "vue.rearranger.settings.migration": "true"
+  }
+}]]></component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/src/main/resources/be/ac/umons/firstg/segmentintersector" />
+      <recent name="$PROJECT_DIR$/src/main/java/be/ac/umons/firstg/segmentintersector/Temp/cartes" />
+      <recent name="$PROJECT_DIR$/src/main/java/be/ac/umons/firstg/segmentintersector/Temp" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/src/main/resources/be/ac/umons/firstg/segmentintersector" />
+      <recent name="$PROJECT_DIR$/src/main/resources/be/ac/umons/firstg/segmentintersector/" />
+      <recent name="$PROJECT_DIR$/src/main/resources" />
+      <recent name="$PROJECT_DIR$/src/main/resources/be/ac/umons/firstg/segmentintersector/Components" />
+      <recent name="$PROJECT_DIR$/src/main/resources/be/ac/umons/firstg/segmentintersector/Controllers" />
+    </key>
+    <key name="MoveClassesOrPackagesDialog.RECENTS_KEY">
+      <recent name="be.ac.umons.firstg.segmentintersector.Components" />
+      <recent name="be.ac.umons.firstg.segmentintersector" />
+      <recent name="be.ac.umons.firstg.segmentintersector.Controllers" />
+    </key>
+    <key name="CopyClassDialog.RECENTS_KEY">
+      <recent name="be.ac.umons.firstg.segmentintersector" />
+    </key>
+  </component>
+  <component name="RunManager">
+    <configuration name="Test" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="be.ac.umons.firstg.segmentintersector.Test" />
+      <module name="SegmentIntersector3000.main" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="be.ac.umons.firstg.segmentintersector.components.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Application.Test" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="jdk-21.0.2-openjdk-21.0.2-4caba194b151-78a6f59c" />
+        <option value="jdk-21.0.2-openjdk-21.0.2-f644763e9732-563d888c" />
+      </set>
+    </attachedChunks>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="da85b0f3-a192-44a7-98db-5081dda788bc" name="Changes" comment="" />
+      <created>1706791361987</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1706791361987</updated>
+      <workItem from="1706791363529" duration="2559000" />
+      <workItem from="1706799936814" duration="3922000" />
+      <workItem from="1706821207210" duration="6472000" />
+      <workItem from="1706883099735" duration="3923000" />
+      <workItem from="1706906759367" duration="1193000" />
+      <workItem from="1706914823627" duration="4605000" />
+      <workItem from="1706949578676" duration="1995000" />
+      <workItem from="1706951591537" duration="6229000" />
+      <workItem from="1707058831858" duration="4458000" />
+      <workItem from="1707116403866" duration="146000" />
+      <workItem from="1707126092436" duration="2263000" />
+      <workItem from="1707128436070" duration="206000" />
+      <workItem from="1707135119171" duration="374000" />
+      <workItem from="1707159198036" duration="3867000" />
+      <workItem from="1707163087468" duration="379000" />
+      <workItem from="1707170118635" duration="3838000" />
+      <workItem from="1707221526556" duration="377000" />
+      <workItem from="1707221920611" duration="63000" />
+      <workItem from="1707221998895" duration="7096000" />
+      <workItem from="1707241148440" duration="2746000" />
+      <workItem from="1707248036174" duration="575000" />
+      <workItem from="1707292601742" duration="1508000" />
+      <workItem from="1707295779556" duration="3060000" />
+      <workItem from="1707298982768" duration="4883000" />
+      <workItem from="1707315026425" duration="9219000" />
+      <workItem from="1707337098022" duration="2896000" />
+      <workItem from="1707404271413" duration="8411000" />
+      <workItem from="1707414971420" duration="4445000" />
+      <workItem from="1707420891277" duration="1242000" />
+      <workItem from="1707425411459" duration="1614000" />
+      <workItem from="1707466175869" duration="4975000" />
+      <workItem from="1707480827378" duration="433000" />
+      <workItem from="1707483962999" duration="2704000" />
+      <workItem from="1707577812965" duration="4119000" />
+      <workItem from="1707729196762" duration="462000" />
+      <workItem from="1707729687881" duration="66000" />
+      <workItem from="1707729935542" duration="3512000" />
+      <workItem from="1707740875842" duration="438000" />
+      <workItem from="1707745336874" duration="403000" />
+      <workItem from="1707817853827" duration="3918000" />
+      <workItem from="1707824257295" duration="576000" />
+      <workItem from="1707837298756" duration="944000" />
+      <workItem from="1707844764385" duration="74000" />
+      <workItem from="1707930257601" duration="778000" />
+      <workItem from="1707993252804" duration="2583000" />
+      <workItem from="1707999425038" duration="6720000" />
+      <workItem from="1708087216611" duration="1198000" />
+      <workItem from="1708103532398" duration="2674000" />
+      <workItem from="1708334389288" duration="3797000" />
+      <workItem from="1708365205217" duration="3834000" />
+      <workItem from="1708377706915" duration="1666000" />
+      <workItem from="1708431455747" duration="757000" />
+      <workItem from="1708464753978" duration="1411000" />
+      <workItem from="1708765205389" duration="3455000" />
+      <workItem from="1709736436794" duration="5000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="XSLT-Support.FileAssociations.UIState">
+    <expand />
+    <select />
+  </component>
+</project>

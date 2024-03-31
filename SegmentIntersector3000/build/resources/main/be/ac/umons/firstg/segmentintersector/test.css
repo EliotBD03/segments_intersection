@@ -1,0 +1,43 @@
+.root{
+    -fx-background-color: #c23fa3;
+}
+
+.table-view{
+    -fx-background-color: transparent;
+}
+
+
+
+/*
+"Corner of the header section
+
+
+ */
+.table-view .column-header-background .filler{
+    -fx-background-color: transparent;
+}
+
+
+
+/*Bottom right corner btw the scrollbars
+
+
+ */
+.table-view .corner{
+    -fx-background-color: transparent;
+}
+
+.table-view .filler{
+    -fx-border-radius: 50px;
+}
+
+.table-view .column-header{
+    -fx-background-color: transparent;
+}
+
+.table-view .column-header-background{
+    -fx-background-color: #d9d9d9;
+    -fx-border-radius: 15px 15px 0 0;
+    -fx-background-radius: 15px 15px 0 0;
+    -fx-padding: 0 0 5px 0;
+}
