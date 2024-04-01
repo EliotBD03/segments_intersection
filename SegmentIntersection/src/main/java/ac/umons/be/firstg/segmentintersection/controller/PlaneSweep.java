@@ -92,8 +92,10 @@ public class PlaneSweep
         }
         else
         {
-           Pair<ComparableSegment, ComparableSegment> segmentPair = statusQueue.findLeftmostRightmost(p);
-            System.out.println("Segment Pair: ");
+            System.out.println("UL");
+            System.out.println(upperInner);
+           Pair<ComparableSegment, ComparableSegment> segmentPair = new Pair<>(upperInner.getLast(), upperInner.getFirst());
+            System.out.println("Leftmost Rightmost of : " + p);
            System.out.println(segmentPair);
            ComparableSegment leftSegment = statusQueue.getNeighbours(segmentPair.getItem1()).getItem1();
            ComparableSegment rightSegment = statusQueue.getNeighbours(segmentPair.getItem2()).getItem2();
@@ -155,7 +157,11 @@ public class PlaneSweep
         System.out.println("fOUND: " + pp);
         if(pp != null)
             if(lessThan(pp.y, p.y) || (almostEqual(pp.y, p.y) && greaterThan(pp.x, p.x)))
+            {
                 pointQueue.enqueue(pp);
+                System.out.println("It's in !");
+                pointQueue.display();
+            }
 
     }
 
