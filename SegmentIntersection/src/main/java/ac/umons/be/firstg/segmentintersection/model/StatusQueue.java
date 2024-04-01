@@ -38,8 +38,11 @@ public class StatusQueue extends AVL<ComparableSegment>
         ComparableSegment comparableSegment = new ComparableSegment(segment);
         // Remove the leaf segment first
         root = removeLeaf(root, comparableSegment);
+        root.balance();
         // Remove the inner segment
         root = removeInner(root, comparableSegment, currStatus);
+        if(root != null)
+            root.balance();
     }
 
     private Node<ComparableSegment> removeInner(Node<ComparableSegment> currNode, ComparableSegment segment, Point ref)
@@ -51,6 +54,8 @@ public class StatusQueue extends AVL<ComparableSegment>
         if (currNode.getData().equals(segment))
         {
             currNode = removeRoot(currNode);
+            if(currNode!=null)
+                currNode.balance();
             return currNode;
         }
         //if (currNode.getData().compareToPoint(segment, ref) >= 0)
@@ -59,6 +64,7 @@ public class StatusQueue extends AVL<ComparableSegment>
             currNode.setLeft(removeInner(currNode.getLeft(), segment, ref));
         }else
             currNode.setRight(removeInner(currNode.getRight(), segment, ref));
+        currNode.balance();
         return currNode;
     }
 
@@ -77,16 +83,13 @@ public class StatusQueue extends AVL<ComparableSegment>
         {
             // Remove the maximum element which by logic is the leaf we are looking for
             currNode.setLeft(removeMax(currNode.getLeft()).getItem1());
-            //currNode.balance();
         }
         else if(statusQueueRelation(currNode.getData(), segment))
         {
             currNode.setLeft(removeLeaf(currNode.getLeft(), segment));
-            //currNode.balance();
         }else
         {
             currNode.setRight(removeLeaf(currNode.getRight(), segment));
-            //currNode.balance();
         }
         return currNode;
     }

@@ -16,8 +16,9 @@ import java.util.ArrayList;
  */
 public class Tree<T extends Comparable<T>> extends Group
 {
-    private static final float minDistX = 25;
-    private static final float minDistY = 50;
+    private static final float maxDistX = 600;
+    private static final float minDistY = 115;
+    private final int initHeigh;
     private IShapeGen<T> leafShape;
     private IShapeGen<T> innerShape;
 
@@ -52,6 +53,7 @@ public class Tree<T extends Comparable<T>> extends Group
         this.innerShape = innerShape;
         //this.getChildren().addAll(getAllNodes(tree,start));
         ArrayList<Node> nodes = new ArrayList<>();
+        initHeigh = tree.getRoot().getHeight();
         recGetAllNodes(tree.getRoot(), start, nodes, null);
         this.getChildren().addAll(nodes);
     }
@@ -63,9 +65,14 @@ public class Tree<T extends Comparable<T>> extends Group
         {
             return;
         }
-        // We continue to explore the tree recursively but we decrease the height
-        Point rightPoint = new Point(curr.x + minDistX * tree.getHeight(), curr.y + minDistY);
-        Point leftPoint = new Point(curr.x - minDistX * tree.getHeight(), curr.y + minDistY);
+        int divBy = 2 * (initHeigh - tree.getHeight());
+        if(divBy == 0)
+        {
+            divBy = 1;
+        }
+        System.out.println((maxDistX / divBy));
+        Point rightPoint= new Point(curr.x + (maxDistX / divBy), curr.y + minDistY);
+        Point leftPoint = new Point(curr.x - (maxDistX / divBy), curr.y + minDistY);
         recGetAllNodes(tree.getRight(), rightPoint, nodes, curr);
         recGetAllNodes(tree.getLeft(), leftPoint, nodes, curr);
         // Then we can start drawing shapes ( so we can avoid lines getting on top of nodes )

@@ -1,13 +1,13 @@
 package ac.umons.be.firstg.segmentintersection.view.pages;
 
 import ac.umons.be.firstg.segmentintersection.controller.PlaneSweepIterable;
+import ac.umons.be.firstg.segmentintersection.model.ComparableSegment;
 import ac.umons.be.firstg.segmentintersection.model.Point;
 import ac.umons.be.firstg.segmentintersection.model.Segment;
-import ac.umons.be.firstg.segmentintersection.view.components.GraphXY;
-import ac.umons.be.firstg.segmentintersection.view.components.IntersectionsTable;
-import ac.umons.be.firstg.segmentintersection.view.components.SegmentsTable;
+import ac.umons.be.firstg.segmentintersection.view.components.*;
 import ac.umons.be.firstg.segmentintersection.view.interfaces.ILambdaEvent;
 import ac.umons.be.firstg.segmentintersection.view.interfaces.IObjectGen;
+import ac.umons.be.firstg.segmentintersection.view.interfaces.IShapeGen;
 import ac.umons.be.firstg.segmentintersection.view.utils.CustomConverter;
 import ac.umons.be.firstg.segmentintersection.view.utils.Icon;
 import javafx.beans.property.ObjectProperty;
@@ -16,6 +16,7 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.geometry.Side;
 import javafx.scene.Node;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
@@ -553,6 +554,7 @@ public class MainPage extends HBox
         //      Tree Buttons
         Button statusTreeButton = createButton(50,"BTreeIcon.png");
         statusTreeButton.setBackground(new Background(new BackgroundFill(Color.ORANGE, CornerRadii.EMPTY, Insets.EMPTY)));
+        statusTreeButton.setOnAction(e -> showStatusTree());
         Button pointQueueButton = createButton(50,"BTreeIcon.png");
         pointQueueButton.setBackground(new Background(new BackgroundFill(Color.GREENYELLOW, CornerRadii.EMPTY, Insets.EMPTY)));
         HBox treeButtonsBox = new HBox();
@@ -721,5 +723,31 @@ public class MainPage extends HBox
         }
 
 
+    }
+
+
+    public void showStatusTree()
+    {
+        Stage TWindow = new Stage();
+        TWindow.setTitle("Status Tree");
+        TWindow.show();
+        TWindow.setResizable(true);
+        TWindow.setMinWidth(400);
+        TWindow.setMinHeight(400);
+
+        IShapeGen<ComparableSegment> genLeaf = x -> new TreeSegmentNode(x,false, Color.AQUA);
+        IShapeGen<ComparableSegment> genNode = x -> new TreeSegmentNode(x,true);
+
+        Tree<ComparableSegment> tree = new Tree<>(planeSweeps.getPlaneSweep().getStatusQueue(),
+                                                  new Point(300, 300),
+                                                genLeaf,
+                                                genNode);
+        ScrollPane scrollPane = new ScrollPane(tree);
+        HBox box = new HBox(scrollPane);
+        box.setFillHeight(true);
+        box.setAlignment(Pos.CENTER);
+
+        Scene sceneT = new Scene(box, 600, 600);
+        TWindow.setScene(sceneT);
     }
 }
