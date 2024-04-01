@@ -334,7 +334,7 @@ public class StatusQueue extends AVL<ComparableSegment>
         rightN = curr.getRight() == null ? null : curr.getRight().lookForMinimum().getData();
         // If the last movement we did was going right, then we can easily find the left node
         // it will simply the maximum of the left child of the father of the inner node
-        if(lastLeft != null)
+        if(lastLeft != null && curr.getLeft().getData().equals(k))
         {
             leftN = lastLeft.getLeft().lookForMaximum().getData();
         }else

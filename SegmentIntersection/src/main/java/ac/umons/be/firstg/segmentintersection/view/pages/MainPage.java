@@ -1,6 +1,7 @@
 package ac.umons.be.firstg.segmentintersection.view.pages;
 
 import ac.umons.be.firstg.segmentintersection.controller.PlaneSweepIterable;
+import ac.umons.be.firstg.segmentintersection.controller.utils.Generator;
 import ac.umons.be.firstg.segmentintersection.model.ComparableSegment;
 import ac.umons.be.firstg.segmentintersection.model.Point;
 import ac.umons.be.firstg.segmentintersection.model.Segment;
@@ -120,7 +121,7 @@ public class MainPage extends HBox
         Button playButton = createButton(50,"PlaybackButtonIcon.png");
         playButton.setOnAction(e -> nextSL());
         Button restartButton = createButton(50,"RestartButtonIcon.png");
-
+        restartButton.setOnAction(e -> randomMap());
         timelinePane.getChildren().addAll(playButton, restartButton);
     }
 
@@ -723,6 +724,21 @@ public class MainPage extends HBox
         }
 
 
+    }
+
+    private void randomMap()
+    {
+        Generator generator = new Generator(10);
+        ArrayList<Segment> segments = generator.generate();
+        segmentsTable.addAll(segments);
+        graph.addSegments(segments);
+        try
+        {
+            createSweepLine(segments);
+        } catch (Exception e)
+        {
+            throw new RuntimeException(e);
+        }
     }
 
 
