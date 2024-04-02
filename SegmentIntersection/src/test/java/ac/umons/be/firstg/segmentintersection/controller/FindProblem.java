@@ -19,13 +19,13 @@ public class FindProblem
         System.out.println("size" + new PlaneSweepIterable(segments).getIntersections().size());
         System.out.println("size" + NaiveIntersection.getIntersections(segments).size());
 
-        while(new PlaneSweepIterable(segments).getIntersections().size() == NaiveIntersection.getIntersections(segments).size())
+        while(true)
         {
             segments = generator.generate();
+            Parser.saveSegments(segments,"/home/foucart/Bureau/Git/segments_intersection/SegmentIntersection/src/test/resources/problem.txt");
             System.out.println("size" + new PlaneSweepIterable(segments).getIntersections().size());
             System.out.println("size" + NaiveIntersection.getIntersections(segments).size());
         }
-        Parser.saveSegments(segments,"/Users/julienladeuze/Desktop/bac3Stuff/segments_intersection/SegmentIntersection/src/test/resources/problem.txt");
     }
 
     public static void main(String[] args) throws Exception

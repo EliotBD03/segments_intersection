@@ -184,27 +184,58 @@ public class StatusQueue extends AVL<ComparableSegment>
     public Pair<ComparableSegment, ComparableSegment> getNeighbours(Point k) throws IllegalArgumentException
     {
         Node<ComparableSegment> curr = root;
+        Node<ComparableSegment> father = root;
         if(curr == null)
             return new Pair<>(null,null);
-        Point p = Segment.getPointOnXAxis(k, curr.getData());
         ComparableSegment leftN = null;
         ComparableSegment rightN = null;
-        while(!curr.isLeaf() && greaterThan(p.x, k.x))
+        boolean maxBound = false;
+        Node<ComparableSegment> lastRightTurn = null;
+        boolean wentLeft = getNextDir(curr.getData(), k);
+        while(!maxBound)
         {
-            curr = curr.getLeft();
-            p = Segment.getPointOnXAxis(k, curr.getData());
+            if(getNextDir(curr.getData(),k))
+            {
+                if(!wentLeft)
+                {
+                    maxBound = true;
+                }
+                curr = curr.getLeft();
+                if(curr.isLeaf())
+                    return new Pair<>(null, curr.getData());
+            }
+            else
+            {
+                if(wentLeft)
+                {
+                    maxBound = true;
+                }
+                lastRightTurn = curr;
+                curr = curr.getRight();
+                if(curr == null)
+                    return new Pair<>(lastRightTurn.getData(), null);
+            }
         }
-        leftN = curr.getData();
-        while (curr.getRight() != null && lessThan(p.x, k.x))
+        System.out.println("father:");
+        System.out.println(lastRightTurn);
+        System.out.println("Curr");
+        System.out.println(curr);
+        if(lastRightTurn == null)
         {
-            curr = curr.getRight();
-            p = Segment.getPointOnXAxis(k, curr.getData());
+            leftN = curr.getData();
+            rightN = curr.getRight() != null ? null: curr.getRight().lookForMinimum().getData();
         }
-        rightN = curr.isLeaf() ? curr.getData(): curr.getLeft().lookForMinimum().getData();
-
+        else
+        {
+            leftN = lastRightTurn.getData();
+            rightN = curr.isLeaf() ?curr.getData():  curr.getLeft().lookForMinimum().getData();
+        }
         return new Pair<>(leftN, rightN);
 
     }
+
+
+
 
     /**
      * Finds all the segments containing the point k, and adds them inside the given list L and C
@@ -257,48 +288,6 @@ public class StatusQueue extends AVL<ComparableSegment>
                 findSegments(current.getRight(), k, L, C);
 
         }
-    }
-
-
-    /**
-     * Finds a pair of segments with the first segment being the leftmost and the second
-     * the rightmost segment in this statusQueue that both contains k (if they exist)
-     * @param k
-     * @return  The
-     */
-    public Pair<ComparableSegment, ComparableSegment> findLeftmostRightmost(Point k)
-    {
-        // Return the left and right leaves
-        Node<ComparableSegment> root = getClosestRoot(k);
-        Node<ComparableSegment> father = root;
-        Node<ComparableSegment> tmp = father;
-        ComparableSegment sL = null;
-        ComparableSegment sR = null;
-        Point p;
-        System.out.println("Looking for: " + k);
-
-        if (father != null)
-        {
-            System.out.println("father");
-            System.out.println(father);
-            tmp = father.getLeft();
-            while (!tmp.isLeaf() && Segment.getClosestPointOnXAxis(currStatus, tmp.getData()).equals(k))
-            {
-                System.out.println(tmp);
-                father = tmp;
-                tmp = tmp.getLeft();
-            }
-            sL = father.getLeft().lookForMaximum().getData();
-            father = root;
-            tmp = root;
-            while (tmp != null && Segment.getClosestPointOnXAxis(currStatus, tmp.getData()).equals(k))
-            {
-                father = tmp;
-                tmp = tmp.getRight();
-            }
-            sR = father.getLeft().lookForMaximum().getData();
-        }
-        return new Pair<>(sL, sR);
     }
 
 
@@ -393,7 +382,7 @@ public class StatusQueue extends AVL<ComparableSegment>
         double o2 = Math.toDegrees(Math.atan(-other.a/other.b));
 
         if(almostEqual(o1, o2))
-            throw new IllegalArgumentException("daddy i can only fit one >w<");
+            throw new IllegalArgumentException("Overlapping segments !");
 
         if (almostLessEqual(o1,0))
         {
@@ -420,6 +409,18 @@ public class StatusQueue extends AVL<ComparableSegment>
         }
         System.out.println("o1: " + o1 + " | o2:" +o2);
         return greaterThan(o1,o2);
+    }
+
+    /**
+     *
+     * @param curr
+     * @param p this point has to not be part of the given segment
+     * @return True, means that you have to go left, False means that you have to go right
+     */
+    private boolean getNextDir(ComparableSegment curr, Point p)
+    {
+        Point p2 = Segment.getPointOnXAxis(p, curr);
+        return greaterThan(p2.x, p.x);
     }
 
 }
