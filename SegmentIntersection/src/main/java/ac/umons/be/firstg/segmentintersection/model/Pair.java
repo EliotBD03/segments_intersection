@@ -10,8 +10,8 @@ import java.util.Objects;
  */
 public class Pair<T,P>
 {
-    private final T item1;
-    private final P item2;
+    private T item1;
+    private P item2;
 
     /**
      * Basic constructor to create a pair containing two values
@@ -41,6 +41,24 @@ public class Pair<T,P>
         return item2;
     }
 
+
+    /**
+     * Sets the first item of the tuple
+     * @param item1 the item to replace the first item with
+     */
+    public void setItem1(T item1)
+    {
+        this.item1 = item1;
+    }
+    /**
+     * Sets the second item of the tuple
+     * @param item2 the item to replace the second item with
+     */
+    public void setItem2(P item2)
+    {
+        this.item2 = item2;
+    }
+
     @Override
     public String toString()
     {
@@ -49,6 +67,8 @@ public class Pair<T,P>
                 ", item2=" + item2 +
                 '}';
     }
+
+
 
     @Override
     public boolean equals(Object o)

@@ -81,4 +81,10 @@ public class CDouble
     {
         return ! almostGreaterEqual(d1, d2);
     }
+
+
+    public static boolean withinBound(double d, double lowerBound, double upperBound)
+    {
+        return almostGreaterEqual(d,  lowerBound) && almostLessEqual(d, upperBound);
+    }
 }
