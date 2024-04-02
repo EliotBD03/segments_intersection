@@ -183,14 +183,26 @@ public class StatusQueue extends AVL<ComparableSegment>
      */
     public Pair<ComparableSegment, ComparableSegment> getNeighbours(Point k) throws IllegalArgumentException
     {
-        Node<ComparableSegment> father = getClosestRoot(k);
-        // Return the left and right leaves
-        //System.out.println("k" + k);
-        //System.out.println("curr " + currStatus);
-        if(root == null)
-            return new Pair<>(null, null);
-        return new Pair<>(  father.getLeft() != null ? father.getLeft().lookForMaximum().getData(): null,
-                            father.getRight() != null ? father.getRight().lookForMinimum().getData(): null);
+        Node<ComparableSegment> curr = root;
+        if(curr == null)
+            return new Pair<>(null,null);
+        Point p = Segment.getPointOnXAxis(k, curr.getData());
+        ComparableSegment leftN = null;
+        ComparableSegment rightN = null;
+        while(!curr.isLeaf() && greaterThan(p.x, k.x))
+        {
+            curr = curr.getLeft();
+            p = Segment.getPointOnXAxis(k, curr.getData());
+        }
+        leftN = curr.getData();
+        while (curr.getRight() != null && lessThan(p.x, k.x))
+        {
+            curr = curr.getRight();
+            p = Segment.getPointOnXAxis(k, curr.getData());
+        }
+        rightN = curr.isLeaf() ? curr.getData(): curr.getLeft().lookForMinimum().getData();
+
+        return new Pair<>(leftN, rightN);
 
     }
 
