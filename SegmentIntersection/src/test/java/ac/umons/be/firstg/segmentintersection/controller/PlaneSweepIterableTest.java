@@ -38,7 +38,7 @@ class PlaneSweepIterableTest {
          */
 
 
-        Parser parser = new Parser(Parser.getPathFromResource("/test2.txt"));
+        Parser parser = new Parser(Parser.getPathFromResource("/problem.txt"));
         PlaneSweepIterable ps2 = new PlaneSweepIterable(parser.getSegmentsFromFile());
         ArrayList<Point> intersections = new ArrayList<>();
         for(PlaneSweep planeSweep : ps2)

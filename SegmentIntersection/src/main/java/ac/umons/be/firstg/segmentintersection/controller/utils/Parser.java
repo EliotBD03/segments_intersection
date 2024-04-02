@@ -3,10 +3,7 @@ package ac.umons.be.firstg.segmentintersection.controller.utils;
 import ac.umons.be.firstg.segmentintersection.model.Segment;
 import ac.umons.be.firstg.segmentintersection.model.StatusQueue;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 import java.net.URISyntaxException;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -17,7 +14,7 @@ import java.util.Arrays;
  */
 public class Parser
 {
-    private String path;
+    private String inputPath;
 
     /**
      * Verify if the file is a txt file.
@@ -25,7 +22,7 @@ public class Parser
      */
     private boolean isATxtFile()
     {
-        return this.path.substring(this.path.length() - 3).equals("txt");
+        return this.inputPath.substring(this.inputPath.length() - 3).equals("txt");
     }
 
     /**
@@ -54,7 +51,7 @@ public class Parser
     {
         if(isATxtFile())
         {
-            try(BufferedReader buffer = new BufferedReader(new FileReader(path)))
+            try(BufferedReader buffer = new BufferedReader(new FileReader(inputPath)))
             {
                 String line;
                 int line_counter = 1;
@@ -68,7 +65,7 @@ public class Parser
             }
         }
         else
-            throw new IOException("The file <"+path+"> is not a txt file");
+            throw new IOException("The file <"+ inputPath +"> is not a txt file");
     }
 
     /**
@@ -82,7 +79,7 @@ public class Parser
         File supposedFile = new File(txtFilePath);
 
         if(supposedFile.exists() && !supposedFile.isDirectory())
-            this.path = txtFilePath;
+            this.inputPath = txtFilePath;
         else
             throw new IOException("The file <"+ txtFilePath +"> does not exist");
     }
@@ -99,7 +96,7 @@ public class Parser
         checkIntegrityOfFile();
         ArrayList<Segment> result = new ArrayList<>();
 
-        try(BufferedReader buffer = new BufferedReader(new FileReader(path)))
+        try(BufferedReader buffer = new BufferedReader(new FileReader(inputPath)))
         {
             String line;
             int id = 1;
@@ -123,5 +120,23 @@ public class Parser
     public static String getPathFromResource(String filePathFromResource) throws URISyntaxException
     {
         return Paths.get(StatusQueue.class.getResource(filePathFromResource).toURI()).toString();
+    }
+
+    public static void saveSegments(ArrayList<Segment> segments, String outputFilePath)
+    {
+        try(BufferedWriter buffer = new BufferedWriter(new FileWriter(outputFilePath)))
+        {
+            for(Segment segment : segments)
+            {
+                buffer.write(String.format("%.2f", segment.getUpperPoint().x) + " "
+                        + String.format("%.2f", segment.getUpperPoint().y) + " "
+                        + String.format("%.2f", segment.getLowerPoint().x) + " "
+                        + String.format("%.2f", segment.getLowerPoint().y) + "\n");
+            }
+        } catch (IOException e)
+        {
+            System.out.println("cannot write in the file" + outputFilePath);
+            throw new RuntimeException();
+        }
     }
 }

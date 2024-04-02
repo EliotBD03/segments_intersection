@@ -1,5 +1,6 @@
 package ac.umons.be.firstg.segmentintersection.controller;
 
+import ac.umons.be.firstg.segmentintersection.model.Point;
 import ac.umons.be.firstg.segmentintersection.model.PointQueue;
 import ac.umons.be.firstg.segmentintersection.model.Segment;
 
@@ -59,6 +60,17 @@ public class PlaneSweepIterable implements Iterable<PlaneSweep>
 
             }
         };
+    }
+
+    public ArrayList<Point> getIntersections()
+    {
+        ArrayList<Point> result = new ArrayList<>();
+        for(PlaneSweep planeSweep : this)
+        {
+            if(planeSweep.getIntersection() != null)
+                result.add(planeSweep.getIntersection());
+        }
+        return result;
     }
 
     public PlaneSweep getPlaneSweep()

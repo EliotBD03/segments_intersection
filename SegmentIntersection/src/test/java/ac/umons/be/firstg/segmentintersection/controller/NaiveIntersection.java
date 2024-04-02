@@ -12,7 +12,7 @@ public class NaiveIntersection
         ArrayList<Point> result = new ArrayList<>();
         for(int i = 0; i < testSet.size(); i++)
         {
-            for(int j = i + 1; j < testSet.size(); j++)
+            for(int j = 0; j < testSet.size(); j++)
             {
                 if(!testSet.get(i).equals(testSet.get(j)))
                 {
