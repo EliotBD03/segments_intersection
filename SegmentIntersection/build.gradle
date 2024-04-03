@@ -42,6 +42,9 @@ dependencies {
 
 test {
     useJUnitPlatform()
+    testLogging{
+        showStandardStreams = true
+    }
 }
 
 jlink {

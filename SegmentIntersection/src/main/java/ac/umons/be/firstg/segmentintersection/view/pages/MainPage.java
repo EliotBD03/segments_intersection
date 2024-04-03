@@ -11,6 +11,9 @@ import ac.umons.be.firstg.segmentintersection.view.interfaces.IObjectGen;
 import ac.umons.be.firstg.segmentintersection.view.interfaces.IShapeGen;
 import ac.umons.be.firstg.segmentintersection.view.utils.CustomConverter;
 import ac.umons.be.firstg.segmentintersection.view.utils.Icon;
+import javafx.animation.Animation;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.geometry.Insets;
@@ -25,6 +28,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.*;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 import javafx.util.Pair;
 import javafx.util.StringConverter;
 import javafx.util.converter.DoubleStringConverter;
@@ -51,7 +55,6 @@ public class MainPage extends HBox
     private IntersectionsTable intersectionsTable;
     private SegmentsTable segmentsTable;
     private GraphXY graph;
-    private boolean tabClosed;
     private Tab currentTab;
 
     // Graph Settings
@@ -67,6 +70,12 @@ public class MainPage extends HBox
     // Sweep Line
     private PlaneSweepIterable planeSweeps;
     private boolean planeSweepStarted;
+    private boolean isFastPlaying;
+    private Timeline timeline;
+    private KeyFrame keyFrame;
+    private ChoiceBox<Double> speedChoice;
+    private Button fastPlayButton;
+    private Button nextStepButton;
 
 
     // Map Settings
@@ -118,11 +127,18 @@ public class MainPage extends HBox
         timelinePane.setAlignment(Pos.CENTER);
         timelinePane.setPadding(new Insets(10, 10, 10, 10));
         timelinePane.setSpacing(20);
-        Button playButton = createButton(50,"PlaybackButtonIcon.png");
-        playButton.setOnAction(e -> nextSL());
+        // Speed Button
+        speedChoice = new ChoiceBox<>();
+        speedChoice.getItems().addAll(0.25, 0.5, 1d, 2d, 4d, 6d, 8d, 10d);
+        speedChoice.getSelectionModel().select(2);
+        // Fast/ Pause play button
+        fastPlayButton = createButton(50,"FastPlayIcon.png");
+        fastPlayButton.setOnAction(e -> fastPlay());
+        nextStepButton = createButton(50,"PlaybackButtonIcon.png");
+        nextStepButton.setOnAction(e -> nextSL());
         Button restartButton = createButton(50,"RestartButtonIcon.png");
         restartButton.setOnAction(e -> randomMap());
-        timelinePane.getChildren().addAll(playButton, restartButton);
+        timelinePane.getChildren().addAll(speedChoice, fastPlayButton, nextStepButton, restartButton);
     }
 
     private void createTabs()
@@ -202,37 +218,37 @@ public class MainPage extends HBox
      */
     private void handleTabInteraction(boolean closing)
     {
-        System.out.println("_-_-_");
+        //System.out.println("_-_-_");
         if(tabPane.getSelectionModel().getSelectedItem() == null)
         {
-            System.out.println("Nothing was selected");
+            //System.out.println("Nothing was selected");
             return;
         }
         if(currentTab == null && !closing)
         {
-            System.out.println("no tab is open and is opening: " + tabPane.getSelectionModel().getSelectedIndex());
+            //System.out.println("no tab is open and is opening: " + tabPane.getSelectionModel().getSelectedIndex());
             currentTab = tabPane.getSelectionModel().getSelectedItem();
-            System.out.println("Selected: " + tabPane.getSelectionModel().getSelectedIndex());
+            //System.out.println("Selected: " + tabPane.getSelectionModel().getSelectedIndex());
             if(currentTab == null)
                 return;
             currentTab.getContent().setVisible(true);
         }// If a tab is open and is closing
         else if (currentTab != null && closing)
         {
-            System.out.println("a tab is open and is closing");
+            //System.out.println("a tab is open and is closing");
             currentTab.getContent().setVisible(false);
-            System.out.println("Just Cleared !");
+            //System.out.println("Just Cleared !");
             tabPane.getSelectionModel().clearSelection();
             graphPane.requestFocus();
 
-            System.out.println("What remains: " + tabPane.getSelectionModel().getSelectedIndex());
+            //System.out.println("What remains: " + tabPane.getSelectionModel().getSelectedIndex());
             currentTab = null;
         }
         // If a tab is open and is opening -> Close previous tab, show the content of the new one and change current tab
         else if (currentTab != null)
         {
-            System.out.println("a tab is open and is opening");
-            System.out.println("Selected: " + tabPane.getSelectionModel().getSelectedIndex());
+            //System.out.println("a tab is open and is opening");
+            //System.out.println("Selected: " + tabPane.getSelectionModel().getSelectedIndex());
             currentTab.getContent().setVisible(false);
             currentTab = tabPane.getSelectionModel().getSelectedItem();
 
@@ -240,11 +256,12 @@ public class MainPage extends HBox
                 return;
             currentTab.getContent().setVisible(true);
         }
-        System.out.println("current tab: " + currentTab + " after "  + closing);
-        System.out.println(xScaleInputs.get());
+        //System.out.println("current tab: " + currentTab + " after "  + closing);
+        //System.out.println(xScaleInputs.get());
         // If no tab is open and is opening
         // If no tab is open and is closing -> nothing happens
     }
+
 
     //______________________________Formatters
     /**
@@ -259,7 +276,6 @@ public class MainPage extends HBox
         TextFormatter<Double> textFormatter = new TextFormatter<>(stringConverter);
         setFormatter(tf, property, textFormatter, event);
     }
-
     /**
      * Create an integer formatter for the given textField and assigns the desired property
      * @param tf        The textField
@@ -334,18 +350,14 @@ public class MainPage extends HBox
         }
         return box;
     }
+
     private Button createButton(int buttonSize, String iconName)
     {
         Button button = new Button();
         button.setPrefSize(buttonSize,buttonSize);
         button.setMinSize(buttonSize,buttonSize);
         button.setMaxSize(buttonSize,buttonSize);
-
-        ImageView buttonIcon = Icon.getIcon(this.getClass(), iconName, 1);
-        buttonIcon.fitWidthProperty().bind(button.widthProperty());
-        buttonIcon.fitHeightProperty().bind(button.heightProperty());
-        button.setGraphic(buttonIcon);
-
+        Icon.setButtonIcon(this.getClass(), iconName, button);
         return button;
     }
 
@@ -421,7 +433,6 @@ public class MainPage extends HBox
 
 
     }
-
     /**
      * Fills the mapTab with all the necessary inputs for the user
      * @param mapTab The tab to fill
@@ -572,6 +583,7 @@ public class MainPage extends HBox
     }
 
     //______________Input Handlers__________________
+
     private void showFiles() throws Exception
     {
         FileChooser fileChooser = new FileChooser();
@@ -584,7 +596,6 @@ public class MainPage extends HBox
             loadMap();
         }
     }
-
 
     /**
      * Resets the graph and table
@@ -685,8 +696,8 @@ public class MainPage extends HBox
         graph.removeSegmentFrom(segment);
     }
 
-    //______________Sweep Line Algo__________________
 
+    //______________Sweep Line Algo__________________
 
     private void createSweepLine(ArrayList<Segment> segments) throws Exception
     {
@@ -724,6 +735,51 @@ public class MainPage extends HBox
         }
 
 
+    }
+
+    private void fastPlay()
+    {
+        if(!isFastPlaying)
+        {
+            isFastPlaying = true;
+            // Change icon to pauseIcon
+            Icon.setButtonIcon(this.getClass(), "PauseIcon.png", fastPlayButton);
+            if(timeline == null)
+            {
+                timeline = new Timeline();
+                timeline.setCycleCount(Animation.INDEFINITE);
+
+            }
+            keyFrame = new KeyFrame(Duration.seconds(0.5d / speedChoice.getValue()), event ->
+            {
+                nextSL();
+                // If it's over, stop fast play
+                if(!planeSweeps.iterator().hasNext())
+                    stopFastPlay();
+            });
+            timeline.getKeyFrames().clear();
+            timeline.getKeyFrames().add(keyFrame);
+            timeline.play();
+            // Disable speed choice during animation so to not confuse the user
+            // And the regular next step button
+            speedChoice.setDisable(true);
+            nextStepButton.setDisable(true);
+        }
+
+        else
+        {
+            stopFastPlay();
+        }
+    }
+    private void stopFastPlay()
+    {
+        // Supposedly the timeline had to have been created before starting
+        isFastPlaying = false;
+        timeline.stop();
+        // Switch back icon to fastPlayIcon
+        Icon.setButtonIcon(this.getClass(), "FastPlayIcon.png", fastPlayButton);
+        speedChoice.setDisable(false);
+        nextStepButton.setDisable(false);
     }
 
     private void randomMap()
