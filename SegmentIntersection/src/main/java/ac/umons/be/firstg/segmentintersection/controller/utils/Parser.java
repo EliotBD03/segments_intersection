@@ -15,6 +15,7 @@ import java.util.Arrays;
 public class Parser
 {
     private String inputPath;
+    private int current;
 
     /**
      * Verify if the file is a txt file.
@@ -76,6 +77,18 @@ public class Parser
      */
     public Parser(String txtFilePath) throws IOException
     {
+        this(txtFilePath, 1);
+    }
+    /**
+     * Default constructor of the Parser object
+     *
+     * @param txtFilePath the file path
+     * @param startingId The starting id of the segments
+     * @throws IOException if the file does not exist.
+     */
+    public Parser(String txtFilePath, int startingId) throws IOException
+    {
+        this.current = startingId;
         File supposedFile = new File(txtFilePath);
 
         if(supposedFile.exists() && !supposedFile.isDirectory())
@@ -99,7 +112,6 @@ public class Parser
         try(BufferedReader buffer = new BufferedReader(new FileReader(inputPath)))
         {
             String line;
-            int id = 1;
             while( (line = buffer.readLine()) != null)
             {
                 Double[] parsedLine = Arrays.stream(line.split("\\s"))
@@ -110,8 +122,8 @@ public class Parser
                 for(int i = 0; i < parsedLine.length; i++)
                     coordinates[i] = parsedLine[i];
 
-                result.add(new Segment(coordinates, "s_" + id));
-                id ++;
+                result.add(new Segment(coordinates, "s_" + current));
+                current ++;
             }
         }
         return result;
@@ -138,5 +150,14 @@ public class Parser
             System.out.println("cannot write in the file" + outputFilePath);
             throw new RuntimeException();
         }
+    }
+
+    /**
+     * Gets the (last given id + 1) to a segment while parsing
+     * @return  The last id given + 1
+     */
+    public int getCurrent()
+    {
+        return current;
     }
 }

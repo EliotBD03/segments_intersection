@@ -412,7 +412,7 @@ public class StatusQueue extends AVL<ComparableSegment>
         double o2 = Math.toDegrees(Math.atan(-other.a/other.b));
 
         if(almostEqual(o1, o2))
-            throw new IllegalArgumentException("Overlapping segments !");
+            throw new IllegalArgumentException("The segment " + curr.id + " and " + other.id +" are overlapping");
 
         if (almostLessEqual(o1,0))
         {
@@ -439,18 +439,6 @@ public class StatusQueue extends AVL<ComparableSegment>
         }
         System.out.println("o1: " + o1 + " | o2:" +o2);
         return greaterThan(o1,o2);
-    }
-
-    /**
-     *
-     * @param curr
-     * @param p this point has to not be part of the given segment
-     * @return True, means that you have to go left, False means that you have to go right
-     */
-    private boolean getNextDir(ComparableSegment curr, Point p)
-    {
-        Point p2 = Segment.getPointOnXAxis(p, curr);
-        return greaterThan(p2.x, p.x);
     }
 
 }

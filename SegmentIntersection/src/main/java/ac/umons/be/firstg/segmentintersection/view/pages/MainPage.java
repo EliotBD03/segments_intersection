@@ -54,6 +54,7 @@ public class MainPage extends HBox
 
     private IntersectionsTable intersectionsTable;
     private SegmentsTable segmentsTable;
+    private int currentId = 1;
     private GraphXY graph;
     private Tab currentTab;
 
@@ -588,7 +589,6 @@ public class MainPage extends HBox
     {
         FileChooser fileChooser = new FileChooser();
         File selection = fileChooser.showOpenDialog(primaryStage);
-        System.out.println("hi");
         if((file != null && !file.equals(selection)) || selection != null)
         {
             file = selection;
@@ -605,6 +605,7 @@ public class MainPage extends HBox
     {
         graph.resetGraph();
         segmentsTable.resetTable();
+        currentId = 1;
         fileNameLabel.setText("No file selected");
     }
 
@@ -628,17 +629,17 @@ public class MainPage extends HBox
     /**
      * Loads the segments contained in the selected file if it was changed since last call
      */
-    private void loadMap() throws Exception
+    private void loadMap()
     {
         if(fileHasChanged && file!= null)
         {
-            // Reset
-            resetMap();
             fileHasChanged = false;
             try
             {
-                Parser parser = new Parser(file.getPath());
+                Parser parser = new Parser(file.getPath(), currentId);
                 ArrayList<Segment> segmentsList = parser.getSegmentsFromFile();
+                // Get next id
+                currentId = parser.getCurrent();
                 segmentsTable.addAll(segmentsList);
                 graph.addSegments(segmentsList);
                 resetGraphSweepLine();
@@ -647,7 +648,7 @@ public class MainPage extends HBox
             {
                 Alert alert = new Alert(Alert.AlertType.ERROR, "There was a problem while trying to read the file: " + file.getName() + "\n\n"
                             + e);
-                alert.setTitle("Invalid file");
+                alert.setTitle("Invalid File");
                 alert.show();
             }
         }
@@ -685,8 +686,8 @@ public class MainPage extends HBox
         Point point1 = new Point(getValueGen.createObject(x1PointInput), getValueGen.createObject(y1PointInput));
         Point point2 = new Point(getValueGen.createObject(x2PointInput), getValueGen.createObject(y2PointInput));
 
-        Segment segmentTMP = new Segment(point1, point2, "tmp id");
-
+        Segment segmentTMP = new Segment(point1, point2, "s_" + currentId);
+        currentId ++;
         // Add segment to the graph and the table
         graph.addSegments(List.of(segmentTMP));
         segmentsTable.addSegment(segmentTMP);
@@ -748,12 +749,14 @@ public class MainPage extends HBox
                         intersectionsTable.addIntersection(inter, inter.getIntersections());
                     graph.moveSweepLine(planeSweeps.getPlaneSweep().getCurrentPoint(), planeSweeps.getPlaneSweep().getUpper(), planeSweeps.getPlaneSweep().getLower(), planeSweeps.getPlaneSweep().getInner());
 
-                }catch (IllegalArgumentException e)
+                }catch (Exception e)
                 {
                     Alert alert = new Alert(Alert.AlertType.ERROR, "There was a problem during the sweepLine algorithm" + "\n\n"
                             + e);
                     alert.setTitle("Sweep Line Algorithm Error");
                     alert.show();
+                    // Stop sweep line execution
+                    resetGraphSweepLine();
                 }
             }
             else
