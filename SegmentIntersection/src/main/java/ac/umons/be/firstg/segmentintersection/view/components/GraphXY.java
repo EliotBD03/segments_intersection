@@ -11,10 +11,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
 import javafx.scene.text.Text;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Stack;
+import java.util.*;
 
 
 /**
@@ -231,6 +228,15 @@ public class GraphXY extends AnchorPane
         updateLegend();
     }
 
+    /**
+     * Returns all contained {@link Segment} contained in this graph
+     * @return The segments contained in this graph
+     */
+    public Set<Segment> getSegments()
+    {
+        return segmentsShown.keySet();
+    }
+
     private void setBoundaries(Iterable<Segment> segments)
     {
         for(Segment segmentTMP: segments)
@@ -251,8 +257,6 @@ public class GraphXY extends AnchorPane
             setBoundaries(segmentsShown.keySet());
         for(Segment segment : segmentsShown.keySet())
         {
-            //System.out.println("Segment: " + segment);
-
             newPosition = new Segment(translatePoint(scalePoint(segment.getUpperPoint())),
                     translatePoint(scalePoint(segment.getLowerPoint())));
             segmentsShown.get(segment).setSegment(newPosition);
@@ -546,8 +550,12 @@ public class GraphXY extends AnchorPane
         }
         if(currSegment != null)
             currSegment.setVisitedPoint(translatePoint(scalePoint(P)));
-        System.out.println("next to set empty: ");
-        System.out.println(toSetActive);
+    }
+
+    public void resetSweepLine()
+    {
+        segmentsShown.keySet().forEach(e ->  segmentsShown.get(e).setActive());
+        initializeSweep();
     }
 
     /**

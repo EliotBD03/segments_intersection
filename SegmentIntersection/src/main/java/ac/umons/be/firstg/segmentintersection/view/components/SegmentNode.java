@@ -54,6 +54,7 @@ public class SegmentNode extends Group implements GraphShape
     public void setActive()
     {
         line.setStroke(Color.BLACK);
+        line.setStrokeWidth(2);
         endPoint2.setActive();
         endPoint1.setActive();
     }

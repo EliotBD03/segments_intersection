@@ -137,7 +137,7 @@ public class MainPage extends HBox
         nextStepButton = createButton(50,"PlaybackButtonIcon.png");
         nextStepButton.setOnAction(e -> nextSL());
         Button restartButton = createButton(50,"RestartButtonIcon.png");
-        restartButton.setOnAction(e -> randomMap());
+        restartButton.setOnAction(e -> resetGraphSweepLine());
         timelinePane.getChildren().addAll(speedChoice, fastPlayButton, nextStepButton, restartButton);
     }
 
@@ -514,7 +514,7 @@ public class MainPage extends HBox
 
         //      Segments table
         segmentsTable = new SegmentsTable(graph);
-        segmentsTable.setRemoveSegmentEvent(segment -> removeSegment(segment));
+        segmentsTable.setRemoveSegmentEvent(this::removeSegment);
         currentMapContent.getChildren().add(segmentsTable);
 
         //      Export and Unload buttons
@@ -638,7 +638,6 @@ public class MainPage extends HBox
             ArrayList<Segment> segmentsList = parser.getSegmentsFromFile();
             segmentsTable.addAll(segmentsList);
             graph.addSegments(segmentsList);
-            createSweepLine(segmentsList);
         }
     }
 
@@ -699,24 +698,28 @@ public class MainPage extends HBox
 
     //______________Sweep Line Algo__________________
 
-    private void createSweepLine(ArrayList<Segment> segments) throws Exception
+    private void createSweepLine() throws Exception
     {
+        ArrayList<Segment> segments = new ArrayList<>(graph.getSegments());
+        if(segments.isEmpty())
+            return;
         planeSweeps = new PlaneSweepIterable(segments);
+        // Init Sweep
+        graph.initializeSweep();
     }
+
 
     private void nextSL()
     {
         if(planeSweeps == null)
-            return;
-
-        // Start plane sweep
-        if(!planeSweepStarted)
         {
-            planeSweepStarted = true;
-            // Init Sweep
-            graph.initializeSweep();
-
-            return;
+            try
+            {
+                createSweepLine();
+            } catch (Exception e)
+            {
+                throw new RuntimeException(e);
+            }
         }
         else
         {
@@ -731,6 +734,7 @@ public class MainPage extends HBox
             else
             {
                 graph.moveSweepLine(planeSweeps.getPlaneSweep().getCurrentPoint(), null, planeSweeps.getPlaneSweep().getLower(), null);
+                planeSweeps = null;
             }
         }
 
@@ -754,7 +758,7 @@ public class MainPage extends HBox
             {
                 nextSL();
                 // If it's over, stop fast play
-                if(!planeSweeps.iterator().hasNext())
+                if(planeSweeps == null || !planeSweeps.iterator().hasNext())
                     stopFastPlay();
             });
             timeline.getKeyFrames().clear();
@@ -773,7 +777,8 @@ public class MainPage extends HBox
     }
     private void stopFastPlay()
     {
-        // Supposedly the timeline had to have been created before starting
+        if(timeline == null)
+            return;
         isFastPlaying = false;
         timeline.stop();
         // Switch back icon to fastPlayIcon
@@ -782,19 +787,29 @@ public class MainPage extends HBox
         nextStepButton.setDisable(false);
     }
 
+    private void resetGraphSweepLine()
+    {
+        // Stop current animation if any
+        stopFastPlay();
+        graph.resetSweepLine();
+        try
+        {
+            createSweepLine();
+        } catch (Exception e)
+        {
+            throw new RuntimeException(e);
+        }
+        // Reset intersection table
+        intersectionsTable.resetTable();
+
+    }
+
     private void randomMap()
     {
         Generator generator = new Generator(10);
         ArrayList<Segment> segments = generator.generate();
         segmentsTable.addAll(segments);
         graph.addSegments(segments);
-        try
-        {
-            createSweepLine(segments);
-        } catch (Exception e)
-        {
-            throw new RuntimeException(e);
-        }
     }
 
 

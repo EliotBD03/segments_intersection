@@ -54,7 +54,6 @@ public class IntersectionsTable extends HBox
      */
     public void addIntersection(Point intersection, List<Segment> segments)
     {
-        int curr = current;
         Map<String, Object> item = new HashMap<>();
         String segmentToString = "";
         for (int i = 0; i < segments.size(); i++)
@@ -68,12 +67,6 @@ public class IntersectionsTable extends HBox
         item.put("inter", intersection.toString());
         item.put("segments", segmentToString);
         Button highlightSegment = new Button("");
-        //ImageView buttonIcon = Icon.getIcon(this.getClass(), "highlightButtonIcon.png", 1);
-        //buttonIcon.setScaleX(1);
-        //buttonIcon.setScaleY(1);
-        //highlightSegment.setGraphic(buttonIcon);
-        //buttonIcon.fitHeightProperty().bind(highlightSegment.heightProperty());
-        //buttonIcon.fitWidthProperty().bind(highlightSegment.widthProperty());
         highlightSegment.setOnAction(e ->{
             tableView.getSelectionModel().select(item);
             if(highlightSegmentsEvent != null)
@@ -86,6 +79,15 @@ public class IntersectionsTable extends HBox
         item.put("highlight", highlightSegment);
         tableView.getItems().add(item);
 
+    }
+
+
+    /**
+     * Clears the table from all intersections
+     */
+    public void resetTable()
+    {
+        tableView.getItems().clear();
     }
 
 
