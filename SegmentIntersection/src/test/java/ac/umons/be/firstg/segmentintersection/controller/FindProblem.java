@@ -14,7 +14,7 @@ public class FindProblem
 {
     public static void findProblem() throws Exception
     {
-        Generator generator = new Generator(15);
+        Generator generator = new Generator(20);
         ArrayList<Segment> segments = generator.generate();
         System.out.println("size" + new PlaneSweepIterable(segments).getIntersections().size());
         System.out.println("size" + NaiveIntersection.getIntersections(segments).size());

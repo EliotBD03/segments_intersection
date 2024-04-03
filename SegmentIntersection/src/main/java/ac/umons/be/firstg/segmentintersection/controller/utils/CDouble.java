@@ -9,7 +9,7 @@ public class CDouble
     /**
      * The threshold value to fight against floating point errors
      */
-    public static final double epsilon = 0.0001d;
+    public static final double epsilon = 0.00001d;
 
     /**
      * A threshold comparison method using {@link CDouble#epsilon}
@@ -50,6 +50,7 @@ public class CDouble
     {
         return compare(d1, d2) >= 0;
     }
+
     /**
      * Checks to see if a value is smaller or equal than another
      * @param d1    One of the value to compare
@@ -71,6 +72,7 @@ public class CDouble
     {
         return ! almostLessEqual(d1, d2);
     }
+
     /**
      * Checks to see if a value is smaller than another
      * @param d1    One of the value to compare
@@ -83,6 +85,13 @@ public class CDouble
     }
 
 
+    /**
+     * Check if a double is part of a bound between a lowerBound and upperBound (inclusive)
+     * @param d             The double to check
+     * @param lowerBound    The lower bound of the set
+     * @param upperBound    The upper bound of the set
+     * @return              True if d is part of the bound, false otherwise
+     */
     public static boolean withinBound(double d, double lowerBound, double upperBound)
     {
         return almostGreaterEqual(d,  lowerBound) && almostLessEqual(d, upperBound);

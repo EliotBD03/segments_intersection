@@ -58,8 +58,8 @@ public class Parser
                 while( (line = buffer.readLine())  != null)
                 {
                     if(!lineContainsFourFloats(line))
-                        throw new IOException("The content of file does not math with the following conditions:" +
-                                "each line contains exactly 4 floating points at line "+ line_counter);
+                        throw new IOException("The content of this file do not match with the following condition:" +
+                                " \nEach line must contain exactly 4 floating points \n At line: "+ line_counter);
                     line_counter++;
                 }
             }

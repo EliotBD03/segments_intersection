@@ -588,6 +588,7 @@ public class MainPage extends HBox
     {
         FileChooser fileChooser = new FileChooser();
         File selection = fileChooser.showOpenDialog(primaryStage);
+        System.out.println("hi");
         if((file != null && !file.equals(selection)) || selection != null)
         {
             file = selection;
@@ -634,10 +635,21 @@ public class MainPage extends HBox
             // Reset
             resetMap();
             fileHasChanged = false;
-            Parser parser = new Parser(file.getPath());
-            ArrayList<Segment> segmentsList = parser.getSegmentsFromFile();
-            segmentsTable.addAll(segmentsList);
-            graph.addSegments(segmentsList);
+            try
+            {
+                Parser parser = new Parser(file.getPath());
+                ArrayList<Segment> segmentsList = parser.getSegmentsFromFile();
+                segmentsTable.addAll(segmentsList);
+                graph.addSegments(segmentsList);
+                resetGraphSweepLine();
+
+            }catch (Exception e)
+            {
+                Alert alert = new Alert(Alert.AlertType.ERROR, "There was a problem while trying to read the file: " + file.getName() + "\n\n"
+                            + e);
+                alert.setTitle("Invalid file");
+                alert.show();
+            }
         }
     }
 
@@ -679,6 +691,8 @@ public class MainPage extends HBox
         graph.addSegments(List.of(segmentTMP));
         segmentsTable.addSegment(segmentTMP);
 
+        // Reset Sweep line algo
+        resetGraphSweepLine();
 
         x1PointInput.setText("");
         x2PointInput.setText("");
@@ -693,6 +707,7 @@ public class MainPage extends HBox
     private void removeSegment(Segment segment)
     {
         graph.removeSegmentFrom(segment);
+        resetGraphSweepLine();
     }
 
 
@@ -726,10 +741,20 @@ public class MainPage extends HBox
             if(planeSweeps.iterator().hasNext())
             {
                 // Next Sweep iteration using U L and C
-                Point inter = planeSweeps.iterator().next().getIntersection();
-                if(inter != null)
-                    intersectionsTable.addIntersection(inter, inter.getIntersections());
-                graph.moveSweepLine(planeSweeps.getPlaneSweep().getCurrentPoint(), planeSweeps.getPlaneSweep().getUpper(), planeSweeps.getPlaneSweep().getLower(), planeSweeps.getPlaneSweep().getInner());
+                try
+                {
+                    Point inter = planeSweeps.iterator().next().getIntersection();
+                    if(inter != null)
+                        intersectionsTable.addIntersection(inter, inter.getIntersections());
+                    graph.moveSweepLine(planeSweeps.getPlaneSweep().getCurrentPoint(), planeSweeps.getPlaneSweep().getUpper(), planeSweeps.getPlaneSweep().getLower(), planeSweeps.getPlaneSweep().getInner());
+
+                }catch (IllegalArgumentException e)
+                {
+                    Alert alert = new Alert(Alert.AlertType.ERROR, "There was a problem during the sweepLine algorithm" + "\n\n"
+                            + e);
+                    alert.setTitle("Sweep Line Algorithm Error");
+                    alert.show();
+                }
             }
             else
             {
