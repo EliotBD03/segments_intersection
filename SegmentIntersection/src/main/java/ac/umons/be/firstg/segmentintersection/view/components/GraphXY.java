@@ -314,7 +314,8 @@ public class GraphXY extends AnchorPane
             getChildren().add(mark);
             markLinesX.add(mark);
         }
-        Text text = (Text) textGen.createNode(new Point(position,20));
+        Text text = (Text) textGen.createNode(new Point(position - 10,25));
+        text.setRotate(-30);
         text.toBack();
         getChildren().add(text);
         legendsX.add(text);
@@ -361,11 +362,11 @@ public class GraphXY extends AnchorPane
 
         for (int i = 0; i < legendsX.size(); i++)
         {
-            legendsX.get(i).setText(Double.toString(tmpMinX + (gapX * i)));
+            legendsX.get(i).setText(String.format("%.2f",tmpMinX + (gapX * i)));
         }
         for (int i = 0; i < legendsY.size(); i++)
         {
-            legendsY.get(i).setText(Double.toString(tmpMinY + (gapY * i)));
+            legendsY.get(i).setText(String.format("%.2f",tmpMinY + (gapY * i)));
         }
 
     }

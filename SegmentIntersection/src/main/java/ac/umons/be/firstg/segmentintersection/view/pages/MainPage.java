@@ -120,12 +120,11 @@ public class MainPage extends HBox
         //  Resize the graph pane with the leftPane
         VBox.setVgrow(graphPane, Priority.ALWAYS);
         graph = new GraphXY(new Point(50,25), 600, 600, 10, 10, 10, 10, true);
+        //graph.setBackground(new Background(new BackgroundFill(Color.PINK, CornerRadii.EMPTY, Insets.EMPTY)));
         graphPane.setContent(graph);
 
         // Creating the TabPane
         createTabs();
-
-
     }
 
     private void createTimeline(HBox timelinePane)
@@ -136,7 +135,7 @@ public class MainPage extends HBox
         // Speed Button
         speedChoice = new ChoiceBox<>();
 
-        speedChoice.getItems().addAll(0.25d, 0.4d, 1d, 2d, 4d, 6d, 8d, 10d);
+        speedChoice.getItems().addAll(0.25d, 0.5d, 1d, 2d, 4d, 6d, 8d, 10d);
         speedChoice.getSelectionModel().select(2);
         // Fast/ Pause play button
         fastPlayButton = createButton(50,"FastPlayIcon.png");
@@ -212,8 +211,6 @@ public class MainPage extends HBox
         tabPane.getSelectionModel().selectedItemProperty().addListener(e -> handleTabInteraction(false));
         //  Stops user from closing tabs
         tabPane.setTabClosingPolicy(TabPane.TabClosingPolicy.UNAVAILABLE);
-
-
     }
 
 
@@ -406,11 +403,11 @@ public class MainPage extends HBox
         content.getChildren().add(encapsTextField(inputField));
 
         inputField = textFieldGen.createObject("Legends X");
-        setIntegerFormatter(inputField, xNbLabelsInputs, null);
+        setIntegerFormatter(inputField, xNbLabelsInputs, event -> hasChanged = true);
         content.getChildren().add(encapsTextField(inputField));
 
         inputField = textFieldGen.createObject("Legends Y");
-        setIntegerFormatter(inputField, yNbLabelsInputs, null);
+        setIntegerFormatter(inputField, yNbLabelsInputs, event -> hasChanged = true);
         content.getChildren().add(encapsTextField(inputField));
 
         HBox box = new HBox();
