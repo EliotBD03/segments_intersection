@@ -526,7 +526,7 @@ public class MainPage extends HBox
         Button exportButton = new Button("Export");
         Button unloadButton = new Button("Unload");
         unloadButton.setOnAction(e -> resetMap());
-        exportButton.setOnAction(e -> export());
+        exportButton.setOnAction(e -> exportSegments());
         HBox buttons = encapsNode(exportButton, unloadButton);
         buttons.setPadding(new Insets(0,20,0,20));
         currentMapContent.getChildren().add(buttons);
@@ -576,14 +576,18 @@ public class MainPage extends HBox
         statusTreeButton.setOnAction(e -> showStatusTree());
         Button pointQueueButton = createButton(50,"BTreeIcon.png");
         pointQueueButton.setBackground(new Background(new BackgroundFill(Color.GREENYELLOW, CornerRadii.EMPTY, Insets.EMPTY)));
-        HBox treeButtonsBox = new HBox();
-        treeButtonsBox.setSpacing(20);
 
-        treeButtonsBox.setAlignment(Pos.CENTER);
-        treeButtonsBox.getChildren().addAll(statusTreeButton, pointQueueButton);
+        Button exportIntersections = new Button("export intersections");
+        exportIntersections.setOnAction(e -> exportIntersections());
+
+        HBox lastRowBox = new HBox();
+        lastRowBox.setSpacing(20);
+
+        lastRowBox.setAlignment(Pos.CENTER);
+        lastRowBox.getChildren().addAll(exportIntersections, statusTreeButton, pointQueueButton);
 
 
-        outer.getChildren().add(treeButtonsBox);
+        outer.getChildren().add(lastRowBox);
 
 
 
@@ -604,12 +608,26 @@ public class MainPage extends HBox
         }
     }
 
-    private void export()
+    private String getOutputFile()
     {
         FileChooser fileChooser = new FileChooser();
         File selection = fileChooser.showSaveDialog(primaryStage);
         if(selection != null)
-            Parser.saveSegments(new ArrayList<>(graph.getSegments()), selection.getPath());
+            return selection.getPath();
+        return null;
+    }
+    private void exportSegments()
+    {
+        String outputPath = getOutputFile();
+        if(outputPath != null)
+            Parser.saveSegments(new ArrayList<>(graph.getSegments()), getOutputFile());
+    }
+
+    private void exportIntersections()
+    {
+        String outputPath = getOutputFile();
+        if(outputPath != null)
+            Parser.saveIntersections(intersectionsTable.getIntersections(), outputPath);
     }
 
     /**
@@ -771,7 +789,7 @@ public class MainPage extends HBox
                 {
                     Point inter = planeSweeps.iterator().next().getIntersection();
                     if(inter != null)
-                        intersectionsTable.addIntersection(inter, inter.getIntersections());
+                        intersectionsTable.addIntersection(inter);
                     graph.moveSweepLine(planeSweeps.getPlaneSweep().getCurrentPoint(), planeSweeps.getPlaneSweep().getUpper(), planeSweeps.getPlaneSweep().getLower(), planeSweeps.getPlaneSweep().getInner());
 
                 }catch (Exception e)

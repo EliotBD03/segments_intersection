@@ -1,5 +1,6 @@
 package ac.umons.be.firstg.segmentintersection.controller.utils;
 
+import ac.umons.be.firstg.segmentintersection.model.Point;
 import ac.umons.be.firstg.segmentintersection.model.Segment;
 import ac.umons.be.firstg.segmentintersection.model.StatusQueue;
 
@@ -151,6 +152,33 @@ public class Parser
             throw new RuntimeException();
         }
     }
+
+    public static void saveIntersections(ArrayList<Point> intersections, String outputFilePath)
+    {
+        try(BufferedWriter buffer = new BufferedWriter(new FileWriter(outputFilePath + ".txt")))
+        {
+            for(Point point : intersections)
+            {
+                buffer.write(String.format("%.2f", point.x) + " "  + String.format("%.2f", point.y) + " ");
+
+                buffer.write("{ ");
+                for(int i = 0; i < point.getIntersections().size() ; i++)
+                {
+                    buffer.write(String.format("%.2f", point.getIntersections().get(i).getLowerPoint().x) + " "
+                            + String.format("%.2f", point.getIntersections().get(i).getLowerPoint().y));
+                    if(i < point.getIntersections().size() - 1)
+                        buffer.write(", ");
+                }
+                buffer.write(" }");
+                buffer.write("\n");
+            }
+        } catch (IOException e)
+        {
+            System.out.println("cannot write in the file" + outputFilePath);
+            throw new RuntimeException();
+        }
+    }
+
 
     /**
      * Gets the (last given id + 1) to a segment while parsing

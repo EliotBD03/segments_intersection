@@ -13,6 +13,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.util.Pair;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -26,6 +27,7 @@ public class IntersectionsTable extends HBox
     private int current;
 
     private ILambdaEvent<Pair<Point, List<Segment>>> highlightSegmentsEvent;
+    private ArrayList<Point> intersections;
 
 
     /**
@@ -42,7 +44,7 @@ public class IntersectionsTable extends HBox
         TableGenerator.addPlaceHolderText(tableView, "No intersections found yet",
                                                     "Try the next iteration");
         getChildren().add(tableView);
-
+        intersections = new ArrayList<>();
         this.graph = graphXY;
 
     }
@@ -50,13 +52,14 @@ public class IntersectionsTable extends HBox
     /**
      * Add an intersection in the table
      * @param intersection  The point of the intersection to add
-     * @param segments      The segment that are intersecting at that point
-     //* @param nbSegments the number of already stored segments inside the intersection table
      */
-    public void addIntersection(Point intersection, List<Segment> segments)
+    public void addIntersection(Point intersection)
     {
+        intersections.add(intersection);
         Map<String, Object> item = new HashMap<>();
         String segmentToString = "";
+
+        ArrayList<Segment> segments = intersection.getIntersections();
         for (int i = 0; i < segments.size(); i++)
         {
             segmentToString = segmentToString.concat(segments.get(i).getId());
@@ -91,6 +94,9 @@ public class IntersectionsTable extends HBox
         tableView.getItems().clear();
     }
 
-
+    public ArrayList<Point> getIntersections()
+    {
+        return intersections;
+    }
 
 }
