@@ -136,7 +136,7 @@ public class Parser
 
     public static void saveSegments(ArrayList<Segment> segments, String outputFilePath)
     {
-        try(BufferedWriter buffer = new BufferedWriter(new FileWriter(outputFilePath)))
+        try(BufferedWriter buffer = new BufferedWriter(new FileWriter(outputFilePath + ".txt")))
         {
             for(Segment segment : segments)
             {
