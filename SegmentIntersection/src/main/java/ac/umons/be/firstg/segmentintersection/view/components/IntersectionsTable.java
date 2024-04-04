@@ -51,6 +51,7 @@ public class IntersectionsTable extends HBox
      * Add an intersection in the table
      * @param intersection  The point of the intersection to add
      * @param segments      The segment that are intersecting at that point
+     //* @param nbSegments the number of already stored segments inside the intersection table
      */
     public void addIntersection(Point intersection, List<Segment> segments)
     {
