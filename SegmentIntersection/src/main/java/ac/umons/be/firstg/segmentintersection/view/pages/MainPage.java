@@ -22,7 +22,6 @@ import javafx.geometry.Side;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.*;
@@ -82,7 +81,7 @@ public class MainPage extends HBox
     // Map Settings
     private Label fileNameLabel;
     private CheckBox showGridInput;
-    private File file;
+    private File inputFile;
     private boolean fileHasChanged = true;
 
     private Button addButton;
@@ -90,6 +89,9 @@ public class MainPage extends HBox
     private TextField y1PointInput = new TextField();
     private TextField x2PointInput = new TextField();
     private TextField y2PointInput = new TextField();
+
+    private int maxDisplayableSegment = 200;
+
 
     public MainPage(Stage primaryStage)
     {
@@ -121,6 +123,7 @@ public class MainPage extends HBox
         // Creating the TabPane
         createTabs();
 
+
     }
 
     private void createTimeline(HBox timelinePane)
@@ -130,7 +133,8 @@ public class MainPage extends HBox
         timelinePane.setSpacing(20);
         // Speed Button
         speedChoice = new ChoiceBox<>();
-        speedChoice.getItems().addAll(0.25, 0.5, 1d, 2d, 4d, 6d, 8d, 10d);
+
+        speedChoice.getItems().addAll(0.25d, 0.4d, 1d, 2d, 4d, 6d, 8d, 10d);
         speedChoice.getSelectionModel().select(2);
         // Fast/ Pause play button
         fastPlayButton = createButton(50,"FastPlayIcon.png");
@@ -522,6 +526,7 @@ public class MainPage extends HBox
         Button exportButton = new Button("Export");
         Button unloadButton = new Button("Unload");
         unloadButton.setOnAction(e -> resetMap());
+        exportButton.setOnAction(e -> export());
         HBox buttons = encapsNode(exportButton, unloadButton);
         buttons.setPadding(new Insets(0,20,0,20));
         currentMapContent.getChildren().add(buttons);
@@ -561,6 +566,7 @@ public class MainPage extends HBox
         outer.getChildren().add(textInfoBox);
 
         //      Segments table
+        int maxSegmentsDisplayable = 200;
         intersectionsTable = new IntersectionsTable(graph);
         VBox.setVgrow(intersectionsTable, Priority.ALWAYS);
         outer.getChildren().add(intersectionsTable);
@@ -585,17 +591,25 @@ public class MainPage extends HBox
 
     //______________Input Handlers__________________
 
-    private void showFiles() throws Exception
+    private void showFiles()
     {
         FileChooser fileChooser = new FileChooser();
         File selection = fileChooser.showOpenDialog(primaryStage);
-        if((file != null && !file.equals(selection)) || selection != null)
+        if((inputFile != null && !inputFile.equals(selection)) || selection != null)
         {
-            file = selection;
-            fileNameLabel.setText(file.getName());
+            inputFile = selection;
+            fileNameLabel.setText(inputFile.getName());
             fileHasChanged = true;
             loadMap();
         }
+    }
+
+    private void export()
+    {
+        FileChooser fileChooser = new FileChooser();
+        File selection = fileChooser.showSaveDialog(primaryStage);
+        if(selection != null)
+            Parser.saveSegments(new ArrayList<>(graph.getSegments()), selection.getPath());
     }
 
     /**
@@ -631,22 +645,33 @@ public class MainPage extends HBox
      */
     private void loadMap()
     {
-        if(fileHasChanged && file!= null)
+        if(fileHasChanged && inputFile != null)
         {
             fileHasChanged = false;
             try
             {
-                Parser parser = new Parser(file.getPath(), currentId);
+                resetMap();
+                Parser parser = new Parser(inputFile.getPath(), currentId);
                 ArrayList<Segment> segmentsList = parser.getSegmentsFromFile();
+
+                if(!speedChoice.getItems().contains(10d))
+                    speedChoice.getItems().add(10d);
+
                 // Get next id
                 currentId = parser.getCurrent();
+
+                if(currentId > maxDisplayableSegment)
+                {
+                    new Alert(Alert.AlertType.WARNING, "Beware that there are too many segments.\nThis will take a lot of memory").show();
+                    speedChoice.getItems().removeLast();
+                }
                 segmentsTable.addAll(segmentsList);
                 graph.addSegments(segmentsList);
                 resetGraphSweepLine();
 
             }catch (Exception e)
             {
-                Alert alert = new Alert(Alert.AlertType.ERROR, "There was a problem while trying to read the file: " + file.getName() + "\n\n"
+                Alert alert = new Alert(Alert.AlertType.ERROR, "There was a problem while trying to read the file: " + inputFile.getName() + "\n\n"
                             + e);
                 alert.setTitle("Invalid File");
                 alert.show();
