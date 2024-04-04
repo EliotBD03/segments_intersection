@@ -1,6 +1,7 @@
 package ac.umons.be.firstg.segmentintersection.view.components;
 
 
+import ac.umons.be.firstg.segmentintersection.model.Point;
 import ac.umons.be.firstg.segmentintersection.model.Segment;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
@@ -9,14 +10,14 @@ import javafx.scene.shape.ArcType;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.*;
 
-public class TreeSegmentNode extends StackPane
+public class TreeNode extends StackPane
 {
-    public TreeSegmentNode(Segment segmentTMP, boolean ringShaped)
+    public TreeNode(Segment segmentTMP, boolean ringShaped)
     {
         this(segmentTMP, ringShaped, Color.GREENYELLOW);
     }
 
-    public TreeSegmentNode(Segment segmentTMP, boolean ringShaped, Color color)
+    public TreeNode(Segment segmentTMP, boolean ringShaped, Color color)
     {
 
         // Create ring
@@ -42,6 +43,21 @@ public class TreeSegmentNode extends StackPane
         Text text = new Text(segmentTMP.getId());
         text.setFont(Font.font("verdana", FontWeight.BOLD, FontPosture.REGULAR, 20));
         getChildren().add(text);
-        //Bounds bounds = localToScene(getBoundsInLocal());
+    }
+
+    public TreeNode(Point point, Color color)
+    {
+        Rectangle rectangle = new Rectangle(70,40);
+        Rectangle clip = new Rectangle(68,38);
+        clip.setFill(color);
+        rectangle.setFill(Color.BLACK);
+        getChildren().add(rectangle);
+        getChildren().add(clip);
+
+
+        // Add text
+        Text text = new Text("x: " + String.format("%.4f", point.x) + "\ny: " + String.format("%.4f", point.y));
+        text.setFont(Font.font("verdana", FontWeight.BOLD, FontPosture.REGULAR,  10));
+        getChildren().add(text);
     }
 }

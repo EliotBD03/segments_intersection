@@ -26,7 +26,6 @@ public class IntersectionsTable extends HBox
 
     private int current;
 
-    private ILambdaEvent<Pair<Point, List<Segment>>> highlightSegmentsEvent;
     private ArrayList<Point> intersections;
 
 
@@ -37,10 +36,9 @@ public class IntersectionsTable extends HBox
     public IntersectionsTable(GraphXY graphXY)
     {
         // Create tableView
-        tableView = TableGenerator.createTable(true,
+        tableView = TableGenerator.createTable(false,
                                                 new Pair<>("Intersections Found","inter"),
-                                                new Pair<>("Segments", "segments"),
-                                                new Pair<>("", "highlight"));
+                                                new Pair<>("Segments", "segments"));
         TableGenerator.addPlaceHolderText(tableView, "No intersections found yet",
                                                     "Try the next iteration");
         getChildren().add(tableView);
@@ -57,7 +55,7 @@ public class IntersectionsTable extends HBox
     {
         intersections.add(intersection);
         Map<String, Object> item = new HashMap<>();
-        String segmentToString = "";
+        String segmentToString = "{";
 
         ArrayList<Segment> segments = intersection.getIntersections();
         for (int i = 0; i < segments.size(); i++)
@@ -65,22 +63,16 @@ public class IntersectionsTable extends HBox
             segmentToString = segmentToString.concat(segments.get(i).getId());
             if(i != segments.size()-1)
             {
-                segmentToString = segmentToString.concat(" <-> ");
+                // After n segments, skip to next line
+                segmentToString = segmentToString.concat(", ");
+                if((i+1) % 4 == 0)
+                    segmentToString = segmentToString.concat("\n");
             }
         }
-        item.put("inter", intersection.toString());
+        segmentToString = segmentToString.concat("}");
+        item.put("inter", "x: " + intersection.x + "\ny: " + intersection.y);
         item.put("segments", segmentToString);
-        Button highlightSegment = new Button("");
-        highlightSegment.setOnAction(e ->{
-            tableView.getSelectionModel().select(item);
-            if(highlightSegmentsEvent != null)
-                highlightSegmentsEvent.callMethod(
-                        new Pair<>((Point) tableView.getSelectionModel().getSelectedItem().get("inter"),
-                                (List<Segment>) tableView.getSelectionModel().getSelectedItem().get(segments)));
-
-        });
         current ++;
-        item.put("highlight", highlightSegment);
         tableView.getItems().add(item);
 
     }

@@ -11,6 +11,7 @@ public class PlaneSweepIterable implements Iterable<PlaneSweep>
 {
     private PointQueue pointQueue;
     private PlaneSweep planeSweep;
+    private int iterationCount;
 
     /**
      * iterator for the plane sweep algorithm
@@ -20,6 +21,7 @@ public class PlaneSweepIterable implements Iterable<PlaneSweep>
     public PlaneSweepIterable(ArrayList<Segment> segments) throws Exception
     {
         this.pointQueue = PointQueue.initQ(segments);
+        this.iterationCount = 0;
         this.planeSweep = new PlaneSweep();
         System.out.println("point queue at initialization");
         pointQueue.display();
@@ -51,6 +53,7 @@ public class PlaneSweepIterable implements Iterable<PlaneSweep>
                 try
                 {
                     planeSweep.next(pointQueue);
+                    iterationCount ++;
                 } catch (Exception e)
                 {
                     throw new RuntimeException(e);
@@ -76,5 +79,16 @@ public class PlaneSweepIterable implements Iterable<PlaneSweep>
     public PlaneSweep getPlaneSweep()
     {
         return planeSweep;
+    }
+
+
+    public PointQueue getPointQueue()
+    {
+        return pointQueue;
+    }
+
+    public int getIterationCount()
+    {
+        return iterationCount;
     }
 }

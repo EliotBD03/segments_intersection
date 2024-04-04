@@ -20,7 +20,6 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.geometry.Side;
 import javafx.scene.Node;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
@@ -49,17 +48,18 @@ public class MainPage extends HBox
     private final ScrollPane graphPane;
     private final HBox timelinePane;
     private final TabPane tabPane;
+    private Tab currentTab;
 
 
     private IntersectionsTable intersectionsTable;
     private SegmentsTable segmentsTable;
-    private int currentId = 1;
-    private GraphXY graph;
-    private Tab currentTab;
 
     // Graph Settings
+    private GraphXY graph;
     private boolean hasChanged;
 
+    // Inputs
+    private int currentId = 1;
     private ObjectProperty<Double> xSizeInputs = new SimpleObjectProperty<>(600d);
     private ObjectProperty<Double> ySizeInputs = new SimpleObjectProperty<>(600d);
     private ObjectProperty<Double> xScaleInputs = new SimpleObjectProperty<>(10d);
@@ -68,8 +68,10 @@ public class MainPage extends HBox
     private ObjectProperty<Integer> yNbLabelsInputs = new SimpleObjectProperty<>(10);
 
     // Sweep Line
+    private Text currentX;
+    private Text currentY;
+    private Text currentIteration;
     private PlaneSweepIterable planeSweeps;
-    private boolean planeSweepStarted;
     private boolean isFastPlaying;
     private Timeline timeline;
     private KeyFrame keyFrame;
@@ -90,7 +92,7 @@ public class MainPage extends HBox
     private TextField x2PointInput = new TextField();
     private TextField y2PointInput = new TextField();
 
-    private int maxDisplayableSegment = 200;
+    private final int maxBfrWarningSegments = 200;
 
 
     public MainPage(Stage primaryStage)
@@ -549,15 +551,16 @@ public class MainPage extends HBox
         VBox textInfoBox = new VBox();
         textInfoBox.setSpacing(20);
         textInfoBox.setPadding(new Insets(20, 10, 0, 0));
-        int currIt = 127;
-        textInfoBox.getChildren().add(encapsNode(new Text("Iteration: "), new Text("" + currIt)));
+
+        currentIteration = new Text("/");
+        textInfoBox.getChildren().add(encapsNode(new Text("Iteration: "), currentIteration));
 
         Text currPointText = new Text("Current Event-Point:");
         HBox currPointBox = new HBox(currPointText);
         //currPointBox.setBackground(new Background(new BackgroundFill(Color.BLUEVIOLET, CornerRadii.EMPTY, Insets.EMPTY)));
-        Text xText = new Text("x: 45.030");
-        Text yText = new Text("y: 81.010");
-        VBox pointBox = new VBox(xText,yText);
+        currentX = new Text("x: /");
+        currentY = new Text("y: /");
+        VBox pointBox = new VBox(currentX, currentY);
 
         VBox.setVgrow(currPointText, Priority.ALWAYS);
         HBox.setHgrow(currPointText, Priority.ALWAYS);
@@ -572,12 +575,12 @@ public class MainPage extends HBox
         outer.getChildren().add(intersectionsTable);
         //      Tree Buttons
         Button statusTreeButton = createButton(50,"BTreeIcon.png");
-        statusTreeButton.setBackground(new Background(new BackgroundFill(Color.ORANGE, CornerRadii.EMPTY, Insets.EMPTY)));
+        statusTreeButton.setBackground(new Background(new BackgroundFill(Color.GREENYELLOW, CornerRadii.EMPTY, Insets.EMPTY)));
         statusTreeButton.setOnAction(e -> showStatusTree());
         Button pointQueueButton = createButton(50,"BTreeIcon.png");
-        pointQueueButton.setBackground(new Background(new BackgroundFill(Color.GREENYELLOW, CornerRadii.EMPTY, Insets.EMPTY)));
-
-        Button exportIntersections = new Button("export intersections");
+        pointQueueButton.setBackground(new Background(new BackgroundFill(Color.ORANGE, CornerRadii.EMPTY, Insets.EMPTY)));
+        pointQueueButton.setOnAction(e -> showPointQueueTree());
+        Button exportIntersections = new Button("Export \nIntersections");
         exportIntersections.setOnAction(e -> exportIntersections());
 
         HBox lastRowBox = new HBox();
@@ -599,8 +602,10 @@ public class MainPage extends HBox
     {
         FileChooser fileChooser = new FileChooser();
         File selection = fileChooser.showOpenDialog(primaryStage);
-        if((inputFile != null && !inputFile.equals(selection)) || selection != null)
+        if(selection != null)
         {
+            if(inputFile != null && inputFile.equals(selection))
+                return;
             inputFile = selection;
             fileNameLabel.setText(inputFile.getName());
             fileHasChanged = true;
@@ -678,7 +683,7 @@ public class MainPage extends HBox
                 // Get next id
                 currentId = parser.getCurrent();
 
-                if(currentId > maxDisplayableSegment)
+                if(currentId > maxBfrWarningSegments)
                 {
                     new Alert(Alert.AlertType.WARNING, "Beware that there are too many segments.\nThis will take a lot of memory").show();
                     speedChoice.getItems().removeLast();
@@ -689,7 +694,7 @@ public class MainPage extends HBox
 
             }catch (Exception e)
             {
-                Alert alert = new Alert(Alert.AlertType.ERROR, "There was a problem while trying to read the file: " + inputFile.getName() + "\n\n"
+                Alert alert = new Alert(Alert.AlertType.ERROR, "There was a problem while trying to read the file: " + (inputFile != null ? inputFile.getName(): "\"\" ") + "\n\n"
                             + e);
                 alert.setTitle("Invalid File");
                 alert.show();
@@ -763,6 +768,7 @@ public class MainPage extends HBox
         if(segments.isEmpty())
             return;
         planeSweeps = new PlaneSweepIterable(segments);
+        currentIteration.setText("/");
         // Init Sweep
         graph.initializeSweep();
     }
@@ -775,6 +781,7 @@ public class MainPage extends HBox
             try
             {
                 createSweepLine();
+                intersectionsTable.resetTable();
             } catch (Exception e)
             {
                 throw new RuntimeException(e);
@@ -788,10 +795,17 @@ public class MainPage extends HBox
                 try
                 {
                     Point inter = planeSweeps.iterator().next().getIntersection();
-                    if(inter != null)
-                        intersectionsTable.addIntersection(inter);
-                    graph.moveSweepLine(planeSweeps.getPlaneSweep().getCurrentPoint(), planeSweeps.getPlaneSweep().getUpper(), planeSweeps.getPlaneSweep().getLower(), planeSweeps.getPlaneSweep().getInner());
 
+                    if(inter != null)
+                    {
+                        System.out.println(inter.getIntersections());
+                        intersectionsTable.addIntersection(inter);
+                    }
+                    graph.moveSweepLine(planeSweeps.getPlaneSweep().getCurrentPoint(), planeSweeps.getPlaneSweep().getUpper(), planeSweeps.getPlaneSweep().getLower(), planeSweeps.getPlaneSweep().getInner());
+                    if(!isFastPlaying)
+                    {
+                        updateSweepInfo();
+                    }
                 }catch (Exception e)
                 {
                     Alert alert = new Alert(Alert.AlertType.ERROR, "There was a problem during the sweepLine algorithm" + "\n\n"
@@ -804,12 +818,24 @@ public class MainPage extends HBox
             }
             else
             {
-                graph.moveSweepLine(planeSweeps.getPlaneSweep().getCurrentPoint(), null, planeSweeps.getPlaneSweep().getLower(), null);
+                graph.moveSweepLine(planeSweeps.getPlaneSweep().getCurrentPoint(), null, null, null);
                 planeSweeps = null;
             }
         }
+    }
 
-
+    private void updateSweepInfo()
+    {
+        if(planeSweeps != null && planeSweeps.getPlaneSweep().getCurrentPoint()!= null)
+        {
+            currentX.setText("x: " + String.format("%5f",planeSweeps.getPlaneSweep().getCurrentPoint().x));
+            currentY.setText("y: " + String.format("%5f",planeSweeps.getPlaneSweep().getCurrentPoint().y));
+            currentIteration.setText(planeSweeps.getIterationCount() + "");
+        }else
+        {
+            currentX.setText("x: /");
+            currentY.setText("y: /");
+        }
     }
 
     private void fastPlay()
@@ -823,14 +849,19 @@ public class MainPage extends HBox
             {
                 timeline = new Timeline();
                 timeline.setCycleCount(Animation.INDEFINITE);
-
             }
+            currentX.setText("x: ...");
+            currentY.setText("y: ...");
+            currentIteration.setText("...");
             keyFrame = new KeyFrame(Duration.seconds(0.5d / speedChoice.getValue()), event ->
             {
                 nextSL();
                 // If it's over, stop fast play
                 if(planeSweeps == null || !planeSweeps.iterator().hasNext())
+                {
+                    nextSL();
                     stopFastPlay();
+                }
             });
             timeline.getKeyFrames().clear();
             timeline.getKeyFrames().add(keyFrame);
@@ -856,6 +887,7 @@ public class MainPage extends HBox
         Icon.setButtonIcon(this.getClass(), "FastPlayIcon.png", fastPlayButton);
         speedChoice.setDisable(false);
         nextStepButton.setDisable(false);
+        updateSweepInfo();
     }
 
     private void resetGraphSweepLine()
@@ -872,6 +904,8 @@ public class MainPage extends HBox
         }
         // Reset intersection table
         intersectionsTable.resetTable();
+        // Reset current X and Y info
+        updateSweepInfo();
 
     }
 
@@ -886,26 +920,18 @@ public class MainPage extends HBox
 
     public void showStatusTree()
     {
-        Stage TWindow = new Stage();
-        TWindow.setTitle("Status Tree");
-        TWindow.show();
-        TWindow.setResizable(true);
-        TWindow.setMinWidth(400);
-        TWindow.setMinHeight(400);
+        IShapeGen<ComparableSegment> genLeaf = x -> new TreeNode(x,false, Color.AQUA);
+        IShapeGen<ComparableSegment> genNode = x -> new TreeNode(x,true);
 
-        IShapeGen<ComparableSegment> genLeaf = x -> new TreeSegmentNode(x,false, Color.AQUA);
-        IShapeGen<ComparableSegment> genNode = x -> new TreeSegmentNode(x,true);
-
-        Tree<ComparableSegment> tree = new Tree<>(planeSweeps.getPlaneSweep().getStatusQueue(),
-                                                  new Point(300, 300),
-                                                genLeaf,
-                                                genNode);
-        ScrollPane scrollPane = new ScrollPane(tree);
-        HBox box = new HBox(scrollPane);
-        box.setFillHeight(true);
-        box.setAlignment(Pos.CENTER);
-
-        Scene sceneT = new Scene(box, 600, 600);
-        TWindow.setScene(sceneT);
+        if(planeSweeps != null)
+            Tree.showTree("Status Queue", planeSweeps.getPlaneSweep().getStatusQueue(), genNode, genLeaf, false);
     }
+
+    public void showPointQueueTree()
+    {
+        IShapeGen<Point> genNode = x -> new TreeNode(x, Color.ORANGE);
+        if(planeSweeps != null)
+            Tree.showTree("Event Point Queue", planeSweeps.getPointQueue(), genNode, genNode, false);
+    }
+
 }

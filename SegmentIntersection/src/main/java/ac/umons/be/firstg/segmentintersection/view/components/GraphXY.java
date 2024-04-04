@@ -46,7 +46,8 @@ public class GraphXY extends AnchorPane
 
     // Sweep Line settings
     private Line sweepLine;
-    private double sweepLinePosition;
+    private EventPointNode currentSweepPoint;
+    private Point sweepLinePosition;
     private Stack<SegmentNode> toSetInactive;
     private Stack<SegmentNode> toSetActive;
 
@@ -453,7 +454,7 @@ public class GraphXY extends AnchorPane
     public void initializeSweep()
     {
         // Initialises the sweepLine
-        setSweepLinePosition(maxY);
+        setSweepLinePosition(new Point(maxX, maxY));
         // Initialise the stacks that will be used to change the status of segments during
         // the exploration
         toSetActive = new Stack<>();
@@ -461,10 +462,10 @@ public class GraphXY extends AnchorPane
         // When starting the exploration, all segments are inactive
         toSetInactive.addAll(segmentsShown.values());
     }
-    private void setSweepLinePosition(double y)
+    private void setSweepLinePosition(Point p)
     {
         // Save the SweepLine position in case of resize
-        sweepLinePosition = y;
+        sweepLinePosition = p;
 
         // If the sweepline wasn't added yet
         if(sweepLine == null)
@@ -473,14 +474,20 @@ public class GraphXY extends AnchorPane
             sweepLine.setStroke(Color.DARKGREEN);
             sweepLine.setStrokeWidth(2);
             sweepLine.getStrokeDashArray().addAll(5d);
-            getChildren().add(sweepLine);
+            currentSweepPoint = new EventPointNode(null, 5, Color.DARKMAGENTA);
+            currentSweepPoint.setLayoutX(maxX);
+            currentSweepPoint.setLayoutY(minY);
+            getChildren().addAll(sweepLine, currentSweepPoint);
         }
         // Move the sweep line (simply doing sweepLine.setLayoutY() doesn't work for some reason
-        double newPosition = origin.y - scaleOnY(y);
+        double newPosition = origin.y - scaleOnY(p.y);
         sweepLine.setStartY(newPosition);
         sweepLine.setStartX(maxAxisY.x);
         sweepLine.setEndX(maxAxisX.x + 5);
         sweepLine.setEndY(newPosition);
+
+        currentSweepPoint.setLayoutX(origin.x + scaleOnX(p.x));
+        currentSweepPoint.setLayoutY(origin.y - scaleOnY(p.y));
     }
 
     /**
@@ -496,9 +503,9 @@ public class GraphXY extends AnchorPane
             initializeSweep();
 
         // Move SweepLine
-
-        setSweepLinePosition(P.y);
+        setSweepLinePosition(P);
         SegmentNode currSegment = null;
+        // Show current point
 
         // Set segments that were active last iteration to active
         while (! toSetActive.isEmpty())
@@ -548,8 +555,7 @@ public class GraphXY extends AnchorPane
                 currSegment.toFront();
             }
         }
-        if(currSegment != null)
-            currSegment.setVisitedPoint(translatePoint(scalePoint(P)));
+        currentSweepPoint.toFront();
     }
 
     public void resetSweepLine()

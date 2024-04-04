@@ -21,9 +21,13 @@ public class EventPointNode extends Pane implements GraphShape
 
     public EventPointNode(Point location)
     {
+        this(location, 3f, Color.BLACK);
+    }
+    public EventPointNode(Point location, double radius, Paint color)
+    {
         circle = new Circle();
-        circle.setFill(Color.BLACK);
-        circle.setRadius(3f);
+        circle.setFill(color);
+        circle.setRadius(radius);
         this.location = location;
         getChildren().add(circle);
     }
@@ -65,4 +69,5 @@ public class EventPointNode extends Pane implements GraphShape
         circle.setFill(previousPointColor);
         circle.setRadius(previousRadius);
     }
+
 }
