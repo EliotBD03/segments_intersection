@@ -15,7 +15,7 @@ public class test extends Application {
         Scene scene = new Scene(new MainPage(stage));
         stage.setMinHeight(600);
         stage.setMinWidth(800);
-        stage.setTitle("Love Finder ver.1.22474487139...");
+        stage.setTitle("Segment Intersection Finder ver.1.22474487139...");
         stage.setScene(scene);
         stage.show();
     }

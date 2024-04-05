@@ -341,7 +341,6 @@ public class StatusQueue extends AVL<ComparableSegment>
         ComparableSegment leftN = null;
         ComparableSegment rightN = null;
 
-        boolean goingLeft = true;
         Node<ComparableSegment> father = root;
         Node<ComparableSegment> curr = root;
         Node<ComparableSegment> lastLeft = null;
@@ -360,14 +359,14 @@ public class StatusQueue extends AVL<ComparableSegment>
                 curr = curr.getRight();
             }
         }
-        // Thanks to the property of the graph
+        // Thanks to the property of the tree
         // The right node is always the minimum in the right child of the inner node containing x
         rightN = curr.getRight() == null ? null : curr.getRight().lookForMinimum().getData();
-        // If the last movement we did was going right, then we can easily find the left node
-        // it will simply the maximum of the left child of the father of the inner node
-        if(lastLeft != null && curr.getLeft().getData().equals(k))
+        // If one of our movement was going right and our left son is the leaf , then we can easily find the left node
+        // it will simply be the data of the node contained inside lastLeft
+        if(lastLeft != null && curr.getLeft().isLeaf())
         {
-            leftN = lastLeft.getLeft().lookForMaximum().getData();
+            leftN = lastLeft.getData();
         }else
         {
             // If not, we have to locate the father of the leaf containing x
@@ -381,9 +380,8 @@ public class StatusQueue extends AVL<ComparableSegment>
                     father = curr;
                     curr = curr.getRight();
                 }
-                // After it was found, we can return the maximum of the left child
-                // of the father of the leaf
-                leftN = father.getLeft().lookForMaximum().getData();
+                // After it was found, we can the data inside the father of the leaf
+                leftN = father.getData();
             }
         }
         return new Pair<>(leftN, rightN);
