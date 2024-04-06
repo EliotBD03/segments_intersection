@@ -186,85 +186,27 @@ public class StatusQueue extends AVL<ComparableSegment>
     public Pair<ComparableSegment, ComparableSegment> getNeighbours(Point k) throws IllegalArgumentException
     {
         Node<ComparableSegment> curr = root;
-        Node<ComparableSegment> lastRight = null;
-
-        Node<ComparableSegment> lastLeft = null;
         if(curr == null)
             return new Pair<>(null,null);
         Point p = null;
-        double lowerBound = Double.POSITIVE_INFINITY;
-        double upperBound = Double.NEGATIVE_INFINITY;
-        Pair<Double, Double> bounds = new Pair<>(lowerBound, upperBound);
-        while (!withinBound(k.x, lowerBound, upperBound))
+
+        Pair<ComparableSegment, ComparableSegment> closestSegments = new Pair<>(null, null);
+        while (!curr.isLeaf() && curr.getRight() != null)
         {
-            System.out.println("bounds: " + lowerBound + " :: " + upperBound);
-            System.out.println("curr");
-            System.out.println(curr);
-            p = Segment.getPointOnXAxis(k, curr.getData());
+            p = Segment.getClosestPointOnXAxis(currStatus, curr.getData());
             if(greaterThan(p.x, k.x))
             {
-                if(curr.isLeaf())
-                {
-                    break;
-                }
-                lastLeft = curr;
+                closestSegments.setItem2(curr.getData());
                 curr = curr.getLeft();
-            }
-            else
+            }else
             {
-                if(curr.getRight() == null)
-                {
-                    break;
-                }
-                lastRight = curr;
+                closestSegments.setItem1(curr.getData());
                 curr = curr.getRight();
             }
-            checkUpdateBounds(bounds, p.x);
         }
-        System.out.println("last curr is: ");
-        System.out.println(curr);
-        System.out.println(bounds);
-        if(curr.getLeft() != null && curr.getRight() != null)
-            return new Pair<>(curr.getData(), curr.getRight().lookForMinimum().getData());
+        return closestSegments;
 
-        if(curr.getRight() == null)
-        {
-            // Rightmost of the graph
-            if(lastRight == null || almostEqual(bounds.getItem1(),bounds.getItem2()))
-                return new Pair<>(curr.getData(), null);
-            else
-                return new Pair<>(lastRight.getData(), curr.getData());
-
-        }
-        // get right not null and
-        else if (curr.getLeft() == null)
-        {
-            if(almostEqual(bounds.getItem1(),bounds.getItem2()))
-                return new Pair<>(null, curr.getData());
-            else
-                return new Pair<>(curr.getData(), lastLeft.getData());
-        }
-        // is leaf
-        else
-        {
-            return new Pair<>(curr.getData(), curr.getData());
-        }
     }
-
-    private boolean checkUpdateBounds(Pair<Double, Double> bounds, Double value)
-    {
-        // Check if the bound was updated or not
-        double upperBound = Math.max(bounds.getItem1(), value);
-        double lowerBound = Math.min(bounds.getItem2(), value);
-
-        if(almostEqual(upperBound, bounds.getItem1()) || almostEqual(lowerBound, bounds.getItem2()) )
-            return false;
-
-        bounds.setItem1(upperBound);
-        bounds.setItem2(lowerBound);
-        return true;
-    }
-
 
 
 
