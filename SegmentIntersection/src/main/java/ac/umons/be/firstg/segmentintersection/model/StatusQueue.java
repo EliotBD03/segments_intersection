@@ -191,7 +191,7 @@ public class StatusQueue extends AVL<ComparableSegment>
         Point p = null;
 
         Pair<ComparableSegment, ComparableSegment> closestSegments = new Pair<>(null, null);
-        while (!curr.isLeaf() && curr.getRight() != null)
+        while (curr != null && !curr.isLeaf() )
         {
             p = Segment.getClosestPointOnXAxis(currStatus, curr.getData());
             if(greaterThan(p.x, k.x))
