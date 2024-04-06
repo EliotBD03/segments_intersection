@@ -198,8 +198,7 @@ public class MainPage extends HBox
 
         tabPane.getTabs().addAll(graphTab,
                                  mapTab,
-                                 sweepLineTab,
-                                 tabGen.createObject(new Pair<>("???? Settings","SpecialIcon.jpg")));
+                                 sweepLineTab);
         tabPane.setTabMaxHeight(tabSize);
         tabPane.setTabMinHeight(tabSize);
         tabPane.setTabMaxWidth(tabSize);
