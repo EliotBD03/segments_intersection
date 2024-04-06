@@ -84,6 +84,7 @@ public class IntersectionsTable extends HBox
     public void resetTable()
     {
         tableView.getItems().clear();
+        intersections.clear();
     }
 
     public ArrayList<Point> getIntersections()

@@ -92,6 +92,7 @@ public class Point implements Comparable<Point>
      */
     public void addIntersection(ArrayList<ComparableSegment> segments)
     {
+        this.intersections.clear();
         this.intersections.addAll(segments);
     }
 
