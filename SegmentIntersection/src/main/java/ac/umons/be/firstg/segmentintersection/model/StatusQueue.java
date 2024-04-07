@@ -329,46 +329,45 @@ public class StatusQueue extends AVL<ComparableSegment>
      */
     private boolean statusQueueRelation(ComparableSegment curr, ComparableSegment other)
     {
-        // True : going left
-        // False : going right
         System.out.println("Compare btw: this: " + curr + " | and : " + other);
         System.out.println("With: " + currStatus);
         int res = curr.compareToPoint(other, currStatus);
         if (res != 0)
             return res > 0;
-        Point p = Segment.getPointOnXAxis(currStatus, other);
+        Point q = Segment.getPointOnXAxis(currStatus, other);
 
-        double o1 = Math.toDegrees(Math.atan(-curr.a/curr.b));
-        double o2 = Math.toDegrees(Math.atan(-other.a/other.b));
+        double o1 = getAngleAboveSweepLine(curr, q);
+        double o2 = getAngleAboveSweepLine(other, q);
 
         if(almostEqual(o1, o2))
             throw new IllegalArgumentException("The segment " + curr.id + " and " + other.id +" are overlapping");
 
-        if (almostLessEqual(o1,0))
-        {
-            o1 += 360;
-        }
-        if (almostLessEqual(o2,0))
-        {
-            o2 += 360;
-        }
-        if(greaterThan(o1,180))
-        {
-            o1 = (o1 - 180);
-        }
-        if(greaterThan(o2, 180))
-        {
-            o2 = (o2 - 180);
-        }
 
-        if(greaterThan(p.x, currStatus.x))
-        {
-            // Get opposite angle
-            o1 = 180 - o1;
-            o2 = 180 - o2;
-        }
-        System.out.println("o1: " + o1 + " | o2:" +o2);
         return greaterThan(o1,o2);
+    }
+
+    /**
+     * Finds the angle above the sweep line at point q, between {@link #currStatus}, q and the line of the segment going upwards
+     * @param s The segment
+     * @param q The point intersected at the sweep line
+     * @return  The angle above the sweep line
+     */
+    private double getAngleAboveSweepLine(Segment s, Point q)
+    {
+        double alpha = Math.toDegrees(Math.atan(-s.a/s.b));
+        if (almostLessEqual(alpha, 0))
+        {
+            alpha += 360;
+        }
+        if(greaterThan(alpha,180))
+        {
+            alpha = (alpha - 180);
+        }
+        if(greaterThan(q.x, currStatus.x))
+        {
+            alpha = 180 - alpha;
+        }
+        return alpha;
     }
 
 }

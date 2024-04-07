@@ -94,11 +94,23 @@ public class PlaneSweep
         {
             System.out.println("UL");
             System.out.println(upperInner);
-           Pair<ComparableSegment, ComparableSegment> segmentPair = new Pair<>(upperInner.getLast(), upperInner.getFirst());
+            Pair<ComparableSegment, ComparableSegment> segmentPair = new Pair<>(upperInner.getLast(), upperInner.getFirst());
             System.out.println("Leftmost Rightmost of : " + p);
-           System.out.println(segmentPair);
-           ComparableSegment leftSegment = statusQueue.getNeighbours(segmentPair.getItem1()).getItem1();
-           ComparableSegment rightSegment = statusQueue.getNeighbours(segmentPair.getItem2()).getItem2();
+            System.out.println(segmentPair);
+            ComparableSegment leftSegment;
+            ComparableSegment rightSegment;
+            // If both items are the same we can only do getNeighbours once
+            if(segmentPair.getItem1().equals(segmentPair.getItem2()))
+            {
+                Pair<ComparableSegment, ComparableSegment> segments = statusQueue.getNeighbours(segmentPair.getItem1());
+                leftSegment = segments.getItem1();
+                rightSegment = segments.getItem2();
+            }
+           else
+           {
+               leftSegment = statusQueue.getNeighbours(segmentPair.getItem1()).getItem1();
+               rightSegment = statusQueue.getNeighbours(segmentPair.getItem2()).getItem2();
+           }
            System.out.println("Left & Right Segment: ");
            System.out.println(leftSegment);
            System.out.println(rightSegment);
