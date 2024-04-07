@@ -247,19 +247,9 @@ public class StatusQueue extends AVL<ComparableSegment>
                 C.add(s);
         }else
         {
-            System.out.println("My p:" + p);
-            System.out.println("k: " + k);
-            if (almostEqual(p.x,k.x))
-            {
-                System.out.println("almost equal nice !");
-                // Check neighbors
+            if(almostGreaterEqual(p.x, k.x))
                 findSegments(current.getLeft(), k, L, C);
-                System.out.println("and now for righht of curr:" + current.getData() );
-                findSegments(current.getRight(), k, L, C);
-            }
-            else if (greaterThan(p.x, k.x))
-                findSegments(current.getLeft(), k, L, C);
-            else
+            if(almostLessEqual(p.x, k.x))
                 findSegments(current.getRight(), k, L, C);
 
         }
