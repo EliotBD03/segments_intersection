@@ -65,6 +65,10 @@ public class PlaneSweepIterable implements Iterable<PlaneSweep>
         };
     }
 
+    /**
+     * return all the intersections from a set of segments
+     * @return the intersection as an arraylist
+     */
     public ArrayList<Point> getIntersections()
     {
         ArrayList<Point> result = new ArrayList<>();

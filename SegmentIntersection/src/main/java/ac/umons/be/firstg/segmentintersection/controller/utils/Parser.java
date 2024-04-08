@@ -130,11 +130,24 @@ public class Parser
         return result;
     }
 
+    /**
+     * Get the absolute path for a file located inside dir "resource"
+     * @param filePathFromResource the path where the current dir is the dire "resource"
+     * @return a string representing the absolute path of the file
+     * @throws URISyntaxException if the wrong string format provided
+     */
+
     public static String getPathFromResource(String filePathFromResource) throws URISyntaxException
     {
         return Paths.get(StatusQueue.class.getResource(filePathFromResource).toURI()).toString();
     }
 
+    /**
+     * Store a set of segments inside a txt file where each line follows the format:
+     * [0-9]+.[0-9]^2 [0-9]+.[0-9]^2 [0-9]+.[0-9]^2 [0-9]+.[0-9]^2
+     * @param segments an arraylist of segment objects
+     * @param outputFilePath the absolute path of the file where to store the segments
+     */
     public static void saveSegments(ArrayList<Segment> segments, String outputFilePath)
     {
         try(BufferedWriter buffer = new BufferedWriter(new FileWriter(outputFilePath + ".txt")))
@@ -153,6 +166,12 @@ public class Parser
         }
     }
 
+    /**
+     * as the saveSegments method, this will store the intersections inside a file
+     * whose path is provided.
+     * @param intersections an arraylist of segments
+     * @param outputFilePath the absolute path of the file
+     */
     public static void saveIntersections(ArrayList<Point> intersections, String outputFilePath)
     {
         try(BufferedWriter buffer = new BufferedWriter(new FileWriter(outputFilePath + ".txt")))

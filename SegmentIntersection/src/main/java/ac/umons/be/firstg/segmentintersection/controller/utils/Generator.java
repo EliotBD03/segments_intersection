@@ -25,6 +25,11 @@ public class Generator
         range = new Range(new double[]{0,0}, new double[]{100, 100});
     }
 
+    /**
+     *  gives a range object to generator object which will be used at the generation process
+     * @param range attribute to set
+     */
+
     public void setRange(Range range)
     {
         this.range = range;
@@ -45,11 +50,10 @@ public class Generator
         return segments;
     }
 
-    public Range getRange()
-    {
-        return range;
-    }
-
+    /**
+     * generate a segment by creating randomly its endpoints.
+     * @return array of double representing endpoints segments
+     */
     private double[] generatePoints()
     {
         double[] res = new double[4];

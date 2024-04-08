@@ -13,7 +13,6 @@ public class StatusQueue extends AVL<ComparableSegment>
 {
 
     private Point currStatus;
-    private AVL<ComparableSegment>.Node<ComparableSegment> tmp;
 
     /**
      * Add a segment inside the tree.
@@ -141,40 +140,6 @@ public class StatusQueue extends AVL<ComparableSegment>
        super.root = this.insert(super.root, new Node<ComparableSegment>(data), currentP);
     }
 
-
-    /**
-     * Gets the closest root containing a segment, that either
-     * holds the searched point or that the point is located between both his right
-     * and left children.
-     * @param p The searched point
-     * @return  The desired root
-     */
-    protected Node<ComparableSegment> getClosestRoot(Point p)
-    {
-        if(this.root == null)
-            return null;
-        Node<ComparableSegment> father = this.root;
-        Node<ComparableSegment> tmp = this.root;
-
-        Point p2 = Segment.getClosestPointOnXAxis(p ,tmp.getData());
-        if(p2 == null)
-            return root;
-        // Go as much left as possible
-        while(greaterThan(p2.x, p.x) && !tmp.isLeaf())
-        {
-            father = tmp;
-            tmp = tmp.getLeft();
-            p2 = Segment.getClosestPointOnXAxis(p, tmp.getData());
-        }
-        // Go as much right as possible
-        while(lessThan(p2.x, p.x) && (tmp.getRight() != null))
-        {
-            father = tmp;
-            tmp = tmp.getRight();
-            p2 = Segment.getClosestPointOnXAxis(p, tmp.getData());
-        }
-        return tmp.isLeaf() ? father: tmp;
-    }
 
     /**
      * Gets the neighboring segments of a {@link Point}.

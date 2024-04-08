@@ -20,13 +20,6 @@ public class PointQueue extends AVL<Point>
         head = new Point(Float.POSITIVE_INFINITY, Float.POSITIVE_INFINITY);
     }
 
-    /**
-     * Update the Q's head
-     */
-    private void lookForNewHead()
-    {
-        head = root == null ? null : root.lookForMinimum().getData();
-    }
 
     /**
      * Q generator which is initialed with a set of endpoints from segments.

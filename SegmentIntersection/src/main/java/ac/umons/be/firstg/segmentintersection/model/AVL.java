@@ -333,11 +333,6 @@ public class AVL<T extends Comparable<T>>
         }
     }
 
-    public T getRootData()
-    {
-        return root.getData();
-    }
-
     /**
      * Insert a node inside an AVL.
      * As the definition mentioned, the AVL will be balanced during the process.
@@ -374,63 +369,6 @@ public class AVL<T extends Comparable<T>>
         root = insert(root, new Node<>(data));
     }
 
-    /**
-     * Remove a given node from the tree
-     * @param current the current node we are in.
-     * @param nodeToRemove the node to remove from the tree.
-     * @return the modified tree
-     * @throws Exception if the data does not exist inside the tree.
-     */
-    protected Node<T> remove(Node<T> current, Node<T> nodeToRemove) throws Exception
-    {
-        if (current == null)
-            throw new Exception("the current AVL does not have the node with the given data : " + nodeToRemove.data);
-        else if(nodeToRemove.compareTo(current) < 0)
-        {
-            current.setLeft(remove(current.getLeft(), nodeToRemove));
-            current.balance();
-        }
-        else if(nodeToRemove.compareTo(current) > 0)
-        {
-            current.setRight(remove(current.getRight(), nodeToRemove));
-            current.balance();
-        }
-        else
-        {
-            if(current.isLeaf())
-                return null;
-            else if(current.getLeft() == null)
-                return current.getRight();
-            else if(current.getRight() == null)
-                return current.getLeft();
-            else
-            {
-                Pair<Node<T>, T> newCurr;
-                if(current.getLeft().getHeight() < current.getRight().getHeight())
-                {
-                    newCurr = removeMax(current.right);
-                    current.right = newCurr.getItem1();
-                }
-                else
-                {
-                    newCurr = removeMax(current.left);
-                    current.left = newCurr.getItem1();
-                }
-                current.data = newCurr.getItem2();
-            }
-        }
-
-        return current;
-    }
-
-
-    /**
-     * Removes the root of the AVL
-     */
-    public void removeRoot()
-    {
-        this.root = removeRoot(this.root);
-    }
 
     /**
      * Removes the root node of the given node
@@ -517,18 +455,6 @@ public class AVL<T extends Comparable<T>>
         if(curr != null)
             curr.balance();
         return new Pair<>(curr, max);
-    }
-
-
-    /**
-     * wrapper for the private remove function
-     * @param data the data to remove from the tree
-     * @throws Exception if the data does not exist inside the tree.
-     */
-    protected void remove(T data) throws Exception
-    {
-        // Replace the root with the new tree
-        this.root = remove(this.root, new Node<>(data));
     }
 
     /**

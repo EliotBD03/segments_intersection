@@ -18,18 +18,35 @@ public class PlaneSweep
 
     private Point intersection;
 
-
+    /**
+     * Constructor of planeSweep Algo
+     * Initially instance the statusQueue
+     */
     public PlaneSweep()
     {
         this.statusQueue = new StatusQueue();
         System.out.println("point queue at initialization");
     }
 
+    /***
+     * apply the sub-algorithm on the next event point
+     * @param pointQueue the point queue
+     * @throws Exception if no more event point in the event queue
+     */
     public void next(PointQueue pointQueue) throws Exception
     {
         currentPoint = pointQueue.dequeue();
         this.intersection = handleEventPoint(currentPoint, pointQueue);
     }
+
+    /**
+     * Make treatment on the current event point
+     * to find potential intersections below it
+     * @param p the event point
+     * @param pointQueue the point queue (should be the same as the point queue which provided the event point)
+     * @return an intersection if there was one, null otherwise
+     * @throws Exception if illegal operations on data structures
+     */
 
     private Point handleEventPoint(Point p, PointQueue pointQueue) throws Exception
     {
@@ -125,6 +142,13 @@ public class PlaneSweep
         return intersection;
     }
 
+    /**
+     * From two sorted arraylist, produce one unique sorted arraylist which is the fusion of the two
+     * @param l1 the first sorted arraylist
+     * @param l2 the second sorted arraylist
+     * @return one arraylist which is a fusion of the two parameters
+     */
+
     public static ArrayList<ComparableSegment> union(ArrayList<ComparableSegment> l1, ArrayList<ComparableSegment> l2)
     {
         ArrayList<ComparableSegment> result = new ArrayList<>();
@@ -162,6 +186,15 @@ public class PlaneSweep
         }
         return result;
     }
+
+    /**
+     * Test if p is the intersection between both segments.
+     * If that's the case then it will be added to the point queue.
+     * @param sl the left segment (accordingly to the sweep line)
+     * @param sr the right segment (accordingly to the sweep line)
+     * @param p the event point supposed to be an intersection
+     * @param pointQueue the point queue (should be the same as the point queue which provided the event point)
+     */
 
     private void findNewEvent(ComparableSegment sl, ComparableSegment sr, Point p, PointQueue pointQueue)
     {
