@@ -455,7 +455,7 @@ public class MainPage extends HBox
         loadFileContent.setAlignment(Pos.CENTER_LEFT);
         //loadFileContent.setBackground(new Background(new BackgroundFill(Color.GREENYELLOW, CornerRadii.EMPTY, Insets.EMPTY)));
         Button loadMapButton = new Button("Import");
-
+        Button generateButton = new Button("Generate");
         fileNameLabel = new Label("No file selected");
         loadMapButton.setOnAction(e ->
         {
@@ -468,7 +468,12 @@ public class MainPage extends HBox
             }
         });
 
-        loadFileContent.getChildren().addAll(loadMapButton, fileNameLabel);
+        generateButton.setOnAction(e ->
+                {
+                    loadMap(true);
+                });
+
+        loadFileContent.getChildren().addAll(loadMapButton, generateButton, fileNameLabel);
 
         // Current Map Content
 
@@ -605,8 +610,13 @@ public class MainPage extends HBox
             inputFile = selection;
             fileNameLabel.setText(inputFile.getName());
             fileHasChanged = true;
-            loadMap();
+            loadMap(false);
         }
+    }
+
+    private void generate()
+    {
+        loadMap(true);
     }
 
     private String getOutputFile()
@@ -642,11 +652,11 @@ public class MainPage extends HBox
         fileNameLabel.setText("No file selected");
     }
 
-    private void loadGraph() throws Exception
+    private void loadGraph()
     {
         // If the graph scales was changed, we need to redraw the entire graph
         if(hasChanged){
-            loadMap();
+            loadMap(false);
             if(hasChanged){
                 hasChanged = false;
                 graph.updateSize(xSizeInputs.get(), ySizeInputs.get(),
@@ -662,8 +672,26 @@ public class MainPage extends HBox
     /**
      * Loads the segments contained in the selected file if it was changed since last call
      */
-    private void loadMap()
+    private void loadMap(boolean generate)
     {
+
+        if(generate)
+        {
+            resetMap();
+            Generator generator =  new Generator(20);
+            ArrayList<Segment> segmentsList = generator.generate();
+
+            if(!speedChoice.getItems().contains(10d))
+                speedChoice.getItems().add(10d);
+
+            // Get next id
+            currentId = 20;
+
+            segmentsTable.addAll(segmentsList);
+            graph.addSegments(segmentsList);
+            resetGraphSweepLine();
+            return;
+        }
         if(fileHasChanged && inputFile != null)
         {
             fileHasChanged = false;
