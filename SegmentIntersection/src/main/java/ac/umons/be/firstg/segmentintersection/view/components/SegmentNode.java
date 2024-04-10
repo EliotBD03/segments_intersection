@@ -72,7 +72,7 @@ public class SegmentNode extends Group implements GraphShape
     @Override
     public void setInactive()
     {
-        line.setStroke(Color.GRAY);
+        line.setStroke(Color.DARKSLATEGRAY);
         line.setStrokeWidth(1);
         endPoint1.setInactive();
         endPoint2.setInactive();
@@ -96,19 +96,6 @@ public class SegmentNode extends Group implements GraphShape
         endPoint2.deselectShape();
         line.setStroke(previousLineColor);
         line.setStrokeWidth(previousLineWidth);
-    }
-
-    public void setVisitedPoint(Point point)
-    {
-        if(segment.getUpperPoint().equals(point))
-        {
-            endPoint1.setVisited();
-        }
-        else if (segment.getLowerPoint().equals(point))
-        {
-            endPoint2.setVisited();
-        }
-
     }
 
 

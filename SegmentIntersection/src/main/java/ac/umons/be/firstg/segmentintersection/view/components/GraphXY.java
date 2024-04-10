@@ -310,6 +310,7 @@ public class GraphXY extends AnchorPane
         {
             Line mark = new Line(origin.x + position, origin.y, origin.x + position, origin.y - size);
             mark.setStroke(Color.GRAY);
+            mark.setOpacity(0.5);
             mark.toBack();
             getChildren().add(mark);
             markLinesX.add(mark);
@@ -435,11 +436,11 @@ public class GraphXY extends AnchorPane
         // And the origin position and axis size
         setAxes(this.maxAxisY);
         // But also the scales labels and lines
+        drawScale(this.nbOfMarksX, this.nbOfMarksY, this.showGrid);
         // Update the segments using the keyset of the dictionary
         // We cannot simply, re add them, because we need to maintain the sweep line state !
+        //addSegments(this.segmentsShown.keySet().stream().toList()); (wouldn't work)
         rescaleSegments(true);
-        //addSegments(this.segmentsShown.keySet().stream().toList());
-        drawScale(this.nbOfMarksX, this.nbOfMarksY, this.showGrid);
         // Redraw SweepLine
         if(sweepLine != null)
             setSweepLinePosition(sweepLinePosition);
@@ -489,6 +490,7 @@ public class GraphXY extends AnchorPane
 
         currentSweepPoint.setLayoutX(origin.x + scaleOnX(p.x));
         currentSweepPoint.setLayoutY(origin.y - scaleOnY(p.y));
+        currentSweepPoint.toFront();
     }
 
     /**
