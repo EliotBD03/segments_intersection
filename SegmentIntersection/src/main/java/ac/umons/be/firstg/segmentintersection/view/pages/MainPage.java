@@ -39,12 +39,12 @@ import java.util.Objects;
 
 import ac.umons.be.firstg.segmentintersection.controller.utils.Parser;
 
-public class MainPage extends HBox
+public class MainPage extends BorderPane
 {
     // Primary Stage to open windows
     private Stage primaryStage;
 
-    private final VBox leftPane;
+    private final VBox centerPane;
     private final ScrollPane graphPane;
     private final HBox timelinePane;
     private final TabPane tabPane;
@@ -104,23 +104,23 @@ public class MainPage extends HBox
 
         this.primaryStage = primaryStage;
         // Create children
-        leftPane = new VBox();
+        centerPane = new VBox();
         tabPane = new TabPane();
-        // Resizes the left part with the main VBOX
-        HBox.setHgrow(leftPane, Priority.ALWAYS);
-        getChildren().addAll(leftPane,tabPane);
-
+        setCenter(centerPane);
+        setRight(tabPane);
         // Create leftPane Children
         timelinePane = new HBox();
         createTimeline(timelinePane);
         graphPane = new ScrollPane();
-        graphPane.setFitToWidth(true);
         graphPane.setFitToHeight(true);
-        leftPane.getChildren().addAll(graphPane, timelinePane);
+        centerPane.getChildren().addAll(graphPane, timelinePane);
         //  Resize the graph pane with the leftPane
         VBox.setVgrow(graphPane, Priority.ALWAYS);
+        HBox.setHgrow(graphPane, Priority.ALWAYS);
+
         graph = new GraphXY(new Point(50,25), 600, 600, 10, 10, 10, 10, true);
-        //graph.setBackground(new Background(new BackgroundFill(Color.PINK, CornerRadii.EMPTY, Insets.EMPTY)));
+        // Remove ugly gray from the scroll pane
+        graphPane.setStyle("-fx-background: rgb(255, 255, 255); \n -fx-background-color: rgb(255, 255, 255);");
         graphPane.setContent(graph);
 
         // Creating the TabPane
@@ -455,8 +455,12 @@ public class MainPage extends HBox
         loadFileContent.setAlignment(Pos.CENTER_LEFT);
         //loadFileContent.setBackground(new Background(new BackgroundFill(Color.GREENYELLOW, CornerRadii.EMPTY, Insets.EMPTY)));
         Button loadMapButton = new Button("Import");
+        loadMapButton.setWrapText(true);
         Button generateButton = new Button("Generate");
-        fileNameLabel = new Label("No file selected");
+        generateButton.setWrapText(true);
+        fileNameLabel = new Label("No file \nselected");
+        fileNameLabel.setMaxWidth(80);
+        fileNameLabel.setWrapText(true);
         loadMapButton.setOnAction(e ->
         {
             try
@@ -698,6 +702,7 @@ public class MainPage extends HBox
             try
             {
                 resetMap();
+                fileNameLabel.setText(inputFile.getName());
                 Parser parser = new Parser(inputFile.getPath(), currentId);
                 ArrayList<Segment> segmentsList = parser.getSegmentsFromFile();
 
