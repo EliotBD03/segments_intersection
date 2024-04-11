@@ -38,7 +38,7 @@ public class Segment
                 lowerPoint = q;
                 break;
             default:
-                throw new IllegalArgumentException("cannot have a segment with exactly the same coordinates");
+                throw new IllegalArgumentException("Cannot have a segment with exactly the same upper and lower point");
         }
         this.a = upperPoint.y - lowerPoint.y;
         this.b = - upperPoint.x + lowerPoint.x;

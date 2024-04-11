@@ -9,6 +9,7 @@ import java.net.URISyntaxException;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Locale;
 
 /**
  * used to extract Segment from a txt file.
@@ -154,10 +155,10 @@ public class Parser
         {
             for(Segment segment : segments)
             {
-                buffer.write(String.format("%.2f", segment.getUpperPoint().x) + " "
-                        + String.format("%.2f", segment.getUpperPoint().y) + " "
-                        + String.format("%.2f", segment.getLowerPoint().x) + " "
-                        + String.format("%.2f", segment.getLowerPoint().y) + "\n");
+                buffer.write(String.format(Locale.US, "%.2f", segment.getUpperPoint().x) + " "
+                        + String.format(Locale.US,"%.2f", segment.getUpperPoint().y) + " "
+                        + String.format(Locale.US,"%.2f", segment.getLowerPoint().x) + " "
+                        + String.format(Locale.US,"%.2f", segment.getLowerPoint().y) + "\n");
             }
         } catch (IOException e)
         {

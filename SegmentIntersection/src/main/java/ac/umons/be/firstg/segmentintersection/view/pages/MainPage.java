@@ -635,7 +635,7 @@ public class MainPage extends BorderPane
     {
         String outputPath = getOutputFile();
         if(outputPath != null)
-            Parser.saveSegments(new ArrayList<>(graph.getSegments()), getOutputFile());
+            Parser.saveSegments(new ArrayList<>(graph.getSegments()), outputPath);
     }
 
     private void exportIntersections()
@@ -652,6 +652,7 @@ public class MainPage extends BorderPane
     {
         graph.resetGraph();
         segmentsTable.resetTable();
+        resetGraphSweepLine();
         currentId = 1;
         fileNameLabel.setText("No file selected");
     }
@@ -763,14 +764,26 @@ public class MainPage extends BorderPane
         Point point1 = new Point(getValueGen.createObject(x1PointInput), getValueGen.createObject(y1PointInput));
         Point point2 = new Point(getValueGen.createObject(x2PointInput), getValueGen.createObject(y2PointInput));
 
-        Segment segmentTMP = new Segment(point1, point2, "s_" + currentId);
-        currentId ++;
-        // Add segment to the graph and the table
-        graph.addSegments(List.of(segmentTMP));
-        segmentsTable.addSegment(segmentTMP);
+        try
+        {
+            Segment segmentTMP = new Segment(point1, point2, "s_" + currentId);
+            currentId ++;
+            // Add segment to the graph and the table
+            graph.addSegments(List.of(segmentTMP));
+            segmentsTable.addSegment(segmentTMP);
 
-        // Reset Sweep line algo
-        resetGraphSweepLine();
+            // Reset Sweep line algo
+            resetGraphSweepLine();
+        }
+        catch (IllegalArgumentException e)
+        {
+            Alert alert = new Alert(Alert.AlertType.ERROR, "There was a problem when trying to add the segment" + "\n\n"
+                    + e);
+            alert.setTitle("Add Segment Error");
+            alert.show();
+            // Stop sweep line execution
+            resetGraphSweepLine();
+        }
 
         x1PointInput.setText("");
         x2PointInput.setText("");
@@ -793,6 +806,7 @@ public class MainPage extends BorderPane
 
     private void createSweepLine() throws Exception
     {
+        planeSweeps = null;
         ArrayList<Segment> segments = new ArrayList<>(graph.getSegments());
         if(segments.isEmpty())
             return;
@@ -935,15 +949,6 @@ public class MainPage extends BorderPane
         intersectionsTable.resetTable();
         // Reset current X and Y info
         updateSweepInfo();
-
-    }
-
-    private void randomMap()
-    {
-        Generator generator = new Generator(10);
-        ArrayList<Segment> segments = generator.generate();
-        segmentsTable.addAll(segments);
-        graph.addSegments(segments);
     }
 
 

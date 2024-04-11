@@ -1,6 +1,7 @@
 package ac.umons.be.firstg.segmentintersection.view.components;
 
 
+import ac.umons.be.firstg.segmentintersection.controller.utils.CDouble;
 import ac.umons.be.firstg.segmentintersection.model.ComparableSegment;
 import ac.umons.be.firstg.segmentintersection.model.Point;
 import ac.umons.be.firstg.segmentintersection.model.Segment;
@@ -244,9 +245,9 @@ public class GraphXY extends AnchorPane
         {
             // Update scale of the graph
             updateMinMax(segmentTMP);
-
             updateScale();
         }
+        updateLegend();
     }
     /**
      * Rescale all segments of the graph
@@ -296,10 +297,19 @@ public class GraphXY extends AnchorPane
 
     private void updateMinMax(Segment segment)
     {
-        maxX = Math.max(Math.max(maxX, segment.getUpperPoint().x), segment.getLowerPoint().x);
-        maxY = Math.max(Math.max(maxY, segment.getUpperPoint().y), segment.getLowerPoint().y);
-        minX = Math.min(Math.min(minX, segment.getUpperPoint().x), segment.getLowerPoint().x);
-        minY = Math.min(Math.min(minY, segment.getUpperPoint().y), segment.getLowerPoint().y);
+        maxX = max(maxX, segment.getUpperPoint().x, segment.getLowerPoint().x, minScaleX);
+        maxY = max(maxY, segment.getUpperPoint().y, segment.getLowerPoint().y, minScaleY);
+        minX = min(minX, segment.getUpperPoint().x, segment.getLowerPoint().x);
+        minY = min(minY, segment.getUpperPoint().y, segment.getLowerPoint().y);
+        System.out.println("segment: " + segment);
+    }
+    private double max(double a, double b, double c, double d)
+    {
+        return Math.max(Math.max(Math.max(a, b), c), d);
+    }
+    private double min(double a, double b, double c)
+    {
+        return Math.min(Math.min(a, b), c);
     }
 
 
@@ -315,7 +325,7 @@ public class GraphXY extends AnchorPane
             getChildren().add(mark);
             markLinesX.add(mark);
         }
-        Text text = (Text) textGen.createNode(new Point(position - 10,25));
+        Text text = (Text) textGen.createNode(new Point(position - 25,20));
         text.setRotate(-30);
         text.toBack();
         getChildren().add(text);
@@ -344,7 +354,6 @@ public class GraphXY extends AnchorPane
     {
         double tmpMinX = minX;
         double tmpMinY = minY;
-
         if(minX == Double.POSITIVE_INFINITY)
         {
             tmpMinX = 0d;
@@ -387,6 +396,13 @@ public class GraphXY extends AnchorPane
         minY = (Math.floor(minY/ minScaleY) * minScaleY);
         scalePixelX = (maxX - minX) / sizePixelAxisX;
         scalePixelY = (maxY - minY) / sizePixelAxisY;
+
+        System.out.println("maxX: " + maxX);
+        System.out.println("maxY: " + maxY);
+        System.out.println("minX: " + minX);
+        System.out.println("minY: " + minY);
+        System.out.println("scalePixelX: " + scalePixelX);
+        System.out.println("scalePixelY: " + scalePixelY);
     }
 
     /**
@@ -442,7 +458,7 @@ public class GraphXY extends AnchorPane
         //addSegments(this.segmentsShown.keySet().stream().toList()); (wouldn't work)
         rescaleSegments(true);
         // Redraw SweepLine
-        if(sweepLine != null)
+        if(sweepLine != null && sweepLinePosition != null)
             setSweepLinePosition(sweepLinePosition);
     }
 
@@ -456,7 +472,13 @@ public class GraphXY extends AnchorPane
     public void initializeSweep()
     {
         // Initialises the sweepLine
-        setSweepLinePosition(new Point(maxX, maxY));
+        if(sweepLine != null)
+        {
+            getChildren().removeAll(sweepLine, currentSweepPoint);
+            currentSweepPoint = null;
+            sweepLine = null;
+        }
+        setSweepLinePosition(null);
         // Initialise the stacks that will be used to change the status of segments during
         // the exploration
         toSetActive = new Stack<>();
@@ -466,6 +488,7 @@ public class GraphXY extends AnchorPane
     }
     private void setSweepLinePosition(Point p)
     {
+        System.out.println("move SL: " + p);
         // Save the SweepLine position in case of resize
         sweepLinePosition = p;
 
@@ -477,20 +500,23 @@ public class GraphXY extends AnchorPane
             sweepLine.setStrokeWidth(2);
             sweepLine.getStrokeDashArray().addAll(5d);
             currentSweepPoint = new EventPointNode(null, 5, Color.DARKMAGENTA);
-            currentSweepPoint.setLayoutX(maxX);
-            currentSweepPoint.setLayoutY(minY);
+            currentSweepPoint.setLayoutX(maxAxisX.x + 5);
+            currentSweepPoint.setLayoutY(maxAxisY.y);
             getChildren().addAll(sweepLine, currentSweepPoint);
         }
-        // Move the sweep line (simply doing sweepLine.setLayoutY() doesn't work for some reason
-        double newPosition = origin.y - scaleOnY(p.y);
-        sweepLine.setStartY(newPosition);
-        sweepLine.setStartX(maxAxisY.x);
-        sweepLine.setEndX(maxAxisX.x + 5);
-        sweepLine.setEndY(newPosition);
+        else
+        {
 
-        currentSweepPoint.setLayoutX(origin.x + scaleOnX(p.x));
-        currentSweepPoint.setLayoutY(origin.y - scaleOnY(p.y));
-        currentSweepPoint.toFront();
+            // Move the sweep line (simply doing sweepLine.setLayoutY() doesn't work
+            double newPosition = origin.y - scaleOnY(p.y);
+            sweepLine.setStartY(newPosition);
+            sweepLine.setStartX(maxAxisY.x);
+            sweepLine.setEndX(maxAxisX.x + 5);
+            sweepLine.setEndY(newPosition);
+            currentSweepPoint.setLayoutX(origin.x + scaleOnX(p.x));
+            currentSweepPoint.setLayoutY(origin.y - scaleOnY(p.y));
+            currentSweepPoint.toFront();
+        }
     }
 
     /**
