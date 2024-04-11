@@ -140,7 +140,8 @@ public class Parser
 
     public static String getPathFromResource(String filePathFromResource) throws URISyntaxException
     {
-        return Paths.get(StatusQueue.class.getResource(filePathFromResource).toURI()).toString();
+
+        return Paths.get(Parser.class.getResource(filePathFromResource).toURI()).toString();
     }
 
     /**

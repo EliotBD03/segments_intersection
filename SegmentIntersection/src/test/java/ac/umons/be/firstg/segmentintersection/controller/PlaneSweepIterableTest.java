@@ -12,13 +12,11 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class PlaneSweepIterableTest {
 
-    private static PlaneSweepIterable planeSweepIterable;
 
     @BeforeAll
     static void initPlaneSweepIterable() throws Exception
     {
-        ArrayList<Segment> segments = new Parser(Parser.getPathFromResource("/test2.txt")).getSegmentsFromFile();
-        planeSweepIterable = new PlaneSweepIterable(segments);
+        ArrayList<Segment> segments = new Parser(Parser.getPathFromResource("/example_segments.txt")).getSegmentsFromFile();
     }
 
     @Test
@@ -38,7 +36,7 @@ class PlaneSweepIterableTest {
          */
 
 
-        Parser parser = new Parser(Parser.getPathFromResource("/problem6.txt"));
+        Parser parser = new Parser(Parser.getPathFromResource("/example_segments.txt"));
         PlaneSweepIterable ps2 = new PlaneSweepIterable(parser.getSegmentsFromFile());
         ArrayList<Point> intersections = new ArrayList<>();
         for(PlaneSweep planeSweep : ps2)
