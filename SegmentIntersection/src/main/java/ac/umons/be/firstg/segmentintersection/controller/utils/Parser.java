@@ -186,7 +186,9 @@ public class Parser
                 for(int i = 0; i < point.getIntersections().size() ; i++)
                 {
                     buffer.write(String.format("%.2f", point.getIntersections().get(i).getLowerPoint().x) + " "
-                            + String.format("%.2f", point.getIntersections().get(i).getLowerPoint().y));
+                            + String.format("%.2f", point.getIntersections().get(i).getLowerPoint().y) + " "
+                            + String.format("%.2f", point.getIntersections().get(i).getUpperPoint().x) + " "
+                            + String.format("%.2f", point.getIntersections().get(i).getUpperPoint().y));
                     if(i < point.getIntersections().size() - 1)
                         buffer.write(", ");
                 }
