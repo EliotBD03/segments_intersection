@@ -22,7 +22,7 @@ public class FindProblem
         while(true)
         {
             segments = generator.generate();
-            Parser.saveSegments(segments,"/home/foucart/Bureau/Git/segments_intersection/SegmentIntersection/src/test/resources/test.txt");
+            Parser.saveSegments(segments,"");
             //System.out.println("size" + new PlaneSweepIterable(segments).getIntersections().size());
             //System.out.println("size" + NaiveIntersection.getIntersections(segments).size());
         }
