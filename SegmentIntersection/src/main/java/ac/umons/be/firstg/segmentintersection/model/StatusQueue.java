@@ -40,12 +40,18 @@ public class StatusQueue extends AVL<ComparableSegment>
         // Remove the leaf segment first
         root = removeLeaf(root, comparableSegment);
         // Remove the inner segment
-        root = removeInner(root, comparableSegment, currStatus);
+        root = removeInner(root, comparableSegment);
         if(root != null)
             root.balance();
     }
 
-    private Node<ComparableSegment> removeInner(Node<ComparableSegment> currNode, ComparableSegment segment, Point ref)
+    /**
+     * Removes the desired segment  inside T
+     * @param currNode  The current node of the tree
+     * @param segment   The segment in the leaf to remove
+     * @return The resulting tree from the deletion of the leaf
+     */
+    private Node<ComparableSegment> removeInner(Node<ComparableSegment> currNode, ComparableSegment segment)
     {
         if(currNode == null)
         {
@@ -56,14 +62,11 @@ public class StatusQueue extends AVL<ComparableSegment>
             currNode = removeRoot(currNode);
             return currNode;
         }
-        //if (currNode.getData().compareToPoint(segment, ref) >= 0)
         if(statusQueueRelation(currNode.getData(), segment))
         {
-            currNode.setLeft(removeInner(currNode.getLeft(), segment, ref));
+            currNode.setLeft(removeInner(currNode.getLeft(), segment));
         }else
-            currNode.setRight(removeInner(currNode.getRight(), segment, ref));
-        if(currNode.getLeft() != null)
-            currNode.balance();
+            currNode.setRight(removeInner(currNode.getRight(), segment));
         return currNode;
     }
 
@@ -200,9 +203,7 @@ public class StatusQueue extends AVL<ComparableSegment>
         // Only works if k, is the current point OR if a future point on the same y axis but in the future !
         // Return the left and right leaves
         ComparableSegment s = current.getData();
-        //System.out.println(current.getData());
         Point p = ComparableSegment.getClosestPointOnXAxis(k, s);
-        System.out.println("current is : " + current.getData());
         if (current.isLeaf())
         {
             if (k.equals(s.getLowerPoint()))
@@ -229,7 +230,6 @@ public class StatusQueue extends AVL<ComparableSegment>
      */
     public Pair<ComparableSegment, ComparableSegment> getNeighbours(Segment k)
     {
-        //System.out.println("get Nei for :"+ k );
         // Cast to comparable segment
         if(k == null || root == null)
             return new Pair<>(null, null);
@@ -241,13 +241,9 @@ public class StatusQueue extends AVL<ComparableSegment>
         Node<ComparableSegment> father = root;
         Node<ComparableSegment> curr = root;
         Node<ComparableSegment> lastLeft = null;
-        System.out.println("From: " + k);
         // Find the inner node with its father by moving in the tree
         while(!curr.getData().equals(x))
         {
-
-            System.out.println("root is");
-            System.out.println(curr.getData());
             if(statusQueueRelation(curr.getData(), x))
             {
                 curr = curr.getLeft();
@@ -294,8 +290,6 @@ public class StatusQueue extends AVL<ComparableSegment>
      */
     private boolean statusQueueRelation(ComparableSegment curr, ComparableSegment other)
     {
-        System.out.println("Compare btw: this: " + curr + " | and : " + other);
-        System.out.println("With: " + currStatus);
         int res = curr.compareToPoint(other, currStatus);
         if (res != 0)
             return res > 0;

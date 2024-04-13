@@ -76,7 +76,6 @@ public class Tree<T extends Comparable<T>> extends Group
             return;
         }
         double newDist = xDist / 2;
-        System.out.println("xDist: " + xDist);
         Point rightPoint= new Point(curr.x + newDist, curr.y + minDistY);
         Point leftPoint = new Point(curr.x - newDist, curr.y + minDistY);
         recGetAllNodes(tree.getRight(), rightPoint, nodes, curr, newDist);

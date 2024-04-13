@@ -23,8 +23,6 @@ public class PlaneSweepIterable implements Iterable<PlaneSweep>
         this.pointQueue = PointQueue.initQ(segments);
         this.iterationCount = 0;
         this.planeSweep = new PlaneSweep();
-        System.out.println("point queue at initialization");
-        pointQueue.display();
     }
 
 

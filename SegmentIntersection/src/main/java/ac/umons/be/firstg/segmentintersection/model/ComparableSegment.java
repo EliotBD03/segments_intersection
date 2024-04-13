@@ -49,7 +49,6 @@ public class ComparableSegment extends Segment implements Comparable<ComparableS
     {
         Point p1 = Segment.getClosestPointOnXAxis(ref, this);
         Point p2 = Segment.getClosestPointOnXAxis(ref, otherSegment);
-        System.out.println("\t\t p1: " +p1 + " | p2:" + p2);
         if (p1 == null || p2 == null){
             // Points are not comparable
             return 0;

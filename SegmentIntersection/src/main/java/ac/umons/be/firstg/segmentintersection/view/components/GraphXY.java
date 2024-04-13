@@ -99,8 +99,6 @@ public class GraphXY extends AnchorPane
         drawScale(nbOfMarksX, nbOfMarksY, showGrid);
 
         setBackground(new Background(new BackgroundFill(Color.WHITE, CornerRadii.EMPTY, Insets.EMPTY)));
-
-        //setOnMouseClicked(e -> System.out.println("interact ??"));
     }
 
     private void resetScale()
@@ -301,7 +299,6 @@ public class GraphXY extends AnchorPane
         maxY = max(maxY, segment.getUpperPoint().y, segment.getLowerPoint().y, minScaleY);
         minX = min(minX, segment.getUpperPoint().x, segment.getLowerPoint().x);
         minY = min(minY, segment.getUpperPoint().y, segment.getLowerPoint().y);
-        System.out.println("segment: " + segment);
     }
     private double max(double a, double b, double c, double d)
     {
@@ -396,13 +393,6 @@ public class GraphXY extends AnchorPane
         minY = (Math.floor(minY/ minScaleY) * minScaleY);
         scalePixelX = (maxX - minX) / sizePixelAxisX;
         scalePixelY = (maxY - minY) / sizePixelAxisY;
-
-        System.out.println("maxX: " + maxX);
-        System.out.println("maxY: " + maxY);
-        System.out.println("minX: " + minX);
-        System.out.println("minY: " + minY);
-        System.out.println("scalePixelX: " + scalePixelX);
-        System.out.println("scalePixelY: " + scalePixelY);
     }
 
     /**
@@ -488,7 +478,6 @@ public class GraphXY extends AnchorPane
     }
     private void setSweepLinePosition(Point p)
     {
-        System.out.println("move SL: " + p);
         // Save the SweepLine position in case of resize
         sweepLinePosition = p;
 
@@ -555,7 +544,6 @@ public class GraphXY extends AnchorPane
             {
                 currSegment = segmentsShown.get(segmentTMP);
                 currSegment.setVisited();
-                System.out.println(segmentsShown.get(segmentTMP));
                 // Segments contained in L, are going to be on top of the sweep line
                 // So they become inactive
 

@@ -221,37 +221,28 @@ public class MainPage extends BorderPane
      */
     private void handleTabInteraction(boolean closing)
     {
-        //System.out.println("_-_-_");
         if(tabPane.getSelectionModel().getSelectedItem() == null)
         {
-            //System.out.println("Nothing was selected");
             return;
         }
         if(currentTab == null && !closing)
         {
-            //System.out.println("no tab is open and is opening: " + tabPane.getSelectionModel().getSelectedIndex());
             currentTab = tabPane.getSelectionModel().getSelectedItem();
-            //System.out.println("Selected: " + tabPane.getSelectionModel().getSelectedIndex());
             if(currentTab == null)
                 return;
             currentTab.getContent().setVisible(true);
         }// If a tab is open and is closing
         else if (currentTab != null && closing)
         {
-            //System.out.println("a tab is open and is closing");
             currentTab.getContent().setVisible(false);
-            //System.out.println("Just Cleared !");
             tabPane.getSelectionModel().clearSelection();
             graphPane.requestFocus();
 
-            //System.out.println("What remains: " + tabPane.getSelectionModel().getSelectedIndex());
             currentTab = null;
         }
         // If a tab is open and is opening -> Close previous tab, show the content of the new one and change current tab
         else if (currentTab != null)
         {
-            //System.out.println("a tab is open and is opening");
-            //System.out.println("Selected: " + tabPane.getSelectionModel().getSelectedIndex());
             currentTab.getContent().setVisible(false);
             currentTab = tabPane.getSelectionModel().getSelectedItem();
 
@@ -259,8 +250,6 @@ public class MainPage extends BorderPane
                 return;
             currentTab.getContent().setVisible(true);
         }
-        //System.out.println("current tab: " + currentTab + " after "  + closing);
-        //System.out.println(xScaleInputs.get());
         // If no tab is open and is opening
         // If no tab is open and is closing -> nothing happens
     }
@@ -305,8 +294,6 @@ public class MainPage extends BorderPane
             //tf.setText(newValue);
             if (!Objects.equals(oldValue, newValue) && event != null)
                 event.callMethod(textFormat.getValueConverter().fromString(newValue));
-
-            //System.out.println("textfield changed from " + oldValue + " to " + newValue);
         });
         textFormat.valueProperty().bindBidirectional(property);
         tf.setTextFormatter(textFormat);
@@ -841,7 +828,6 @@ public class MainPage extends BorderPane
 
                     if(inter != null)
                     {
-                        System.out.println(inter.getIntersections());
                         intersectionsTable.addIntersection(inter);
                     }
                     graph.moveSweepLine(planeSweeps.getPlaneSweep().getCurrentPoint(), planeSweeps.getPlaneSweep().getUpper(), planeSweeps.getPlaneSweep().getLower(), planeSweeps.getPlaneSweep().getInner());
