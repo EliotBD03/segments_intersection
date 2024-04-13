@@ -406,7 +406,7 @@ public class AVL<T extends Comparable<T>>
     {
         // Tree is empty
         if(curr == null)
-            return null;
+            return new Pair<>(null, null);
 
         T max = curr.data;
         // The current node is max
@@ -437,7 +437,7 @@ public class AVL<T extends Comparable<T>>
     {
         // Tree is empty
         if(curr == null)
-            return null;
+            return new Pair<>(null,null);
 
         T max = curr.data;
         // The current node is min

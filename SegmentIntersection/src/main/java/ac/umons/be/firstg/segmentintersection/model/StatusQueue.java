@@ -63,10 +63,10 @@ public class StatusQueue extends AVL<ComparableSegment>
             return currNode;
         }
         if(statusQueueRelation(currNode.getData(), segment))
-        {
             currNode.setLeft(removeInner(currNode.getLeft(), segment));
-        }else
+        else
             currNode.setRight(removeInner(currNode.getRight(), segment));
+        currNode.balance();
         return currNode;
     }
 
@@ -85,6 +85,7 @@ public class StatusQueue extends AVL<ComparableSegment>
         {
             // Remove the maximum element which by logic is the leaf we are looking for
             currNode.setLeft(removeMax(currNode.getLeft()).getItem1());
+            return currNode;
         }
         else if(statusQueueRelation(currNode.getData(), segment))
         {
@@ -93,6 +94,8 @@ public class StatusQueue extends AVL<ComparableSegment>
         {
             currNode.setRight(removeLeaf(currNode.getRight(), segment));
         }
+        currNode.updateHeight();
+        currNode.balance();
         return currNode;
     }
 

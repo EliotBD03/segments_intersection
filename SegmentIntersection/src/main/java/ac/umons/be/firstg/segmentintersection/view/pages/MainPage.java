@@ -670,6 +670,7 @@ public class MainPage extends BorderPane
         if(generate)
         {
             resetMap();
+            inputFile = null;
             Generator generator =  new Generator(20);
             ArrayList<Segment> segmentsList = generator.generate();
 
