@@ -16,15 +16,15 @@ public class FindProblem
     {
         Generator generator = new Generator(10);
         ArrayList<Segment> segments = generator.generate();
-        System.out.println("size" + new PlaneSweepIterable(segments).getIntersections().size());
-        System.out.println("size" + NaiveIntersection.getIntersections(segments).size());
+        //System.out.println("size" + new PlaneSweepIterable(segments).getIntersections().size());
+        //System.out.println("size" + NaiveIntersection.getIntersections(segments).size());
 
         while(true)
         {
             segments = generator.generate();
-            //Parser.saveSegments(segments,"");
-            System.out.println("size" + new PlaneSweepIterable(segments).getIntersections().size());
-            System.out.println("size" + NaiveIntersection.getIntersections(segments).size());
+            Parser.saveSegments(segments,"/home/foucart/Bureau/Git/segments_intersection/SegmentIntersection/src/test/resources/test.txt");
+            //System.out.println("size" + new PlaneSweepIterable(segments).getIntersections().size());
+            //System.out.println("size" + NaiveIntersection.getIntersections(segments).size());
         }
     }
 
