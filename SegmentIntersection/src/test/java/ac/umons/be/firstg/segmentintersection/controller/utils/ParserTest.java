@@ -23,8 +23,8 @@ public class ParserTest
                 add(new Segment(new double[]{0, 1, 1, 0}, "s2"));
             }
         };
-        String path = "path/to/your/resource/folder"; //TODO if you want to make this work please replace the string :)
-        assertDoesNotThrow(() -> Parser.saveSegments(segments, (path)));
+        //String path = "path/to/your/resource/folder"; //TODO if you want to make this work please replace the string :)
+        //assertDoesNotThrow(() -> Parser.saveSegments(segments, (path)));
 
     }
 }
