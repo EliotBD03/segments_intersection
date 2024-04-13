@@ -94,7 +94,6 @@ public class StatusQueue extends AVL<ComparableSegment>
         {
             currNode.setRight(removeLeaf(currNode.getRight(), segment));
         }
-        currNode.updateHeight();
         currNode.balance();
         return currNode;
     }
@@ -133,8 +132,6 @@ public class StatusQueue extends AVL<ComparableSegment>
                 current.balance();
             }
         }
-
-        current.updateHeight();
         return current;
     }
 
